@@ -1,3 +1,3 @@
 # `Temat Projektu`
 
-# Autorzy: Michał Pilecki 
+# Autorzy: Michał Pilecki, Jakub Opar
