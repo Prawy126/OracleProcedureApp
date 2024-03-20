@@ -1,3 +1,3 @@
-# `Temat Projektu`
+# Aplickacja Zarządzająca Szpitalem
 
-# Autorzy: Michał Pilecki 
+## Autorzy: Michał Pilecki, Jakub Opar
