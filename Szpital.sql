@@ -13,12 +13,11 @@ CREATE TABLE "leki" (
   "nazwa_leku" character varying(100),
   "instrukcja" text,
   "forma_leku" character varying(50),
-  "data_poczatkowa" date,
-  "data_koncowa" date,
+  "ilosc_magazyn" integer,
   "kategoria_leku" character varying(50),
-  "dostepnosc_szpital" boolean,
-  "cena" numeric(10,2),
-  "dawka_jednostak" character varying(50),
+  "cena" float NOT NULL,
+  "dawka_jednostka" character varying(50),
+  "Ilosc" integer NOT NULL,
   PRIMARY KEY ("id_leku")
 );
 
@@ -26,9 +25,10 @@ CREATE TABLE "pacjenci" (
   "id_pacjentka" integer NOT NULL DEFAULT nextval('pacjenci_id_pacjentka_seq'::regclass),
   "imie" character varying(50),
   "nazwisko" character varying(50),
-  "numer_identyczny" character varying(50),
   "id_pielegniarki" integer,
   "id_konta" integer NOT NULL,
+  "Czas_pobytu(DNI)" integer NOT NULL,
+  "id_Sali" integer NOT NULL,
   PRIMARY KEY ("id_pacjentka")
 );
 
@@ -44,7 +44,11 @@ CREATE TABLE "pielegniarki" (
 CREATE TABLE "przypisania_leki" (
   "id_pacjenta" integer NOT NULL,
   "id_leku" integer NOT NULL,
-  "dawka" integer
+  "dawka" integer,
+  "data_poczatkowa" date,
+  "data_koncowa" date,
+  "data_waznosci" date,
+  "dostepnosc_szpital" boolean
 );
 
 CREATE TABLE "rodzaje_zabiegow" (
@@ -60,6 +64,8 @@ CREATE TABLE "sale" (
   "numer_sali" character varying(10),
   "lokalizacja" character varying(100),
   "status" character varying(50),
+  "typ_sali" character varying(50),
+  "miejsca" integer NOT NULL,
   PRIMARY KEY ("id_sali")
 );
 
@@ -123,3 +129,5 @@ ALTER TABLE "zabiegi" ADD FOREIGN KEY ("status") REFERENCES "statusy" ("nr_statu
 ALTER TABLE "zabiegi" ADD FOREIGN KEY ("id_rodzaju_zabiegu") REFERENCES "rodzaje_zabiegow" ("id_rodzaju");
 
 ALTER TABLE "zabiegi" ADD FOREIGN KEY ("id_sali") REFERENCES "sale" ("id_sali");
+
+ALTER TABLE "pacjenci" ADD FOREIGN KEY ("id_Sali") REFERENCES "sale" ("id_sali");
