@@ -79,7 +79,6 @@ CREATE TABLE "zabiegi" (
   "czas_trwania" time NOT NULL,
   "koszt" numeric(10,2) NOT NULL,
   "status" integer NOT NULL,
-  "id_pielegniarki" integer NOT NULL,
   PRIMARY KEY ("id_zabiegu")
 );
 
@@ -115,8 +114,6 @@ ALTER TABLE "pielegniarki" ADD FOREIGN KEY ("id_pielegniarki") REFERENCES "Zabie
 
 ALTER TABLE "zabiegi" ADD FOREIGN KEY ("id_zabiegu") REFERENCES "Zabiegi_Pielęgniraki" ("id_zabiegu");
 
-ALTER TABLE "zabiegi" ADD FOREIGN KEY ("id_pielegniarki") REFERENCES "Zabiegi_Pielęgniraki" ("id_pielęgniarki");
-
 ALTER TABLE "zabiegi" ADD FOREIGN KEY ("id_zabiegu") REFERENCES "zabiegi_lekarze" ("id_zabiegu");
 
 ALTER TABLE "lekarze" ADD FOREIGN KEY ("id_lekarza") REFERENCES "zabiegi_lekarze" ("id_lekarza");
@@ -124,3 +121,5 @@ ALTER TABLE "lekarze" ADD FOREIGN KEY ("id_lekarza") REFERENCES "zabiegi_lekarze
 ALTER TABLE "zabiegi" ADD FOREIGN KEY ("status") REFERENCES "statusy" ("nr_statusu");
 
 ALTER TABLE "zabiegi" ADD FOREIGN KEY ("id_rodzaju_zabiegu") REFERENCES "rodzaje_zabiegow" ("id_rodzaju");
+
+ALTER TABLE "zabiegi" ADD FOREIGN KEY ("id_sali") REFERENCES "sale" ("id_sali");
