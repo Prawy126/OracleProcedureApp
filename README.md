@@ -18,6 +18,7 @@ Pacjent będzie miał możliwość wyświetlenia informacji na temat informacji 
 Rysunek 1. przedstawia schemat bazy danych szpitala. Składa się ona z dwunastu tabel, w tym dziewięciu tabel podstawowych i trzech łączących.
 
 ##### Informacje o tabelach
+
 | Tabela "lekarze"         | Opis: Zawiera informacje o lekarzach                                                          |
 |--------------------------|-----------------------------------------------------------------------------------------------|
 | Id_lekarza               | Unikalny identyfikator lekarza                                                                |
@@ -117,6 +118,7 @@ Rysunek 1. przedstawia schemat bazy danych szpitala. Składa się ona z dwunastu
 | Id_zabiegu               | Identyfikator zabiegu                                                                         |
 
 #### Uwagi:
+
 | W tabeli konta istnieje konto administratora o id 1 które nie jest przypisane do żadnej tabeli.                          |
 |--------------------------------------------------------------------------------------------------------------------------|
 | Status w tabeli zabiegi jest aktualizowany w czasie rzeczywistym.                                                        |
