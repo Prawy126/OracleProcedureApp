@@ -109,7 +109,6 @@ Rysunek 1. przedstawia schemat bazy danych szpitala. Składa się ona z dwunastu
 | Id_konta                 | Unikalny identyfikator konta                                                                  |
 | Login                    | Login konta                                                                                   |
 | Hasło                    | Hasło konta                                                                                   |
-| Rod
 | Rodzaj_Konta             | Rodzaj konta. Każdy z rodzajów ma inne uprawnienia.                                           |
 
 | Tabela "Zabiegi_Pielęgniarki" | Opis: Tabela łącząca między zabiegami, a pielęgniarkami                                  |
