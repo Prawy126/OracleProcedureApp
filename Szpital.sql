@@ -17,7 +17,6 @@ CREATE TABLE "leki" (
   "kategoria_leku" character varying(50),
   "cena" float NOT NULL,
   "dawka_jednostka" character varying(50),
-  "Ilosc" integer NOT NULL,
   PRIMARY KEY ("id_leku")
 );
 
@@ -55,6 +54,7 @@ CREATE TABLE "rodzaje_zabiegow" (
   "id_rodzaju" integer NOT NULL DEFAULT nextval('rodzaje_zabiegow_id_rodzaju_seq'::regclass),
   "nazwa_zabiegu" character varying(100),
   "opis_zabiegu" text,
+  "zalecenia_przed_zabiegiem" text,
   "zalecenia_po_zabiegu" text,
   PRIMARY KEY ("id_rodzaju")
 );
@@ -78,7 +78,6 @@ CREATE TABLE "statusy" (
 
 CREATE TABLE "zabiegi" (
   "id_zabiegu" integer NOT NULL DEFAULT nextval('zabiegi_id_zabiegu_seq'::regclass),
-  "nazwa_zabiegu" character varying(100),
   "id_rodzaju_zabiegu" integer NOT NULL,
   "id_sali" integer NOT NULL,
   "data_zabiegu" timestamp NOT NULL,
