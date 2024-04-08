@@ -13,7 +13,7 @@ Lekarz będzie miał możliwość podglądu zaplanowanych zabiegów na dany term
 Pacjent będzie miał możliwość wyświetlenia informacji na temat informacji o zabiegu, jego terminu oraz jakie ma się przypisane leki. 
 
 ### 2. Opis bazy danych
-![Diagram](Szpital.png)
+![Diagram](Diagram%20ERD.png)
 #### Rysunek 1. Diagram ERD bazy danych.
 Rysunek 1. przedstawia schemat bazy danych szpitala. Składa się ona z dwunastu tabel, w tym dziewięciu tabel podstawowych i trzech łączących.
 
