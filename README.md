@@ -14,7 +14,7 @@ Pacjent będzie miał możliwość wyświetlenia informacji na temat informacji 
 
 ### 2. Opis bazy danych
 ![Diagram](Diagram%20ERD.png)
-#### Rysunek 1. Diagram ERD bazy danych.
+#### Rysunek 1. Diagram ERD bazy danych. [Link](https://dbdiagram.io/d/Szpital-65fb1331ae072629ce88a924)
 Rysunek 1. przedstawia schemat bazy danych szpitala. Składa się ona z dwunastu tabel, w tym dziewięciu tabel podstawowych i trzech łączących.
 
 ##### Informacje o tabelach
