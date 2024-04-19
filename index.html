@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bootstrap demo</title>
+  <link href="css/bootstrap.css" rel="stylesheet">
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Szpital</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link" href="#Wycieczki">Start</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#Wycieczki">Wycieczki</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#Cennik">Cenniki</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#Formularz">Inne</a>
+          </li>
+        </ul>
+        <form class="d-flex" role="search">
+          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+          <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
+      </div>
+    </div>
+  </nav>
+  <div id="carouselExample" class="carousel slide">
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <img src="img/carousel1.jpg" class="d-block w-100" alt="góry">
+      </div>
+      <div class="carousel-item">
+        <img src="img/carousel2.jpg" class="d-block w-100" alt="piękne widoki">
+      </div>
+      <div class="carousel-item">
+        <img src="img/carousel3.jpg" class="d-block w-100" alt="piękna panorama">
+      </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+  <div>
+    <h3 id="Wycieczki">Wycieczki</h3>
+    <div class="container text-center">
+      <div class="row">
+        <div class="col">
+          <div class="card" style="width: 18rem;">
+            <img src="img/colorado.jpg" class="card-img-top" alt="colorado">
+            <div class="card-body">
+              <h5 class="card-title">Kolorado</h5>
+              <p class="card-text">jest wyżynno-górzystym stanem, którego średnia wysokość nad poziomem morza przekracza
+                2000 m. Najwyższy szczyt Kolorado, Mount Elbert, wznosi się na 4399 m n.p.m.</p>
+              <a href="#" class="btn btn-primary">więcej szczegółów</a>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card" style="width: 18rem;">
+            <img src="img/alaska.jpg" class="card-img-top" alt="alaska">
+            <div class="card-body">
+              <h5 class="card-title">Alaska</h5>
+              <p class="card-text">pasmo górskie w Ameryce Północnej w stanie Alaska. Jest to najwyższa część łańcucha
+                Kordylierów z najwyższym szczytem kontynentu - Denali (McKinley) (6194 m n.p.m.).</p>
+              <a href="#" class="btn btn-primary">Więcej szczegółów</a>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card" style="width: 18rem;">
+            <img src="img/everest.jpg" class="card-img-top" alt="everest">
+            <div class="card-body">
+              <h5 class="card-title">Eeverest</h5>
+              <p class="card-text">najwyższy szczyt Ziemi (8848 m n.p.m., podaje się też wysokość 8844 lub 8850),
+                ośmiotysięcznik położony w Himalajach Wysokich, na granicy Nepalu i Tybetu.</p>
+              <a href="#" class="btn btn-primary">Więcej szczegółów</a>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card" style="width: 18rem;">
+            <img src="img/alps.jpg" class="card-img-top" alt="alps">
+            <div class="card-body">
+              <h5 class="card-title">Alpy</h5>
+              <p class="card-text">najwyższy łańcuch górski Europy, ciągnący się łukiem od wybrzeża Morza Śródziemnego w
+                okolicy Savony po dolinę Dunaju w okolicach Wiednia.</p>
+              <a href="#" class="btn btn-primary">Więcej szczegółów</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <h3 id="Cennik">Cennik</h3>
+    <div class="table-responsive">
+      <table class="table table-success table-striped">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Nazwa wycieczki</th>
+            <th scope="col">Kontynent</th>
+            <th scope="col">Kraj</th>
+            <th scope="col">Okres</th>
+            <th scope="col">Cena</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">1</th>
+            <td>Kolorado</td>
+            <td>Ameryka Północna</td>
+            <td>USA</td>
+            <td>7 dni</td>
+            <td>19000 PLN</td>
+          </tr>
+          <tr>
+            <th scope="row">2</th>
+            <td>Alaska</td>
+            <td>Ameryka Północna</td>
+            <td>USA</td>
+            <td>10 dni</td>
+            <td>24000 PLN</td>
+          </tr>
+          <tr>
+            <th scope="row">3</th>
+            <td>Everest</td>
+            <td>Azja</td>
+            <td>Chiny</td>
+            <td>7 dni</td>
+            <td>22000 PLN</td>
+          </tr>
+          <tr>
+            <th scope="row">4</th>
+            <td>Alpy</td>
+            <td>Europa</td>
+            <td>Austria</td>
+            <td>7 dni</td>
+            <td>16000 PLN</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    
+  </div>
+  <div>
+    <div class="container text-center">
+      <div class="row">
+        <div class="col">
+          <h4 id="O wycieczkach">O naszych wycieczkach...</h4>
+          <div class="ratio ratio-16x9"> 
+            <iframe src="https://www.youtube.com/embed/t7ZpJ7wWlZI"></iframe> 
+           </div>
+        </div>
+        <div class="col">
+          <h4 id="Formularz">Zapytaj o ofertę</h4>
+          
+            <form>
+              <div class="mb-3">
+                <div class="d-flex p-2"><label for="exampleInputEmail1" class="form-label">Email address</label></div>
+                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="name@example.com">
+                <div id="emailHelp" class="form-text"></div>
+                </div><div class="d-flex p-2"><label for="exampleInputEmail1" class="form-label">Rodzaj oferty</label></div>
+                <select class="form-select" aria-label="Default select example">
+                  <option value="1">Grupowa</option>
+                  <option selected>Indywidualna</option>
+                  <option value="3">Specjalna</option>
+                </select>
+                <div class="d-flex p-2"><label for="exampleInputEmail1" class="form-label">Budżet</label></div>
+                
+              <div class="input-group mb-3">
+                <input type="number" class="form-control" placeholder="2000" aria-label="Recipient's username" aria-describedby="button-addon2">
+                <button class="btn btn-outline-secondary" type="button" id="button-addon2">PLN</button>
+              </div>
+              
+              <div class="mb-3">
+                <div class="d-flex p-2"><label for="exampleFormControlTextarea1" class="form-label">Komentarz</label></div>
+                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <footer class="container-fluid bg-body-tertiary">
+    <div class="row text-center pt-2">
+      <p>&copy;  &ndash; 2024</p>
+    </div>
+  </footer>
+  <script src="js/bootstrap.bundle.js"></script>
+</body>
+
+</html>
