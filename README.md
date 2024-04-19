@@ -117,6 +117,22 @@ Rysunek 1. przedstawia schemat bazy danych szpitala. Składa się ona z dwunastu
 | Id_pielegniarki          | Identyfikator pielęgniarki                                                                    |
 | Id_zabiegu               | Identyfikator zabiegu                                                                         |
 
+#### Opis relacji:
+| Tabela 1 | Typ relacji | Tabela 2|
+|----------|-------------|---------|
+|Zabiegi|Wiele do wiele|Lekarze|
+|Zabiegi|Wiele do wiele|Pielegniarki|
+|Pacjenci|Wiele do wiele|Leki|
+|Zabiegi|Jeden do wiele|Statusy|
+|Zabiegi|Jeden do wiele|Rodzaje_zabiegow|
+|Zabiegi|Jeden do wiele|Sale|
+|Pielegniarki|Jeden do wiele|Pacjenci|
+|Sale|Jeden do wiele|Pacjenci|
+|Konta|Jeden do jeden|Pacjenci|
+|Konta|Jeden do jeden|Pielegniarki|
+|Konta|Jeden do jeden|Lekarze| 
+
+
 #### Uwagi:
 
 | W tabeli konta istnieje konto administratora o id 1 które nie jest przypisane do żadnej tabeli.                          |
