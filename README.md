@@ -144,6 +144,13 @@ Rysunek 1. przedstawia schemat bazy danych szpitala. Składa się ona z dwunastu
 
 
 
-### 3. Opis założeń projektu:
-Tekst tekst
-
+### 3. Funkcjonalności:
+- CRUD
+- Aktualizacja statusów zabiegów w czasie rzeczywistym
+- Wyświetla powiadomoienia o zbliżającym się terminie zabiegu
+- Hashowanie haseł
+- Powiadomoienie gdy będze niewielka ilość danego leku
+- Baza będzie zabezpieczona pod kątem przyjęcia błędnych informacji
+- Lekarz będzie miał możliwość zaplanowania zabiegu na dany termin
+- Pielęgniarka będzie miała infomracje jakimi pacjentami się zajmuje
+- Pacjent będzie miał możliwość wyświetlenia informacji na temat informacji o zabiegu, jego terminu oraz jakie ma przypisane leki 
