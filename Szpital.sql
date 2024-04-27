@@ -89,8 +89,7 @@ CREATE TABLE "zabiegi" (
 
 CREATE TABLE "zabiegi_lekarze" (
   "id_zabiegu" integer NOT NULL,
-  "id_lekarza" integer NOT NULL,
-  PRIMARY KEY ("id_zabiegu", "id_lekarza")
+  "id_lekarza" integer NOT NULL
 );
 
 CREATE TABLE "Konta" (
