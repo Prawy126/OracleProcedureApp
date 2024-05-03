@@ -1,91 +1,87 @@
 CREATE TABLE "lekarze" (
-  "id_lekarza" integer NOT NULL DEFAULT nextval('lekarze_id_lekarza_seq'::regclass),
-  "imie" character varying(50) NOT NULL,
-  "nazwisko" character varying(50) NOT NULL,
-  "specjalizacja" character varying(50) NOT NULL,
-  "numer_licencji" character varying(50) NOT NULL,
-  "id_konta" integer NOT NULL,
-  PRIMARY KEY ("id_lekarza")
+  "id_lekarza" integer NOT NULL PRIMARY KEY,
+  "imie" varchar2(50) NOT NULL,
+  "nazwisko" varchar2(50) NOT NULL,
+  "specjalizacja" varchar2(50) NOT NULL,
+  "numer_licencji" varchar2(50) NOT NULL,
+  "id_konta" integer NOT NULL
 );
+
 
 CREATE TABLE "leki" (
-  "id_leku" integer NOT NULL DEFAULT nextval('leki_id_leku_seq'::regclass),
-  "nazwa_leku" character varying(100) NOT NULL,
-  "instrukcja" text NOT NULL,
-  "forma_leku" character varying(50) NOT NULL,
+  "id_leku" integer NOT NULL PRIMARY KEY,
+  "nazwa_leku" varchar2(100) NOT NULL,
+  "instrukcja" clob NOT NULL,
+  "forma_leku" varchar2(50) NOT NULL,
   "ilosc_magazyn" integer,
-  "kategoria_leku" character varying(50) NOT NULL,
+  "kategoria_leku" varchar2(50) NOT NULL,
   "cena" float,
-  "dawka_jednostka" character varying(50) NOT NULL,
-  PRIMARY KEY ("id_leku")
+  "dawka_jednostka" varchar2(50) NOT NULL
 );
 
+
 CREATE TABLE "pacjenci" (
-  "id_pacjentka" integer NOT NULL DEFAULT nextval('pacjenci_id_pacjentka_seq'::regclass),
+  "id_pacjentka" integer NOT NULL PRIMARY KEY,
   "imie" character varying(50) NOT NULL,
   "nazwisko" character varying(50) NOT NULL,
   "id_pielegniarki" integer,
   "id_konta" integer NOT NULL,
   "Czas_pobytu(DNI)" integer NOT NULL,
-  "id_Sali" integer NOT NULL,
-  PRIMARY KEY ("id_pacjentka")
+  "id_Sali" integer NOT NULL
 );
 
 CREATE TABLE "pielegniarki" (
-  "id_pielegniarki" integer NOT NULL DEFAULT nextval('pielegniarki_id_pielegniarki_seq'::regclass),
+  "id_pielegniarki" integer NOT NULL PRIMARY KEY,
   "imie" character varying(50) NOT NULL,
   "nazwisko" character varying(50) NOT NULL,
   "numer_identyfikacyjny" character varying(50) NOT NULL,
-  "id_konta" integer NOT NULL,
-  PRIMARY KEY ("id_pielegniarki")
+  "id_konta" integer NOT NULL
 );
 
 CREATE TABLE "przypisania_leki" (
   "id_pacjenta" integer NOT NULL,
   "id_leku" integer NOT NULL,
   "dawka" integer NOT NULL,
-  "data_poczatkowa" date NOT NULL,
-  "data_koncowa" date NOT NULL,
+  "data_poczatkowa" date,
+  "data_koncowa" date,
   "data_waznosci" date,
-  "dostepnosc_szpital" boolean NOT NULL
+  "dostepnosc_szpital" CHAR(1)
 );
 
 CREATE TABLE "rodzaje_zabiegow" (
-  "id_rodzaju" integer NOT NULL DEFAULT nextval('rodzaje_zabiegow_id_rodzaju_seq'::regclass),
-  "nazwa_zabiegu" character varying(100) NOT NULL,
-  "opis_zabiegu" text NOT NULL,
-  "zalecenia_przed_zabiegiem" text,
-  "zalecenia_po_zabiegu" text,
-  PRIMARY KEY ("id_rodzaju")
+  "id_rodzaju" integer NOT NULL PRIMARY KEY,
+  "nazwa_zabiegu" varchar2(100) NOT NULL,
+  "opis_zabiegu" clob NOT NULL,
+  "zalecenia_przed_zabiegiem" clob,
+  "zalecenia_po_zabiegu" clob
 );
 
+
 CREATE TABLE "sale" (
-  "id_sali" integer NOT NULL DEFAULT nextval('sale_id_sali_seq'::regclass),
+  "id_sali" integer NOT NULL PRIMARY KEY,
   "numer_sali" character varying(10),
   "lokalizacja" character varying(100) NOT NULL,
   "status" character varying(50) NOT NULL,
   "typ_sali" character varying(50),
-  "miejsca" integer NOT NULL,
-  PRIMARY KEY ("id_sali")
+  "miejsca" integer NOT NULL
 );
 
 CREATE TABLE "statusy" (
-  "nr_statusu" integer NOT NULL DEFAULT nextval('statusy_nr_statusu_seq'::regclass),
+  "nr_statusu" integer NOT NULL PRIMARY KEY,
   "status" character varying(50) NOT NULL,
-  "opis_statusu" text NOT NULL,
-  PRIMARY KEY ("nr_statusu")
+  "opis_statusu" clob NOT NULL
 );
 
 CREATE TABLE "zabiegi" (
-  "id_zabiegu" integer NOT NULL DEFAULT nextval('zabiegi_id_zabiegu_seq'::regclass),
+  "id_zabiegu" integer NOT NULL PRIMARY KEY,
   "id_rodzaju_zabiegu" integer NOT NULL,
   "id_sali" integer NOT NULL,
   "data_zabiegu" timestamp NOT NULL,
-  "czas_trwania" time NOT NULL,
+  "czas_trwania" interval DAY TO SECOND NOT NULL,
   "koszt" numeric(10,2) NOT NULL,
-  "status" integer NOT NULL,
-  PRIMARY KEY ("id_zabiegu")
+  "status" number(1) NOT NULL
 );
+
 
 CREATE TABLE "zabiegi_lekarze" (
   "id_zabiegu" integer NOT NULL,
@@ -93,7 +89,7 @@ CREATE TABLE "zabiegi_lekarze" (
 );
 
 CREATE TABLE "Konta" (
-  "id_konta" integer NOT NULL DEFAULT nextval('leki_id_leku_seq'::regclass),
+  "id_konta" integer NOT NULL PRIMARY KEY,
   "login" character varying(50) NOT NULL,
   "haslo" character varying(50) NOT NULL,
   "rodzaj_Konta" character varying(50) NOT NULL
@@ -106,32 +102,27 @@ CREATE TABLE "Zabiegi_Pielęgniraki" (
 
 CREATE TABLE "przypisania_leki_leki" (
   "przypisania_leki_id_leku" integer,
-  "leki_id_leku" integer,
-  PRIMARY KEY ("przypisania_leki_id_leku", "leki_id_leku")
+  "leki_id_leku" integer
 );
 
 CREATE TABLE "przypisania_leki_pacjenci" (
   "przypisania_leki_id_pacjenta" integer,
-  "pacjenci_id_pacjentka" integer,
-  PRIMARY KEY ("przypisania_leki_id_pacjenta", "pacjenci_id_pacjentka")
+  "pacjenci_id_pacjentka" integer
 );
 
 CREATE TABLE "Zabiegi_Pielęgniraki_zabiegi" (
   "Zabiegi_Pielęgniraki_id_zabiegu" integer,
-  "zabiegi_id_zabiegu" integer,
-  PRIMARY KEY ("Zabiegi_Pielęgniraki_id_zabiegu", "zabiegi_id_zabiegu")
+  "zabiegi_id_zabiegu" integer
 );
 
 CREATE TABLE "zabiegi_lekarze_zabiegi" (
   "zabiegi_lekarze_id_zabiegu" integer,
-  "zabiegi_id_zabiegu" integer,
-  PRIMARY KEY ("zabiegi_lekarze_id_zabiegu", "zabiegi_id_zabiegu")
+  "zabiegi_id_zabiegu" integer
 );
 
 CREATE TABLE "zabiegi_lekarze_lekarze" (
   "zabiegi_lekarze_id_lekarza" integer,
-  "lekarze_id_lekarza" integer,
-  PRIMARY KEY ("zabiegi_lekarze_id_lekarza", "lekarze_id_lekarza")
+  "lekarze_id_lekarza" integer
 );
 
 COMMENT ON COLUMN "lekarze"."id_konta" IS '
@@ -187,25 +178,25 @@ ALTER TABLE "lekarze" ADD FOREIGN KEY ("id_konta") REFERENCES "Konta" ("id_konta
 
 ALTER TABLE "pielegniarki" ADD FOREIGN KEY ("id_konta") REFERENCES "Konta" ("id_konta");
 
-ALTER TABLE "przypisania_leki_leki" ADD FOREIGN KEY ("przypisania_leki_id_leku") REFERENCES "przypisania_leki" ("id_leku");
+ALTER TABLE "przypisania_leki_leki" ADD FOREIGN KEY ("przypisania_leki_id_leku") REFERENCES "przypisania_leki" ("id_leku"); //należy sprawdzić
 
 ALTER TABLE "przypisania_leki_leki" ADD FOREIGN KEY ("leki_id_leku") REFERENCES "leki" ("id_leku");
 
-ALTER TABLE "przypisania_leki_pacjenci" ADD FOREIGN KEY ("przypisania_leki_id_pacjenta") REFERENCES "przypisania_leki" ("id_pacjenta");
+ALTER TABLE "przypisania_leki_pacjenci" ADD FOREIGN KEY ("przypisania_leki_id_pacjenta") REFERENCES "przypisania_leki" ("id_pacjenta"); //również do sprawdzenia
 
 ALTER TABLE "przypisania_leki_pacjenci" ADD FOREIGN KEY ("pacjenci_id_pacjentka") REFERENCES "pacjenci" ("id_pacjentka");
 
 ALTER TABLE "Zabiegi_Pielęgniraki" ADD FOREIGN KEY ("id_pielęgniarki") REFERENCES "pielegniarki" ("id_pielegniarki");
 
-ALTER TABLE "Zabiegi_Pielęgniraki_zabiegi" ADD FOREIGN KEY ("Zabiegi_Pielęgniraki_id_zabiegu") REFERENCES "Zabiegi_Pielęgniraki" ("id_zabiegu");
+ALTER TABLE "Zabiegi_Pielęgniraki_zabiegi" ADD FOREIGN KEY ("Zabiegi_Pielęgniraki_id_zabiegu") REFERENCES "Zabiegi_Pielęgniraki" ("id_zabiegu"); //również do sprawdzenia
 
-ALTER TABLE "Zabiegi_Pielęgniraki_zabiegi" ADD FOREIGN KEY ("zabiegi_id_zabiegu") REFERENCES "zabiegi" ("id_zabiegu");
+ALTER TABLE "Zabiegi_Pielęgniraki_zabiegi" ADD FOREIGN KEY ("zabiegi_id_zabiegu") REFERENCES "zabiegi" ("id_zabiegu"); // również do sprawdzenia
 
-ALTER TABLE "zabiegi_lekarze_zabiegi" ADD FOREIGN KEY ("zabiegi_lekarze_id_zabiegu") REFERENCES "zabiegi_lekarze" ("id_zabiegu");
+ALTER TABLE "zabiegi_lekarze_zabiegi" ADD FOREIGN KEY ("zabiegi_lekarze_id_zabiegu") REFERENCES "zabiegi_lekarze" ("id_zabiegu"); // również do sprawdznenia
 
 ALTER TABLE "zabiegi_lekarze_zabiegi" ADD FOREIGN KEY ("zabiegi_id_zabiegu") REFERENCES "zabiegi" ("id_zabiegu");
 
-ALTER TABLE "zabiegi_lekarze_lekarze" ADD FOREIGN KEY ("zabiegi_lekarze_id_lekarza") REFERENCES "zabiegi_lekarze" ("id_lekarza");
+ALTER TABLE "zabiegi_lekarze_lekarze" ADD FOREIGN KEY ("zabiegi_lekarze_id_lekarza") REFERENCES "zabiegi_lekarze" ("id_lekarza"); // również do sprawdzenia
 
 ALTER TABLE "zabiegi_lekarze_lekarze" ADD FOREIGN KEY ("lekarze_id_lekarza") REFERENCES "lekarze" ("id_lekarza");
 
