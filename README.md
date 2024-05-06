@@ -118,6 +118,7 @@ Rysunek 1. przedstawia schemat bazy danych szpitala. Składa się ona z dwunastu
 | Id_zabiegu               | Identyfikator zabiegu                                                                         |
 
 #### Opis relacji:
+
 | Tabela 1 | Typ relacji | Tabela 2|
 |----------|-------------|---------|
 |Zabiegi|Wiele do wiele|Lekarze|
