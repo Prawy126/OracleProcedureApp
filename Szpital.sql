@@ -95,35 +95,28 @@ CREATE TABLE "Konta" (
   "rodzaj_Konta" character varying(50) NOT NULL
 );
 
-CREATE TABLE "Zabiegi_Pielęgniraki" (
-  "id_pielęgniarki" integer NOT NULL,
+CREATE TABLE "Zabiegi_Piel�gniraki" (
+  "id_piel�gniarki" integer NOT NULL,
   "id_zabiegu" integer NOT NULL
 );
 
-CREATE TABLE "przypisania_leki_leki" (
-  "przypisania_leki_id_leku" integer,
-  "leki_id_leku" integer
-);
 
-CREATE TABLE "przypisania_leki_pacjenci" (
-  "przypisania_leki_id_pacjenta" integer,
-  "pacjenci_id_pacjentka" integer
-);
+// do wywalenia
+DROP TABLE IF EXISTS "przypisania_leki_leki";
 
-CREATE TABLE "Zabiegi_Pielęgniraki_zabiegi" (
-  "Zabiegi_Pielęgniraki_id_zabiegu" integer,
-  "zabiegi_id_zabiegu" integer
-);
 
-CREATE TABLE "zabiegi_lekarze_zabiegi" (
-  "zabiegi_lekarze_id_zabiegu" integer,
-  "zabiegi_id_zabiegu" integer
-);
+// do wywalenia
+DROP TABLE "przypisania_leki_pacjenci";
 
-CREATE TABLE "zabiegi_lekarze_lekarze" (
-  "zabiegi_lekarze_id_lekarza" integer,
-  "lekarze_id_lekarza" integer
-);
+
+// do wywalenia
+DROP TABLE "Zabiegi_Piel�gniraki_zabiegi";
+
+//do wywalenia
+DROP TABLE "zabiegi_lekarze_zabiegi";
+
+// do wywalenia
+DROP TABLE "zabiegi_lekarze_lekarze";
 
 COMMENT ON COLUMN "lekarze"."id_konta" IS '
 Klucz obcy z tabeli Konta
@@ -165,10 +158,10 @@ COMMENT ON COLUMN "zabiegi_lekarze"."id_lekarza" IS '
 Klucz obcy z tabeli lekarze
 ';
 
-COMMENT ON COLUMN "Zabiegi_Pielęgniraki"."id_pielęgniarki" IS '\undefined    Klucz obcy z tabeli pielegniarki
+COMMENT ON COLUMN "Zabiegi_Piel�gniraki"."id_piel�gniarki" IS '\undefined    Klucz obcy z tabeli pielegniarki
   ';
 
-COMMENT ON COLUMN "Zabiegi_Pielęgniraki"."id_zabiegu" IS '
+COMMENT ON COLUMN "Zabiegi_Piel�gniraki"."id_zabiegu" IS '
 Klucz obcy z tabeli zabiegi
 ';
 
@@ -178,25 +171,11 @@ ALTER TABLE "lekarze" ADD FOREIGN KEY ("id_konta") REFERENCES "Konta" ("id_konta
 
 ALTER TABLE "pielegniarki" ADD FOREIGN KEY ("id_konta") REFERENCES "Konta" ("id_konta");
 
-ALTER TABLE "przypisania_leki_leki" ADD FOREIGN KEY ("przypisania_leki_id_leku") REFERENCES "przypisania_leki" ("id_leku"); //należy sprawdzić
-
 ALTER TABLE "przypisania_leki_leki" ADD FOREIGN KEY ("leki_id_leku") REFERENCES "leki" ("id_leku");
 
-ALTER TABLE "przypisania_leki_pacjenci" ADD FOREIGN KEY ("przypisania_leki_id_pacjenta") REFERENCES "przypisania_leki" ("id_pacjenta"); //również do sprawdzenia
+ALTER TABLE "przypisania_leki_pacjenci" ADD FOREIGN KEY ("id_pacjentka") REFERENCES "pacjenci" ("id_pacjentka");
 
-ALTER TABLE "przypisania_leki_pacjenci" ADD FOREIGN KEY ("pacjenci_id_pacjentka") REFERENCES "pacjenci" ("id_pacjentka");
-
-ALTER TABLE "Zabiegi_Pielęgniraki" ADD FOREIGN KEY ("id_pielęgniarki") REFERENCES "pielegniarki" ("id_pielegniarki");
-
-ALTER TABLE "Zabiegi_Pielęgniraki_zabiegi" ADD FOREIGN KEY ("Zabiegi_Pielęgniraki_id_zabiegu") REFERENCES "Zabiegi_Pielęgniraki" ("id_zabiegu"); //również do sprawdzenia
-
-ALTER TABLE "Zabiegi_Pielęgniraki_zabiegi" ADD FOREIGN KEY ("zabiegi_id_zabiegu") REFERENCES "zabiegi" ("id_zabiegu"); // również do sprawdzenia
-
-ALTER TABLE "zabiegi_lekarze_zabiegi" ADD FOREIGN KEY ("zabiegi_lekarze_id_zabiegu") REFERENCES "zabiegi_lekarze" ("id_zabiegu"); // również do sprawdznenia
-
-ALTER TABLE "zabiegi_lekarze_zabiegi" ADD FOREIGN KEY ("zabiegi_id_zabiegu") REFERENCES "zabiegi" ("id_zabiegu");
-
-ALTER TABLE "zabiegi_lekarze_lekarze" ADD FOREIGN KEY ("zabiegi_lekarze_id_lekarza") REFERENCES "zabiegi_lekarze" ("id_lekarza"); // również do sprawdzenia
+ALTER TABLE "Zabiegi_Piel�gniraki" ADD FOREIGN KEY ("id_piel�gniarki") REFERENCES "pielegniarki" ("id_pielegniarki");
 
 ALTER TABLE "zabiegi_lekarze_lekarze" ADD FOREIGN KEY ("lekarze_id_lekarza") REFERENCES "lekarze" ("id_lekarza");
 
