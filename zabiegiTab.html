@@ -52,23 +52,15 @@
     <form>
       <div class="row">
         <div class="form-group col-md-2">
-          <input type="number" class="form-control" id="inputID" placeholder="ID">
+          <input type="text" class="form-control" id="inputWyszukiwanie" placeholder="Wyszukaj">
         </div>
         <div class="form-group col-md-2">
-          <input type="text" class="form-control" id="inputRodzajZabiegu" placeholder="Rodzaj zabiegu">
+          <button type="submit" class="btn btn-primary">Zatwierdź</button>
         </div>
-        <div class="form-group col-md-2">
-          <input type="text" class="form-control" id="inputSala" placeholder="Sala">
-        </div>
-        <div class="form-group col-md-2">
-            <input type="date" class="form-control" id="inputData" placeholder="Data">
-          </div>
-        <div class="form-group col-md-2">
-            <button type="submit" class="btn btn-primary">Wyszukaj</button>
-          </div>
       </div>
     </form>
   </div>
+
 
   <div class="container mt-4">
     <div class="table-responsive">
@@ -83,6 +75,8 @@
             <th scope="col">Kolumna 5</th>
             <th scope="col">Kolumna 6</th>
             <th scope="col">Kolumna 7</th>
+            <th scope="col"></th>
+            <th scope="col"></th>
           </tr>
         </thead>
         <tbody>
@@ -95,6 +89,8 @@
             <td>Dane 5</td>
             <td>Dane 6</td>
             <td>Dane 7</td>
+            <td><a href="#">Edytuj</a></td>
+            <td><button type="button" class="btn btn-danger">Usuń</button></td>
           </tr>
           <tr>
             <th scope="row">2</th>
@@ -105,6 +101,8 @@
             <td>Dane 12</td>
             <td>Dane 13</td>
             <td>Dane 14</td>
+            <td><a href="#">Edytuj</a></td>
+            <td><button type="button" class="btn btn-danger">Usuń</button></td>
           </tr>
           <tr>
             <th scope="row">3</th>
@@ -115,6 +113,8 @@
             <td>Dane 19</td>
             <td>Dane 20</td>
             <td>Dane 21</td>
+            <td><a href="#">Edytuj</a></td>
+            <td><button type="button" class="btn btn-danger">Usuń</button></td>
           </tr>
           <tr>
             <th scope="row">4</th>
@@ -125,6 +125,8 @@
             <td>Dane 26</td>
             <td>Dane 27</td>
             <td>Dane 28</td>
+            <td><a href="#">Edytuj</a></td>
+            <td><button type="button" class="btn btn-danger">Usuń</button></td>
           </tr>
           <tr>
             <th scope="row">5</th>
@@ -135,10 +137,45 @@
             <td>Dane 33</td>
             <td>Dane 34</td>
             <td>Dane 35</td>
+            <td><a href="#">Edytuj</a></td>
+            <td><button type="button" class="btn btn-danger">Usuń</button></td>
           </tr>
         </tbody>
       </table>
     </div>
+  </div>
+
+  <div class="container">
+    <h2 class="mt-4">Dodawanie zabiegu</h2>
+    <form>
+      <div class="row">
+        <div class="form-group col-md-1">
+          <input type="number" class="form-control" id="inputID" placeholder="ID">
+        </div>
+        <div class="form-group col-md-2">
+          <input type="number" class="form-control" id="inputIDRodzajZabiegu" placeholder="ID Rodzaju zabiegu">
+        </div>
+        <div class="form-group col-md-1">
+          <input type="number" class="form-control" id="inputIDSala" placeholder="ID Sali">
+        </div>
+        <div class="form-group col-md-2">
+          <input type="date" class="form-control" id="inputData" placeholder="Data">
+        </div>
+        <div class="form-group col-md-2">
+          <input type="text" class="form-control" id="inputCzasTrwania" placeholder="Czas trwania">
+          <!--Domyślnie zero i będzie liczony do momentu zmiany statusu na "zakończony"-->
+        </div>
+        <div class="form-group col-md-1">
+          <input type="number" class="form-control" id="inputKoszt" placeholder="Koszt">
+        </div>
+        <div class="form-group col-md-1">
+          <input type="number" class="form-control" id="inpuStatus" placeholder="Status">
+        </div>
+        <div class="form-group col-md-1">
+          <button type="submit" class="btn btn-primary">Dodaj</button>
+        </div>
+      </div>
+    </form>
   </div>
 
 
@@ -146,15 +183,15 @@
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-  
 
 
-    <footer class="footer fixed-bottom bg-body-tertiary">
-      <div class="row text-center pt-2">
-        <p>&copy; &ndash; 2024</p>
-      </div>
-    </footer>
-    <script src="js/bootstrap.bundle.js"></script>
+
+  <footer class="footer fixed-bottom bg-body-tertiary">
+    <div class="row text-center pt-2">
+      <p>&copy; &ndash; 2024</p>
+    </div>
+  </footer>
+  <script src="js/bootstrap.bundle.js"></script>
 </body>
 
 </html>
