@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('procedures', function (Blueprint $table) {
             $table->id();
-            //$table->foreignIdFor(treatment_type::class)->constrained();
-            //$table->foreignIdFor(room::class)->constrained();
+            $table->foreignIdFor(treatment_type::class)->constrained();
+            $table->foreignIdFor(room::class)->constrained();
             $table->timestamps('date');
             $table->time('time');
             $table->decimal('cost',10,2);
