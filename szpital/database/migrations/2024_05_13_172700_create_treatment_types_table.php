@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\medicin;
+use App\Models\patient;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,6 +15,10 @@ return new class extends Migration
     {
         Schema::create('treatment_types', function (Blueprint $table) {
             $table->id();
+            $table->string('name',100);
+            $table->text('description');
+            $table->text('recommendations_before_surgery');
+            $table->text('recommendations_after_surgery');
             $table->timestamps();
         });
     }

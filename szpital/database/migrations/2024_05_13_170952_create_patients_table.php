@@ -18,11 +18,11 @@ return new class extends Migration
             $table->id();
             $table->string('name',20);
             $table->string('surname',25);
-            $table->foreignIdFor(nurse::class)->constrained()->nullable();
-            $table->foreignIdFor(User::class)->constrained();
+            //$table->foreignIdFor(nurse::class)->constrained();
+            //$table->foreignIdFor(User::class)->constrained();
             $table->integer('time_visit');
-            $table->foreignIdFor(room::class)->constrained();
-            $table->timestamps();
+            //$table->foreignIdFor(room::class)->constrained();
+
         });
     }
 

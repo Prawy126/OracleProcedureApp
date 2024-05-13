@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\doctor;
+use App\Models\procedure;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -12,7 +14,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('treatments_doctors', function (Blueprint $table) {
-            $table->id();
+            $table->foreignIdFor(procedure::class)->constrained();
+            $table->foreignIdFor(doctor::class)->constrained();
             $table->timestamps();
         });
     }
