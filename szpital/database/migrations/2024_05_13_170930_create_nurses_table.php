@@ -16,7 +16,7 @@ return new class extends Migration
             $table->id();
             $table->string('name',20);
             $table->string('surname',30);
-            $table->string('number_id',30);
+            $table->string('number',30);
             $table->foreignIdFor(User::class)->constrained();
         });
     }

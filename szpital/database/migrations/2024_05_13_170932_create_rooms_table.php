@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('location',100);
             $table->string('status',50);
             $table->string('type_room',50)->nullable();
-            $table->timestamps();
+
         });
     }
 

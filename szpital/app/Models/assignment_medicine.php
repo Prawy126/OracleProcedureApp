@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class assignment_medicine extends Model
 {
@@ -15,14 +16,16 @@ class assignment_medicine extends Model
 
     public $timestamps = false;
 
-    public function patient(): BelongsTo
+    public function patient(): HasMany
     {
-        return $this->belongsTo(patient::class);
+        return $this->hasMany(patient::class);
     }
 
-    public function medicine(): BelongsTo
+    public function medicine(): HasMany
     {
-        return $this->belongsTo(medicin::class);
+        return $this->hasMany(medicin::class);
     }
+
+
 
 }

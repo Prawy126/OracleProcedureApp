@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -17,9 +18,9 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
-        'email',
+        'login',
         'password',
+        'account_type',
     ];
 
     /**
@@ -29,7 +30,7 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'password',
-        'remember_token',
+
     ];
 
     /**
@@ -37,11 +38,26 @@ class User extends Authenticatable
      *
      * @return array<string, string>
      */
-    protected function casts(): array
+        protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
+            //'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
     }
+    public function doctor(): HasOne
+    {
+        return $this->hasOne(doctor::class);
+    }
+
+    public function patient(): HasOne
+    {
+        return $this->hasOne(patient::class);
+    }
+
+    public function nurse(): HasOne
+    {
+        return $this->hasOne(nurse::class);
+    }
+
 }

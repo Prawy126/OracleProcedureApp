@@ -15,8 +15,7 @@ return new class extends Migration
     {
         Schema::create('treatments_nurses', function (Blueprint $table) {
             $table->foreignIdFor(nurse::class)->constrained();
-            $table->foreginIdFor(procedure::class)->constrained();
-
+            $table->foreignIdFor(procedure::class)->constrained();
         });
     }
 
