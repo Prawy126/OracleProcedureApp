@@ -8,7 +8,7 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item active">
-          <a class="nav-link" href="{{ route('admin') }}">Dashboard</span></a>
+          <a class="nav-link" href="{{ route('admin') }}">Dashboard</a>
         </li>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown1" role="button" data-toggle="dropdown"
@@ -25,7 +25,7 @@
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown2">
             <a class="dropdown-item" href="{{ route('pacjenciTab') }}" >Pacjenci</a>
-            <a class="dropdown-item" href="{{ route('lekiTab') }}</a>
+            <a class="dropdown-item" href="{{ route('lekiTab') }}">leki</a>
             <a class="dropdown-item" href="{{ route('saleTab') }}">Sale</a>
           </div>
         </li>

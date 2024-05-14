@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\treatments_doctor;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -13,5 +14,6 @@ class TreatmentsDoctorSeeder extends Seeder
     public function run(): void
     {
         //
+        treatments_doctor::truncate();
     }
 }

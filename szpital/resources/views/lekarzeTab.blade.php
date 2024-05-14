@@ -7,7 +7,7 @@
 
     @include('shared.navbar')
 
-    @include('shared.script')
+    @include('shared.scripts')
 
     <div class="container">
         <h2 class="mt-4">Lekarze</h2>
