@@ -1,14 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="dark">
 
-<head>
-    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>test</title>
-    <link rel="stylesheet" href="{{ asset('css/bootstrap.css') }}">
-    <script defer src="{{ asset('js/bootstrap.bundle.js') }}"></script>
-</head>
+@include('shared.head')
 
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark pl-5">
@@ -19,12 +12,7 @@
         </button>
     </nav>
 
-
-
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
+    @include('shared.scripts')
 
     <div class="container">
         <div class="row justify-content-center mt-5">
@@ -45,12 +33,8 @@
         </div>
       </div>
 
-    <footer class="footer fixed-bottom bg-body-tertiary">
-        <div class="row text-center pt-2">
-            <p>&copy; &ndash; 2024</p>
-        </div>
-    </footer>
-    <script src="js/bootstrap.bundle.js"></script>
+    @include('shared.footer')
+
 </body>
 
 </html>
