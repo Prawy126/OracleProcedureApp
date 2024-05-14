@@ -19,14 +19,14 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item active">
-          <a class="nav-link" href="#">Dashboard</span></a>
+          <a class="nav-link" href="{{ route('admin') }}">Dashboard</span></a>
         </li>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown1" role="button" data-toggle="dropdown"
             aria-haspopup="true" aria-expanded="false">Zarządzaj pracownikami</a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown1">
-            <a class="dropdown-item" href="#">Lekarze</a>
-            <a class="dropdown-item" href="#">Pielęgniarki</a>
+            <a class="dropdown-item" href="{{ route('lekarzeTab') }}">Lekarze</a>
+            <a class="dropdown-item" href="{{ route('pielegniarkiTab') }}">Pielęgniarki</a>
           </div>
         </li>
         <li class="nav-item dropdown">
@@ -35,9 +35,9 @@
             Zarządzaj szpitalem
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown2">
-            <a class="dropdown-item" href="#">Pacjenci</a>
-            <a class="dropdown-item" href="{{ route('lekiTab') }}>Leki</a>
-            <a class="dropdown-item" href="#">Sale</a>
+            <a class="dropdown-item" href="{{ route('pacjenciTab') }}" >Pacjenci</a>
+            <a class="dropdown-item" href="{{ route('lekiTab') }}</a>
+            <a class="dropdown-item" href="{{ route('saleTab') }}">Sale</a>
           </div>
         </li>
       </ul>
@@ -137,7 +137,7 @@
                 </tr>
               </tbody>
             </table>
-            <a href="#" class="btn btn-primary">Zarządzaj</a>
+            <a href="{{ route('saleTab') }} class="btn btn-primary">Zarządzaj</a>
           </div>
         </div>
       </div>
@@ -182,7 +182,7 @@
                 </tr>
               </tbody>
             </table>
-            <a href="#" class="btn btn-primary">Zarządzaj</a>
+            <a href="{{ route('lekiTab') }} class="btn btn-primary">Zarządzaj</a>
           </div>
         </div>
       </div>
