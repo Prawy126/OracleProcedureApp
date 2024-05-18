@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DoctorController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -10,9 +11,7 @@ Route::get('/zaloguj', function () {
     return view('Logowanie');
 });
 
-Route::get('/lekarzeTab', function () {
-    return view('lekarzeTab');
-})->name('lekarzeTab');
+Route::post('/lekarzeTab', [DoctorController::class, 'show'])->name('doctorShow');
 
 Route::get('/pielegniarkiTab', function () {
     return view('pielegniarkiTab');
@@ -33,5 +32,6 @@ Route::get('/saleTab', function () {
 Route::get('/admin', function() {
     return view('admin');
 })->name('admin');
+
 
 

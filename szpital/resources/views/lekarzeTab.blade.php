@@ -40,61 +40,20 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <th scope="row">1</th>
-                        <td>Dane 1</td>
-                        <td>Dane 2</td>
-                        <td>Dane 3</td>
-                        <td>Dane 4</td>
-                        <td>Dane 5</td>
-                        <td>Dane 6</td>
-                        <td><a href="#">Edytuj</a></td>
-                        <td><button type="button" class="btn btn-danger">Usuń</button></td>
-                    </tr>
-                    <tr>
-                        <th scope="row">2</th>
-                        <td>Dane 7</td>
-                        <td>Dane 8</td>
-                        <td>Dane 9</td>
-                        <td>Dane 10</td>
-                        <td>Dane 11</td>
-                        <td>Dane 12</td>
-                        <td><a href="#">Edytuj</a></td>
-                        <td><button type="button" class="btn btn-danger">Usuń</button></td>
-                    </tr>
-                    <tr>
-                        <th scope="row">3</th>
-                        <td>Dane 13</td>
-                        <td>Dane 14</td>
-                        <td>Dane 15</td>
-                        <td>Dane 16</td>
-                        <td>Dane 17</td>
-                        <td>Dane 18</td>
-                        <td><a href="#">Edytuj</a></td>
-                        <td><button type="button" class="btn btn-danger">Usuń</button></td>
-                    </tr>
-                    <tr>
-                        <th scope="row">4</th>
-                        <td>Dane 19</td>
-                        <td>Dane 20</td>
-                        <td>Dane 21</td>
-                        <td>Dane 22</td>
-                        <td>Dane 23</td>
-                        <td>Dane 24</td>
-                        <td><a href="#">Edytuj</a></td>
-                        <td><button type="button" class="btn btn-danger">Usuń</button></td>
-                    </tr>
-                    <tr>
-                        <th scope="row">5</th>
-                        <td>Dane 25</td>
-                        <td>Dane 26</td>
-                        <td>Dane 27</td>
-                        <td>Dane 28</td>
-                        <td>Dane 29</td>
-                        <td>Dane 30</td>
-                        <td><a href="#">Edytuj</a></td>
-                        <td><button type="button" class="btn btn-danger">Usuń</button></td>
-                    </tr>
+                    @forelse ($doctors as $doc)
+                        <tr>
+                            <th scope="row">{{ $doc->id }}</th>
+                            <td>{{ $doc->name }}</td>
+                            <td>{{ $doc->surname }}</td>
+                            <td>{{ $doc->specialization}}</td>
+                            <td>{{ $doc->license_number }} dni</td>
+                            <td>{{ $doc->user_id }}</td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <th scope="row" colspan="6">Brak danych.</th>
+                        </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>
@@ -102,7 +61,7 @@
 
     <div class="container">
         <h2 class="mt-4">Dodawanie lekarzy</h2>
-        <form>
+        <form method="POST" action="{{ route('') }}">
             <div class="row">
                 <div class="form-group col-md-1">
                     <input type="number" class="form-control" id="inputID" placeholder="ID">
