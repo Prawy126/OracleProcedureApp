@@ -29,9 +29,7 @@ Route::get('/pacjenciTab', function () {
     return view('pacjenciTab');
 })->name('pacjenciTab');
 
-Route::get('/saleTab', function () {
-    return view('saleTab');
-})->name('saleTab');
+
 
 Route::get('/admin', function() {
     return view('admin');
