@@ -17,6 +17,14 @@ Route::get('/zaloguj', function () {
 
 Route::get('/lekarzeTab', [DoctorController::class, 'index'])->name('doctorIndex');
 
+Route::get('/lekarzeTab', [DoctorController::class, 'store'])->name('doctorStore');
+
+Route::get('/edycjaLekarze', [DoctorController::class, 'edit'])->name('doctorEdit');
+
+Route::get('/lekarzeTab', [DoctorController::class, 'update'])->name('doctorUpdate');
+
+Route::get('/lekarzeTab', [DoctorController::class, 'destroy'])->name('doctorDelete');
+
 Route::get('/pielegniarkiTab', [NurseController::class, 'index'])->name('nurseIndex');
 
 Route::get('/pacjenciTab', [PatientController::class, 'index'])->name('patientIndex');
@@ -29,13 +37,13 @@ Route::get('/pacjenciTab', function () {
     return view('pacjenciTab');
 })->name('pacjenciTab');
 
-Route::get('/saleTab', function () {
-    return view('saleTab');
-})->name('saleTab');
-
 Route::get('/admin', function() {
     return view('admin');
 })->name('admin');
+
+Route::get('/edycjaLekarze', function() {
+    return view('edycjaLekarze');
+})->name('doctorsEdit');
 
 
 

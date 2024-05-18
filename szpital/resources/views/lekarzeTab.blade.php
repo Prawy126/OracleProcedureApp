@@ -48,8 +48,11 @@
                             <td>{{ $doc->specialization }}</td>
                             <td>{{ $doc->license_number }}</td>
                             <td>{{ $doc->user_id }}</td>
-                            <td><a href="#">Edytuj</a></td>
-                            <td><button type="button" class="btn btn-danger">Usuń</button></td>
+                            <td><a href="{{ route('doctorEdit') }}">Edytuj</a></td>
+                            <form method="POST" action="{{ route('doctorDelete', $doc->id) }}">
+                                @method('DELETE')
+                                <input type="submit" class="btn btn-danger" value="Usuń" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" />
+                            </form>
                         </tr>
                     @empty
                         <tr>
@@ -63,7 +66,7 @@
 
     <div class="container">
         <h2 class="mt-4">Dodawanie lekarzy</h2>
-        <form method="POST" action="">
+        <form method="POST" action="{{ route('doctorStore') }}">
             <div class="row">
                 <div class="form-group col-md-1">
                     <input type="number" class="form-control" id="inputID" placeholder="ID">
