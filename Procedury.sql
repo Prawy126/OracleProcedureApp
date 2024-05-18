@@ -140,4 +140,52 @@ BEGIN
     DELETE FROM nurses WHERE id = p_nurse_id;
 END;
 
+CREATE OR REPLACE PROCEDURE ADD_MEDICIN(
+    p_name IN VARCHAR2,
+    p_instruction IN CLOB,
+    p_warehouse_quantity IN NUMBER,
+    p_drug_category IN VARCHAR2,
+    p_price IN NUMBER,
+    p_dose_unit IN VARCHAR2)
+IS
+BEGIN
+    INSERT INTO NURSES (NAME, SURNAME, "NUMBER", USER_ID)
+    VALUES (p_name, p_surname, p_number, p_user_id);
+END;
+
+
+CREATE OR REPLACE PROCEDURE GET_NURSE(
+    p_nurse_id IN NUMBER,
+    p_nurse OUT SYS_REFCURSOR)
+IS
+BEGIN
+    OPEN p_nurse FOR
+    SELECT * FROM nurses WHERE id = p_nurse_id;
+END;
+
+
+CREATE OR REPLACE PROCEDURE UPDATE_NURSE(
+    p_nurse_id IN NUMBER,
+    p_name IN VARCHAR2,
+    p_surname IN VARCHAR2,
+    p_number IN VARCHAR2,
+    p_user_id IN NUMBER)
+IS
+BEGIN
+    UPDATE nurses
+    SET name = p_name,
+        surname = p_surname,
+        "NUMBER" = p_number,
+        user_id = p_user_id
+    WHERE id = p_nurse_id;
+END;
+
+CREATE OR REPLACE PROCEDURE DELETE_NURSE(
+    p_nurse_id IN NUMBER)
+IS
+BEGIN
+    DELETE FROM nurses WHERE id = p_nurse_id;
+END;
+
+
 

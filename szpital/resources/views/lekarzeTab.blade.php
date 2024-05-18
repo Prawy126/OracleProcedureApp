@@ -48,11 +48,13 @@
                             <td>{{ $doc->specialization }}</td>
                             <td>{{ $doc->license_number }}</td>
                             <td>{{ $doc->user_id }}</td>
-                            <td><a href="{{ route('doctorEdit') }}">Edytuj</a></td>
-                            <form method="POST" action="{{ route('doctorDelete', $doc->id) }}">
+                            <td><a href="{{ route('doctorEdit',$doc->id) }}">Edytuj</a></td>
+                            <td><form action="{{ route('doctorDelete', $doc->id) }}" method="POST">
+                                @csrf
                                 @method('DELETE')
-                                <input type="submit" class="btn btn-danger" value="Usuń" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" />
-                            </form>
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form></td>
+
                         </tr>
                     @empty
                         <tr>
@@ -67,24 +69,22 @@
     <div class="container">
         <h2 class="mt-4">Dodawanie lekarzy</h2>
         <form method="POST" action="{{ route('doctorStore') }}">
+            @csrf
             <div class="row">
                 <div class="form-group col-md-1">
-                    <input type="number" class="form-control" id="inputID" placeholder="ID">
-                </div>
-                <div class="form-group col-md-1">
-                    <input type="text" class="form-control" id="inputImie" placeholder="Imię">
+                    <input type="text" class="form-control" id="inputImie" placeholder="Imię" name="name">
                 </div>
                 <div class="form-group col-md-2">
-                    <input type="text" class="form-control" id="inputNazwisko" placeholder="Nazwisko">
+                    <input type="text" class="form-control" id="inputNazwisko" placeholder="Nazwisko" name="surname">
                 </div>
                 <div class="form-group col-md-2">
-                    <input type="text" class="form-control" id="inputSpecjalizacja" placeholder="Specjalizacja">
+                    <input type="text" class="form-control" id="inputSpecjalizacja" placeholder="Specjalizacja" name="specialization">
                 </div>
                 <div class="form-group col-md-2">
-                    <input type="text" class="form-control" id="inputNumerLicencji" placeholder="Numer licencji">
+                    <input type="text" class="form-control" id="inputNumerLicencji" placeholder="Numer licencji" name="license_number">
                 </div>
                 <div class="form-group col-md-2">
-                    <input type="number" class="form-control" id="inputIDKonta" placeholder="ID konta">
+                    <input type="number" class="form-control" id="inputIDKonta" placeholder="ID konta" name="user_id">
                 </div>
                 <div class="form-group col-md-2">
                     <button type="submit" class="btn btn-primary">Dodaj</button>
