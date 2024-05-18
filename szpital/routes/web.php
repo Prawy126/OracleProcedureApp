@@ -1,6 +1,10 @@
 <?php
 
 use App\Http\Controllers\DoctorController;
+use App\Http\Controllers\MedicinController;
+use App\Http\Controllers\NurseController;
+use App\Http\Controllers\PatientController;
+use App\Http\Controllers\RoomController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -13,17 +17,17 @@ Route::get('/zaloguj', function () {
 
 Route::get('/lekarzeTab', [DoctorController::class, 'index'])->name('doctorIndex');
 
-Route::get('/pielegniarkiTab', function () {
-    return view('pielegniarkiTab');
-})->name('pielegniarkiTab');
+Route::get('/pielegniarkiTab', [NurseController::class, 'index'])->name('nurseIndex');
+
+Route::get('/pacjenciTab', [PatientController::class, 'index'])->name('patientIndex');
+
+Route::get('/lekiTab', [MedicinController::class, 'index'])->name('medicinIndex');
+
+Route::get('/saleTab', [RoomController::class, 'index'])->name('roomIndex');
 
 Route::get('/pacjenciTab', function () {
     return view('pacjenciTab');
 })->name('pacjenciTab');
-
-Route::get('/lekiTab', function () {
-    return view('lekiTab');
-})->name('lekiTab');
 
 Route::get('/saleTab', function () {
     return view('saleTab');

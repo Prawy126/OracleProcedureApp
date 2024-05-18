@@ -36,66 +36,28 @@
                         <th scope="col">Kolumna 3</th>
                         <th scope="col">Kolumna 4</th>
                         <th scope="col">Kolumna 5</th>
-                        <th scope="col">Kolumna 6</th>
-                        <th scope="col">Kolumna 7</th>
                         <th scope="col"></th>
                         <th scope="col"></th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <th scope="row">1</th>
-                        <td>Akcje</td>
-                        <td>Dane 1</td>
-                        <td>Dane 2</td>
-                        <td>Dane 3</td>
-                        <td>Dane 4</td>
-                        <td>Dane 5</td>
-                        <td>Dane 6</td>
-                        <td>Dane 7</td>
-                        <td><a href="#">Edytuj</a></td>
-                        <td><button type="button" class="btn btn-danger">Usuń</button></td>
-                    </tr>
-                    <tr>
-                        <th scope="row">1</th>
-                        <td>Akcje</td>
-                        <td>Dane 1</td>
-                        <td>Dane 2</td>
-                        <td>Dane 3</td>
-                        <td>Dane 4</td>
-                        <td>Dane 5</td>
-                        <td>Dane 6</td>
-                        <td>Dane 7</td>
-                        <td><a href="#">Edytuj</a></td>
-                        <td><button type="button" class="btn btn-danger">Usuń</button></td>
-                    </tr>
-                    <tr>
-                        <th scope="row">1</th>
-                        <td>Akcje</td>
-                        <td>Dane 1</td>
-                        <td>Dane 2</td>
-                        <td>Dane 3</td>
-                        <td>Dane 4</td>
-                        <td>Dane 5</td>
-                        <td>Dane 6</td>
-                        <td>Dane 7</td>
-                        <td><a href="#">Edytuj</a></td>
-                        <td><button type="button" class="btn btn-danger">Usuń</button></td>
-                    </tr>
-                    <tr>
-                        <th scope="row">1</th>
-                        <td>Akcje</td>
-                        <td>Dane 1</td>
-                        <td>Dane 2</td>
-                        <td>Dane 3</td>
-                        <td>Dane 4</td>
-                        <td>Dane 5</td>
-                        <td>Dane 6</td>
-                        <td>Dane 7</td>
-                        <td><a href="#">Edytuj</a></td>
-                        <td><button type="button" class="btn btn-danger">Usuń</button></td>
-                    </tr>
-
+                    @forelse ($medicines as $med)
+                        <tr>
+                            <th scope="row">{{ $med->id }}</th>
+                            <td>{{ $med->name }}</td>
+                            <td>{{ $med->instrucion }}</td>
+                            <td>{{ $med->warehouse_quantity }}</td>
+                            <td>{{ $med->drug_category }}</td>
+                            <td>{{ $med->price }}</td>
+                            <td>{{ $med->dose_unit }}</td>
+                            <td><a href="#">Edytuj</a></td>
+                            <td><button type="button" class="btn btn-danger">Usuń</button></td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <th scope="row" colspan="6">Brak danych.</th>
+                        </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>

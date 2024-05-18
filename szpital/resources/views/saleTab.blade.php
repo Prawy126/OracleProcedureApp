@@ -33,68 +33,26 @@
                         <th scope="col">Kolumna 2</th>
                         <th scope="col">Kolumna 3</th>
                         <th scope="col">Kolumna 4</th>
-                        <th scope="col">Kolumna 5</th>
-                        <th scope="col">Kolumna 6</th>
                         <th scope="col"></th>
                         <th scope="col"></th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <th scope="row">1</th>
-                        <td>Dane 1</td>
-                        <td>Dane 2</td>
-                        <td>Dane 3</td>
-                        <td>Dane 4</td>
-                        <td>Dane 5</td>
-                        <td>Dane 6</td>
-                        <td><a href="#">Edytuj</a></td>
-                        <td><button type="button" class="btn btn-danger">Usuń</button></td>
-                    </tr>
-                    <tr>
-                        <th scope="row">2</th>
-                        <td>Dane 7</td>
-                        <td>Dane 8</td>
-                        <td>Dane 9</td>
-                        <td>Dane 10</td>
-                        <td>Dane 11</td>
-                        <td>Dane 12</td>
-                        <td><a href="#">Edytuj</a></td>
-                        <td><button type="button" class="btn btn-danger">Usuń</button></td>
-                    </tr>
-                    <tr>
-                        <th scope="row">3</th>
-                        <td>Dane 13</td>
-                        <td>Dane 14</td>
-                        <td>Dane 15</td>
-                        <td>Dane 16</td>
-                        <td>Dane 17</td>
-                        <td>Dane 18</td>
-                        <td><a href="#">Edytuj</a></td>
-                        <td><button type="button" class="btn btn-danger">Usuń</button></td>
-                    </tr>
-                    <tr>
-                        <th scope="row">4</th>
-                        <td>Dane 19</td>
-                        <td>Dane 20</td>
-                        <td>Dane 21</td>
-                        <td>Dane 22</td>
-                        <td>Dane 23</td>
-                        <td>Dane 24</td>
-                        <td><a href="#">Edytuj</a></td>
-                        <td><button type="button" class="btn btn-danger">Usuń</button></td>
-                    </tr>
-                    <tr>
-                        <th scope="row">5</th>
-                        <td>Dane 25</td>
-                        <td>Dane 26</td>
-                        <td>Dane 27</td>
-                        <td>Dane 28</td>
-                        <td>Dane 29</td>
-                        <td>Dane 30</td>
-                        <td><a href="#">Edytuj</a></td>
-                        <td><button type="button" class="btn btn-danger">Usuń</button></td>
-                    </tr>
+                    @forelse ($rooms as $r)
+                        <tr>
+                            <th scope="row">{{ $r->id }}</th>
+                            <td>{{ $r->number }}</td>
+                            <td>{{ $r->location }}</td>
+                            <td>{{ $r->status }}</td>
+                            <td>{{ $r->type_room }}</td>
+                            <td><a href="#">Edytuj</a></td>
+                            <td><button type="button" class="btn btn-danger">Usuń</button></td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <th scope="row" colspan="6">Brak danych.</th>
+                        </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>

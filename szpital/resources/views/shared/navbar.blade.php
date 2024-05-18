@@ -15,7 +15,7 @@
             aria-haspopup="true" aria-expanded="false">Zarządzaj pracownikami</a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown1">
             <a class="dropdown-item" href="{{ route('doctorIndex') }}">Lekarze</a>
-            <a class="dropdown-item" href="{{ route('pielegniarkiTab') }}">Pielęgniarki</a>
+            <a class="dropdown-item" href="{{ route('nurseIndex') }}">Pielęgniarki</a>
           </div>
         </li>
         <li class="nav-item dropdown">
@@ -24,9 +24,9 @@
             Zarządzaj szpitalem
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown2">
-            <a class="dropdown-item" href="{{ route('pacjenciTab') }}" >Pacjenci</a>
-            <a class="dropdown-item" href="{{ route('lekiTab') }}">leki</a>
-            <a class="dropdown-item" href="{{ route('saleTab') }}">Sale</a>
+            <a class="dropdown-item" href="{{ route('patientIndex') }}" >Pacjenci</a>
+            <a class="dropdown-item" href="{{ route('medicinIndex') }}">leki</a>
+            <a class="dropdown-item" href="{{ route('roomIndex') }}">Sale</a>
           </div>
         </li>
       </ul>
