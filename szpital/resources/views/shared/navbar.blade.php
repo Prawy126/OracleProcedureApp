@@ -14,7 +14,7 @@
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown1" role="button" data-toggle="dropdown"
             aria-haspopup="true" aria-expanded="false">Zarządzaj pracownikami</a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown1">
-            <a class="dropdown-item" href="{{ route('lekarzeTab') }}">Lekarze</a>
+            <a class="dropdown-item" href="{{ route('doctorIndex') }}">Lekarze</a>
             <a class="dropdown-item" href="{{ route('pielegniarkiTab') }}">Pielęgniarki</a>
           </div>
         </li>

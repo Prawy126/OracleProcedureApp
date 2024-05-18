@@ -29,12 +29,12 @@
                 <thead>
                     <tr>
                         <th scope="col">#</th>
-                        <th scope="col">Kolumna 1</th>
-                        <th scope="col">Kolumna 2</th>
-                        <th scope="col">Kolumna 3</th>
-                        <th scope="col">Kolumna 4</th>
-                        <th scope="col">Kolumna 5</th>
-                        <th scope="col">Kolumna 6</th>
+                        <th scope="col">IMIĘ</th>
+                        <th scope="col">NAZWISKO</th>
+                        <th scope="col">SPECJALIZACJA</th>
+                        <th scope="col">LICENCJA</th>
+                        <th scope="col">ID KONTA</th>
+
                         <th scope="col"></th>
                         <th scope="col"></th>
                     </tr>
@@ -45,9 +45,11 @@
                             <th scope="row">{{ $doc->id }}</th>
                             <td>{{ $doc->name }}</td>
                             <td>{{ $doc->surname }}</td>
-                            <td>{{ $doc->specialization}}</td>
-                            <td>{{ $doc->license_number }} dni</td>
+                            <td>{{ $doc->specialization }}</td>
+                            <td>{{ $doc->license_number }}</td>
                             <td>{{ $doc->user_id }}</td>
+                            <td><a href="#">Edytuj</a></td>
+                            <td><button type="button" class="btn btn-danger">Usuń</button></td>
                         </tr>
                     @empty
                         <tr>
@@ -61,7 +63,7 @@
 
     <div class="container">
         <h2 class="mt-4">Dodawanie lekarzy</h2>
-        <form method="POST" action="{{ route('') }}">
+        <form method="POST" action="">
             <div class="row">
                 <div class="form-group col-md-1">
                     <input type="number" class="form-control" id="inputID" placeholder="ID">

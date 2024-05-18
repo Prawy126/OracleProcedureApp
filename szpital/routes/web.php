@@ -11,7 +11,7 @@ Route::get('/zaloguj', function () {
     return view('Logowanie');
 });
 
-Route::post('/lekarzeTab', [DoctorController::class, 'show'])->name('doctorShow');
+Route::get('/lekarzeTab', [DoctorController::class, 'index'])->name('doctorIndex');
 
 Route::get('/pielegniarkiTab', function () {
     return view('pielegniarkiTab');
