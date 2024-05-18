@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\nurse;
 use Illuminate\Http\Request;
 
 class NurseController extends Controller
@@ -12,4 +13,5 @@ class NurseController extends Controller
         return view('pielegniarkiTab', [
             'nurses' => $nurses,
         ]);
+}
 }

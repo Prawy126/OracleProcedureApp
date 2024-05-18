@@ -24,9 +24,9 @@
             Zarządzaj szpitalem
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown2">
-            <a class="dropdown-item" href="{{ route('patientIndex') }}" >Pacjenci</a>
+            <a class="dropdown-item" href="#" >Pacjenci</a>
             <a class="dropdown-item" href="{{ route('medicinIndex') }}">leki</a>
-            <a class="dropdown-item" href="{{ route('roomIndex') }}">Sale</a>
+            <a class="dropdown-item" href="{{ route('roomIndex' )}}">Sale</a>
           </div>
         </li>
       </ul>

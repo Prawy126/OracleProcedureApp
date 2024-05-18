@@ -10,7 +10,7 @@ class RoomController extends Controller
     public function index()
     {
         $rooms = room::all();
-        return view('roomsTab', [
+        return view('saleTab', [
             'rooms' => $rooms,
         ]);
     }
