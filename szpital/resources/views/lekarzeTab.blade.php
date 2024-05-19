@@ -34,7 +34,6 @@
                         <th scope="col">SPECJALIZACJA</th>
                         <th scope="col">LICENCJA</th>
                         <th scope="col">ID KONTA</th>
-
                         <th scope="col"></th>
                         <th scope="col"></th>
                     </tr>
@@ -49,16 +48,17 @@
                             <td>{{ $doc->license_number }}</td>
                             <td>{{ $doc->user_id }}</td>
                             <td><a href="{{ route('doctorEdit',$doc->id) }}">Edytuj</a></td>
-                            <td><form action="{{ route('doctorDelete', $doc->id) }}" method="POST">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger">Delete</button>
-                            </form></td>
-
+                            <td>
+                                <form action="{{ route('doctorDelete', $doc->id) }}" method="POST">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                </form>
+                            </td>
                         </tr>
                     @empty
                         <tr>
-                            <th scope="row" colspan="6">Brak danych.</th>
+                            <th scope="row" colspan="8">Brak danych.</th>
                         </tr>
                     @endforelse
                 </tbody>
@@ -71,7 +71,7 @@
         <form method="POST" action="{{ route('doctorStore') }}">
             @csrf
             <div class="row">
-                <div class="form-group col-md-1">
+                <div class="form-group col-md-2">
                     <input type="text" class="form-control" id="inputImie" placeholder="Imię" name="name">
                 </div>
                 <div class="form-group col-md-2">
@@ -92,7 +92,6 @@
             </div>
         </form>
     </div>
-
 
     @include('shared.footer')
 

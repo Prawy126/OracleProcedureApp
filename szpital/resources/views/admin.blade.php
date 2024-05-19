@@ -94,7 +94,7 @@
                 </tr>
               </tbody>
             </table>
-            <a href="{{ route('saleTab') }}" class="btn btn">Zarządzaj</a>
+            <a href="{{ route('roomIndex') }}" class="btn btn">Zarządzaj</a>
           </div>
         </div>
       </div>
@@ -139,7 +139,7 @@
                 </tr>
               </tbody>
             </table>
-            <a href="{{ route('lekiTab') }}" class="btn btn">Zarządzaj</a>
+            <a href="{{ route('medicinIndex') }}" class="btn btn">Zarządzaj</a>
           </div>
         </div>
       </div>

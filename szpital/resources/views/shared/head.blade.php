@@ -1,6 +1,8 @@
 <head>
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Bootstrap demo</title>
-    <link href="css/bootstrap.css" rel="stylesheet">
+    <title>Szpital</title>
+    <link rel="stylesheet" href="{{ asset('css/bootstrap.css') }}">
+    <script defer src="{{ asset('js/bootstrap.bundle.js') }}"></script>
 </head>

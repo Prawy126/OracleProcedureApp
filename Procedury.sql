@@ -154,37 +154,89 @@ BEGIN
 END;
 
 
-CREATE OR REPLACE PROCEDURE GET_NURSE(
-    p_nurse_id IN NUMBER,
-    p_nurse OUT SYS_REFCURSOR)
+CREATE OR REPLACE PROCEDURE GET_MEDICIN(
+    p_medicin_id IN NUMBER,
+    p_medicin OUT SYS_REFCURSOR)
 IS
 BEGIN
-    OPEN p_nurse FOR
-    SELECT * FROM nurses WHERE id = p_nurse_id;
+    OPEN p_medicin FOR
+    SELECT * FROM medicins WHERE id = p_medicin_id;
 END;
 
 
-CREATE OR REPLACE PROCEDURE UPDATE_NURSE(
-    p_nurse_id IN NUMBER,
+CREATE OR REPLACE PROCEDURE UPDATE_MEDICIN(
+    p_medicin_id IN NUMBER,
+    p_name IN VARCHAR2,
+    p_instruction IN CLOB,
+    p_warehouse_quantity IN NUMBER,
+    p_drug_category IN VARCHAR2,
+    p_price IN NUMBER,
+    p_dose_unit IN VARCHAR2)
+IS
+BEGIN
+    UPDATE medicins
+    SET name = p_name,
+        instruction = p_instruction,
+        warehouse_quantity = p_warehouse_quantity,
+        drug_category = p_drug_category,
+        price = p_price,
+        dose_unit = p_dose_unit
+    WHERE id = p_medicin_id;
+END;
+
+CREATE OR REPLACE PROCEDURE DELETE_MEDICIN(
+    p_medicin_id IN NUMBER)
+IS
+BEGIN
+    DELETE FROM medicins WHERE id = p_medicin_id;
+END;
+
+
+CREATE OR REPLACE PROCEDURE ADD_ROOM(
+    p_number IN NUMBER,
+    p_location IN VARCHAR2,
+    p_status IN VARCHAR2,
+    p_type_room IN VARCHAR2)
+IS
+BEGIN
+    INSERT INTO rooms ("number", "location", status, type_room)
+    VALUES (p_number, p_location, p_status, p_type_room);
+END;
+
+CREATE OR REPLACE PROCEDURE GET_DOCTOR(
+    p_doctor_id IN NUMBER,
+    p_doctor OUT SYS_REFCURSOR)
+IS
+BEGIN
+    OPEN p_doctor FOR
+    SELECT * FROM doctors WHERE id = p_doctor_id;
+END;
+
+
+CREATE OR REPLACE PROCEDURE UPDATE_DOCTOR(
+    p_doctor_id IN NUMBER,
     p_name IN VARCHAR2,
     p_surname IN VARCHAR2,
-    p_number IN VARCHAR2,
+    p_specialization IN VARCHAR2,
+    p_license_number IN VARCHAR2,
     p_user_id IN NUMBER)
 IS
 BEGIN
-    UPDATE nurses
+    UPDATE doctors
     SET name = p_name,
         surname = p_surname,
-        "NUMBER" = p_number,
+        specialization = p_specialization,
+        license_number = p_license_number,
         user_id = p_user_id
-    WHERE id = p_nurse_id;
+    WHERE id = p_doctor_id;
 END;
 
-CREATE OR REPLACE PROCEDURE DELETE_NURSE(
-    p_nurse_id IN NUMBER)
+
+CREATE OR REPLACE PROCEDURE DELETE_DOCTOR(
+    p_doctor_id IN NUMBER)
 IS
 BEGIN
-    DELETE FROM nurses WHERE id = p_nurse_id;
+    DELETE FROM doctors WHERE id = p_doctor_id;
 END;
 
 

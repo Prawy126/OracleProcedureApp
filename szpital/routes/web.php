@@ -17,7 +17,7 @@ Route::get('/zaloguj', function () {
 // Poprawione trasy
 Route::get('/lekarzeTab', [DoctorController::class, 'index'])->name('doctorIndex');
 Route::post('/lekarzeTab', [DoctorController::class, 'store'])->name('doctorStore');
-Route::get('/edycjaLekarze/{id}', [DoctorController::class, 'edit'])->name('doctorEdit');
+Route::get('/leakrzeTab/{id}/edycjaLeakrze', [DoctorController::class, 'edit'])->name('doctorEdit');
 Route::put('/lekarzeTab/{id}', [DoctorController::class, 'update'])->name('doctorUpdate');
 Route::delete('/lekarzeTab/{id}', [DoctorController::class, 'destroy'])->name('doctorDelete');
 
@@ -30,12 +30,7 @@ Route::get('/pacjenciTab', function () {
     return view('pacjenciTab');
 })->name('pacjenciTab');
 
-
-
 Route::get('/admin', function() {
     return view('admin');
 })->name('admin');
 
-Route::get('/edycjaLekarze', function() {
-    return view('edycjaLekarze');
-})->name('doctorsEdit');
