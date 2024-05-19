@@ -18,8 +18,8 @@ class RoomSeeder extends Seeder
         room::truncate();
 
         room::insert([[
-            'number'=>'2B',
-            'location'=>'Rzeszów',
+            'rnumber'=>'2B',
+            'rlocation'=>'Rzeszów',
             'status'=>'wolny',
             'type_room'=>'czteroosobowy'
         ]]);
