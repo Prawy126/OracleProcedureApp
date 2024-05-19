@@ -192,58 +192,51 @@ BEGIN
 END;
 
 
--- sekwencja dla room 
-CREATE SEQUENCE room_seq
-START WITH 1
-INCREMENT BY 1
-NOCACHE;
-
 CREATE OR REPLACE PROCEDURE ADD_ROOM(
-    p_rnumber IN VARCHAR2,
-    p_rlocation IN VARCHAR2,
+    p_number IN NUMBER,
+    p_location IN VARCHAR2,
     p_status IN VARCHAR2,
     p_type_room IN VARCHAR2)
 IS
 BEGIN
-    INSERT INTO rooms (id, rnumber, rlocation, status, type_room)
-    VALUES (room_seq.NEXTVAL, p_rnumber, p_rlocation, p_status, p_type_room);
+    INSERT INTO rooms ("number", "location", status, type_room)
+    VALUES (p_number, p_location, p_status, p_type_room);
+END;
+
+CREATE OR REPLACE PROCEDURE GET_DOCTOR(
+    p_doctor_id IN NUMBER,
+    p_doctor OUT SYS_REFCURSOR)
+IS
+BEGIN
+    OPEN p_doctor FOR
+    SELECT * FROM doctors WHERE id = p_doctor_id;
 END;
 
 
-
-
-CREATE OR REPLACE PROCEDURE GET_ROOM(
-    p_room_id IN NUMBER,
-    p_room OUT SYS_REFCURSOR)
+CREATE OR REPLACE PROCEDURE UPDATE_DOCTOR(
+    p_doctor_id IN NUMBER,
+    p_name IN VARCHAR2,
+    p_surname IN VARCHAR2,
+    p_specialization IN VARCHAR2,
+    p_license_number IN VARCHAR2,
+    p_user_id IN NUMBER)
 IS
 BEGIN
-    OPEN p_room FOR
-    SELECT * FROM rooms WHERE id = p_room_id;
+    UPDATE doctors
+    SET name = p_name,
+        surname = p_surname,
+        specialization = p_specialization,
+        license_number = p_license_number,
+        user_id = p_user_id
+    WHERE id = p_doctor_id;
 END;
 
 
-CREATE OR REPLACE PROCEDURE UPDATE_ROOM(
-    p_room_id IN NUMBER,
-    p_rnumber IN VARCHAR2,
-    p_rlocation IN VARCHAR2,
-    p_status IN VARCHAR2,
-    p_type_room IN VARCHAR2)
+CREATE OR REPLACE PROCEDURE DELETE_DOCTOR(
+    p_doctor_id IN NUMBER)
 IS
 BEGIN
-    UPDATE rooms
-    SET rnumber = p_rnumber,
-        rlocation = p_rlocation,
-        status = p_status,
-        type_room = p_type_room
-    WHERE id = p_room_id;
-END;
-
-
-CREATE OR REPLACE PROCEDURE DELETE_ROOM(
-    p_room_id IN NUMBER)
-IS
-BEGIN
-    DELETE FROM rooms WHERE id = p_room_id;
+    DELETE FROM doctors WHERE id = p_doctor_id;
 END;
 
 
