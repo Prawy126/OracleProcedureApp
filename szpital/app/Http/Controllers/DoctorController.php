@@ -33,40 +33,33 @@ class DoctorController extends Controller
 
     public function edit($id)
     {
-       /* try {
-            $pdo = DB::getPdo();
+        $doctor = null;
 
-            $stmt = $pdo->prepare("
-                DECLARE
-                    doctor_cursor SYS_REFCURSOR;
-                BEGIN
-                    GET_DOCTOR(:id, :doctor_cursor);
-                    :doctor_cursor := doctor_cursor;
-                END;
-            ");dd($stmt);
-            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-            $stmt->bindParam(':doctor_cursor', $doctorCursor, PDO::PARAM_STMT);
-            $stmt->execute();
+        DB::getPdo()->beginTransaction();
+        $stmt = DB::getPdo()->prepare('BEGIN GET_DOCTOR(:id, :cursor); END;');
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->bindParam(':cursor', $doctor, PDO::PARAM_STMT);
+        $stmt->execute();
 
-            $doctor = [];
-            if ($doctorCursor) {
-                oci_execute($doctorCursor, OCI_DEFAULT);
-                while ($row = oci_fetch_assoc($doctorCursor)) {
-                    $doctor[] = $row;
-                }
-                oci_free_statement($doctorCursor);
-            }
+        oci_execute($doctor, OCI_DEFAULT);
+        oci_fetch_all($doctor, $result, 0, -1, OCI_FETCHSTATEMENT_BY_ROW);
+        DB::getPdo()->commit();
 
-            return view('edycjaLekarze', compact('doctor'));
-        } catch (Exception $e) {
-            return redirect()->route('admin')->with('error', 'Błąd podczas pobierania danych lekarza: ' . $e->getMessage());
-        }*/
-        $doctor = Doctor::find($id); // lub inne zapytanie
-        //dd($doctor); // Debugging
+        if (empty($result)) {
+            return redirect()->route('doctorIndex')->with('error', 'Doctor not found.');
+        }
+
+        $doctor = $result[0]; // Przypisanie pierwszego wiersza wyników do zmiennej $doctor
+        //dd($doctor);
+        return view('edycjaLekarze', compact('doctor'));
+
+        }
+        /*$doctor = Doctor::find($id); // lub inne zapytanie
+        dd($doctor); // Debugging
 
         return view('edycjaLekarze',compact('doctor'));
-        dd($doctor);
-    }
+        dd($doctor);*/
+
 
     public function update(Request $request, $id)
     {

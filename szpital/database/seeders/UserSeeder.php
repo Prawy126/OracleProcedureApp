@@ -33,7 +33,12 @@ class UserSeeder extends Seeder
             'login' => 'login3',
             'password' => 'haslo',
             'account_type' => 'doctor'
-        ]
+        ],
+        [
+            'login' => 'login4',
+            'password' => 'haslo',
+            'account_type' => 'doctor'
+        ],
     ]);
     }
 }
