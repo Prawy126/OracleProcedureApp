@@ -603,6 +603,18 @@ BEGIN
 END;
 /
 
+CREATE OR REPLACE PROCEDURE ADD_ROOM (
+       p_rnumber IN NUMBER,
+       p_rlocation IN VARCHAR2,
+       p_status IN VARCHAR2,
+       p_type_room IN VARCHAR2,
+       p_seats IN INTEGER
+   ) AS
+   BEGIN
+       INSERT INTO rooms (rnumber, rlocation, status, type_room, seats)
+       VALUES (p_rnumber, p_rlocation, p_status, p_type_room, p_seats);
+   END;
+/
 
 
 
