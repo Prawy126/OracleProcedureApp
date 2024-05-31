@@ -23,7 +23,13 @@ Route::delete('/lekarzeTab/{id}', [DoctorController::class, 'destroy'])->name('d
 
 Route::get('/pielegniarkiTab', [NurseController::class, 'index'])->name('nurseIndex');
 Route::get('/pacjenciTab', [PatientController::class, 'index'])->name('patientIndex');
+
 Route::get('/lekiTab', [MedicinController::class, 'index'])->name('medicinIndex');
+Route::post('/lekiTab', [MedicinController::class, 'store'])->name('medicinStore');
+Route::get('/lekiTab/{id}/edycjaLeki', [MedicinController::class, 'edit'])->name('medicinEdit');
+Route::put('/lekiTab/{id}', [MedicinController::class, 'update'])->name('medicinUpdate');
+Route::delete('/lekiTab/{id}', [MedicinController::class, 'destroy'])->name('medicinDelete');
+
 Route::get('/saleTab', [RoomController::class, 'index'])->name('roomIndex');
 
 Route::get('/pacjenciTab', function () {

@@ -50,8 +50,14 @@
                             <td>{{ $med->drug_category }}</td>
                             <td>{{ $med->price }}</td>
                             <td>{{ $med->dose_unit }}</td>
-                            <td><a href="#">Edytuj</a></td>
-                            <td><button type="button" class="btn btn-danger">Usuń</button></td>
+                            <td><a href="{{ route('medicinEdit',$med->id) }}">Edytuj</a></td>
+                            <td>
+                                <form action="{{ route('medicinDelete', $med->id) }}" method="POST">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                </form>
+                            </td>
                         </tr>
                     @empty
                         <tr>
@@ -65,13 +71,10 @@
 
     <div class="container mb-12" style="padding-bottom: 50px;"> <!--naprawa problemu nie bootstrapowym podejściem-->
         <h2 class="mt-4">Dodawanie leku</h2>
-        <form>
+        <form method="POST" action="{{ route('medicinStore') }}">
+            @csrf
             <div class="row mb-2">
                 <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="inputID">ID</label>
-                        <input type="number" class="form-control" id="inputID" placeholder="ID">
-                    </div>
                     <div class="form-group">
                         <label for="inputNazwaLeku">Nazwa leku</label>
                         <input type="text" class="form-control" id="inputNazwaLeku" placeholder="Nazwa leku">

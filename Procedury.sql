@@ -140,7 +140,7 @@ BEGIN
     DELETE FROM nurses WHERE id = p_nurse_id;
 END;
 
-CREATE OR REPLACE PROCEDURE ADD_MEDICIN(
+CREATE OR REPLACE PROCEDURE ADD_MEDICINE(
     p_name IN VARCHAR2,
     p_instruction IN CLOB,
     p_warehouse_quantity IN NUMBER,
@@ -149,9 +149,10 @@ CREATE OR REPLACE PROCEDURE ADD_MEDICIN(
     p_dose_unit IN VARCHAR2)
 IS
 BEGIN
-    INSERT INTO NURSES (NAME, SURNAME, "NUMBER", USER_ID)
-    VALUES (p_name, p_surname, p_number, p_user_id);
+    INSERT INTO MEDICINS ("NAME", "INSTRUCTION", "WAREHOUSE_QUANTITY", "DRUG_CATEGORY", "PRICE", "DOSE_UNIT")
+    VALUES (p_name, p_instruction, p_warehouse_quantity, p_drug_category, p_price, p_dose_unit);
 END;
+
 
 
 CREATE OR REPLACE PROCEDURE GET_MEDICIN(
