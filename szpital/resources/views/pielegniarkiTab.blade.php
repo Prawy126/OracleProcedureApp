@@ -60,20 +60,23 @@
 
     <div class="container">
         <h2 class="mt-4">Dodawanie pielęgniarek</h2>
-        <form>
+        <form action="{{ route('rooms.store') }}" method="POST">
+            @csrf
             <div class="row">
-                <div class="form-group col-md-2">
-                    <input type="number" class="form-control" id="inputID" placeholder="ID">
+                <div class="form-group col-md-1">
+                    <input type="number" class="form-control" name="id" id="inputID" placeholder="ID">
                 </div>
                 <div class="form-group col-md-2">
-                    <input type="text" class="form-control" id="inputImie" placeholder="Imię">
+                    <input type="number" class="form-control" name="rnumber" id="inputNumerSali" placeholder="Numer sali">
                 </div>
                 <div class="form-group col-md-2">
-                    <input type="text" class="form-control" id="inputNazwisko" placeholder="Nazwisko">
+                    <input type="text" class="form-control" name="rlocation" id="inputLokalizacja" placeholder="Lokalizacja">
                 </div>
                 <div class="form-group col-md-2">
-                    <input type="text" class="form-control" id="inputNumerIdentyfikacyjny"
-                        placeholder="Numer identyfikacyjny">
+                    <input type="text" class="form-control" name="status" id="inputStatusSali" placeholder="Status sali">
+                </div>
+                <div class="form-group col-md-1">
+                    <input type="text" class="form-control" name="type_room" id="inputTypSali" placeholder="Typ sali">
                 </div>
                 <div class="form-group col-md-2">
                     <button type="submit" class="btn btn-primary">Dodaj</button>

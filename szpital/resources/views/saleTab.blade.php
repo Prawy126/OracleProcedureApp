@@ -60,25 +60,23 @@
 
     <div class="container">
         <h2 class="mt-4">Dodawanie sal</h2>
-        <form>
+        <form action="{{ route('rooms.store') }}" method="POST">
+            @csrf
             <div class="row">
                 <div class="form-group col-md-1">
-                    <input type="number" class="form-control" id="inputID" placeholder="ID">
+                    <input type="number" class="form-control" name="id" id="inputID" placeholder="ID">
                 </div>
                 <div class="form-group col-md-2">
-                    <input type="number" class="form-control" id="inputNumerSali" placeholder="Numer sali">
+                    <input type="number" class="form-control" name="rnumber" id="inputNumerSali" placeholder="Numer sali">
                 </div>
                 <div class="form-group col-md-2">
-                    <input type="text" class="form-control" id="inputLokalizacja" placeholder="Lokalizacja">
+                    <input type="text" class="form-control" name="rlocation" id="inputLokalizacja" placeholder="Lokalizacja">
                 </div>
                 <div class="form-group col-md-2">
-                    <input type="text" class="form-control" id="inputStatusSali" placeholder="Status sali">
+                    <input type="text" class="form-control" name="status" id="inputStatusSali" placeholder="Status sali">
                 </div>
                 <div class="form-group col-md-1">
-                    <input type="text" class="form-control" id="inputTypSali" placeholder="Typ sali">
-                </div>
-                <div class="form-group col-md-2">
-                    <input type="number" class="form-control" id="inputLiczbaMiejsc" placeholder="Liczba miejsc">
+                    <input type="text" class="form-control" name="type_room" id="inputTypSali" placeholder="Typ sali">
                 </div>
                 <div class="form-group col-md-2">
                     <button type="submit" class="btn btn-primary">Dodaj</button>

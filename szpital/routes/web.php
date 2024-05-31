@@ -6,6 +6,7 @@ use App\Http\Controllers\PatientController;
 use App\Http\Controllers\RoomController;
 use Illuminate\Support\Facades\Route;
 
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -22,6 +23,11 @@ Route::put('/lekarzeTab/{id}', [DoctorController::class, 'update'])->name('docto
 Route::delete('/lekarzeTab/{id}', [DoctorController::class, 'destroy'])->name('doctorDelete');
 
 Route::get('/pielegniarkiTab', [NurseController::class, 'index'])->name('nurseIndex');
+Route::post('/nurses', [NurseController::class, 'store'])->name('nursesStore');
+Route::get('/nurses/{id}', [NurseController::class, 'show'])->name('nursesShow');
+Route::put('/nurses/{id}', [NurseController::class, 'update'])->name('nursesUpdate');
+Route::delete('/nurses/{id}', [NurseController::class, 'destroy'])->name('nursesDestroy');
+
 Route::get('/pacjenciTab', [PatientController::class, 'index'])->name('patientIndex');
 
 Route::get('/lekiTab', [MedicinController::class, 'index'])->name('medicinIndex');
@@ -31,6 +37,10 @@ Route::put('/lekiTab/{id}', [MedicinController::class, 'update'])->name('medicin
 Route::delete('/lekiTab/{id}', [MedicinController::class, 'destroy'])->name('medicinDelete');
 
 Route::get('/saleTab', [RoomController::class, 'index'])->name('roomIndex');
+Route::get('/rooms/{id}', [RoomController::class, 'show'])->name('roomsShow');
+Route::post('/rooms', [RoomController::class, 'store'])->name('roomsStore');
+Route::put('/rooms/{id}', [RoomController::class, 'update'])->name('roomsUpdate');
+Route::delete('/rooms/{id}', [RoomController::class, 'destroy'])->name('roomsDestroy');
 
 Route::get('/pacjenciTab', function () {
     return view('pacjenciTab');

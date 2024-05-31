@@ -77,35 +77,33 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="inputNazwaLeku">Nazwa leku</label>
-                        <input type="text" class="form-control" id="inputNazwaLeku" placeholder="Nazwa leku">
+                        <input type="text" class="form-control" id="inputNazwaLeku" name="name" placeholder="Nazwa leku">
                     </div>
                     <div class="form-group">
                         <label for="inputInstrukcja">Instrukcja</label>
-                        <textarea class="form-control" id="inputInstrukcja" rows="6" placeholder="Instrukcja"></textarea>
+                        <textarea class="form-control" id="inputInstrukcja" name="instruction" rows="6" placeholder="Instrukcja"></textarea>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="inputFormaLeku">Forma leku</label>
-                        <input type="text" class="form-control" id="inputFormaLeku" placeholder="Forma leku">
+                        <input type="text" class="form-control" id="inputFormaLeku" name="drug_category" placeholder="Forma leku">
                     </div>
                     <div class="form-group">
                         <label for="inputIloscMagazyn">Ilość w magazynie</label>
-                        <input type="number" class="form-control" id="inputIloscMagazyn"
-                            placeholder="Ilość w magazynie">
+                        <input type="number" class="form-control" id="inputIloscMagazyn" name="warehouse_quantity" placeholder="Ilość w magazynie">
                     </div>
                     <div class="form-group">
                         <label for="inputKategoriaLeku">Kategoria Leku</label>
-                        <input type="text" class="form-control" id="inputKategoriaLeku" placeholder="Kategoria Leku">
+                        <input type="text" class="form-control" id="inputKategoriaLeku" name="drug_category" placeholder="Kategoria Leku">
                     </div>
                     <div class="form-group">
                         <label for="inputCena">Cena</label>
-                        <input type="number" class="form-control" id="inputCena" placeholder="Cena">
+                        <input type="number" class="form-control" id="inputCena" name="price" placeholder="Cena">
                     </div>
                     <div class="form-group">
                         <label for="inputDawkaJednostka">Dawka jednostka</label>
-                        <input type="text" class="form-control" id="inputDawkaJednostka"
-                            placeholder="Dawka jednostka">
+                        <input type="text" class="form-control" id="inputDawkaJednostka" name="dose_unit" placeholder="Dawka jednostka">
                     </div>
                 </div>
             </div>

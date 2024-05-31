@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\medicin;
@@ -20,7 +19,7 @@ class MedicinController extends Controller
     public function store(Request $request)
     {
         DB::transaction(function () use ($request) {
-            DB::statement('BEGIN ADD_MEDICINE(:name, :instruction, :warehouse_quantity, :drug_category, :price, :dose_unit ); END;', [
+            DB::statement('BEGIN ADD_MEDICINE(:name, :instruction, :warehouse_quantity, :drug_category, :price, :dose_unit); END;', [
                 'name' => $request->input('name'),
                 'instruction' => $request->input('instruction'),
                 'warehouse_quantity' => $request->input('warehouse_quantity'),
@@ -58,7 +57,7 @@ class MedicinController extends Controller
     public function update(Request $request, $id)
     {
         DB::transaction(function() use ($request, $id) {
-            DB::statement('UPDATE_MEDICIN(:name, :instruction, :warehouse_quantity, :drug_category, :price, :dose_unit ); END;', [
+            DB::statement('UPDATE_MEDICIN(:name, :instruction, :warehouse_quantity, :drug_category, :price, :dose_unit); END;', [
                 'name' => $request->input('name'),
                 'instruction' => $request->input('instruction'),
                 'warehouse_quantity' => $request->input('warehouse_quantity'),
