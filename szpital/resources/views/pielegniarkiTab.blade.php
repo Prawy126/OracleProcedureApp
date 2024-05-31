@@ -11,10 +11,10 @@
 
     <div class="container">
         <h2 class="mt-4">Pielęgniarki</h2>
-        <form>
+        <form method="GET" action="{{ route('nurseIndex') }}">
             <div class="row">
                 <div class="form-group col-md-2">
-                    <input type="number" class="form-control" id="inputWyszukaj" placeholder="Wyszukaj">
+                    <input type="number" class="form-control" name="search" id="inputWyszukaj" placeholder="Wyszukaj">
                 </div>
                 <div class="form-group col-md-2">
                     <button type="submit" class="btn btn-primary">Zatwierdź</button>
@@ -29,12 +29,12 @@
                 <thead>
                     <tr>
                         <th scope="col">#</th>
-                        <th scope="col">Kolumna 1</th>
-                        <th scope="col">Kolumna 2</th>
-                        <th scope="col">Kolumna 3</th>
-                        <th scope="col">Kolumna 4</th>
-                        <th scope="col"></th>
-                        <th scope="col"></th>
+                        <th scope="col">Imię</th>
+                        <th scope="col">Nazwisko</th>
+                        <th scope="col">Numer</th>
+                        <th scope="col">ID Użytkownika</th>
+                        <th scope="col">Edytuj</th>
+                        <th scope="col">Usuń</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -45,12 +45,18 @@
                             <td>{{ $nur->surname }}</td>
                             <td>{{ $nur->number }}</td>
                             <td>{{ $nur->user_id }}</td>
-                            <td><a href="#">Edytuj</a></td>
-                            <td><button type="button" class="btn btn-danger">Usuń</button></td>
+                            <td><a href="{{ route('nursesShow', $nur->id) }}" class="btn btn-warning">Edytuj</a></td>
+                            <td>
+                                <form action="{{ route('nursesDestroy', $nur->id) }}" method="POST">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger">Usuń</button>
+                                </form>
+                            </td>
                         </tr>
                     @empty
                         <tr>
-                            <th scope="row" colspan="6">Brak danych.</th>
+                            <th scope="row" colspan="7">Brak danych.</th>
                         </tr>
                     @endforelse
                 </tbody>
@@ -60,23 +66,20 @@
 
     <div class="container">
         <h2 class="mt-4">Dodawanie pielęgniarek</h2>
-        <form action="{{ route('rooms.store') }}" method="POST">
+        <form action="{{ route('nursesStore') }}" method="POST">
             @csrf
             <div class="row">
-                <div class="form-group col-md-1">
-                    <input type="number" class="form-control" name="id" id="inputID" placeholder="ID">
+                <div class="form-group col-md-2">
+                    <input type="text" class="form-control" name="name" id="inputName" placeholder="Imię">
                 </div>
                 <div class="form-group col-md-2">
-                    <input type="number" class="form-control" name="rnumber" id="inputNumerSali" placeholder="Numer sali">
+                    <input type="text" class="form-control" name="surname" id="inputSurname" placeholder="Nazwisko">
                 </div>
                 <div class="form-group col-md-2">
-                    <input type="text" class="form-control" name="rlocation" id="inputLokalizacja" placeholder="Lokalizacja">
+                    <input type="text" class="form-control" name="number" id="inputNumber" placeholder="Numer">
                 </div>
                 <div class="form-group col-md-2">
-                    <input type="text" class="form-control" name="status" id="inputStatusSali" placeholder="Status sali">
-                </div>
-                <div class="form-group col-md-1">
-                    <input type="text" class="form-control" name="type_room" id="inputTypSali" placeholder="Typ sali">
+                    <input type="number" class="form-control" name="user_id" id="inputUserID" placeholder="ID Użytkownika">
                 </div>
                 <div class="form-group col-md-2">
                     <button type="submit" class="btn btn-primary">Dodaj</button>
@@ -85,9 +88,7 @@
         </form>
     </div>
 
-
     @include('shared.footer')
 
 </body>
-
 </html>

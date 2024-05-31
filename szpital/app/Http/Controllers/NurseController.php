@@ -1,16 +1,23 @@
 <?php
-
 namespace App\Http\Controllers;
 
-use App\Models\nurse;
+use App\Models\Nurse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class NursController extends Controller
+class NurseController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $nurses = nurse::all();
+        $search = $request->input('search');
+        if ($search) {
+            $nurses = Nurse::where('name', 'LIKE', "%$search%")
+                           ->orWhere('surname', 'LIKE', "%$search%")
+                           ->get();
+        } else {
+            $nurses = Nurse::all();
+        }
+
         return view('pielegniarkiTab', [
             'nurses' => $nurses,
         ]);
@@ -30,15 +37,25 @@ class NursController extends Controller
             'userId' => $userId
         ]);
 
-        return redirect()->route('nursesIndex');
+        return redirect()->route('nurseIndex');
     }
 
     public function show($id)
     {
-        $nurse = DB::select('BEGIN GET_NURSE(:id, :nurse); END;', [
-            'id' => $id,
-            'nurse' => null
-        ]);
+        $nurse = DB::connection()->getPdo()->prepare('BEGIN GET_NURSE(:id, :nurse); END;');
+        $nurse->bindParam(':id', $id);
+        $nurse->bindParam(':nurse', $cursor, \PDO::PARAM_STMT);
+        $nurse->execute();
+
+        oci_execute($cursor);
+        $result = [];
+        while ($row = oci_fetch_assoc($cursor)) {
+            $result[] = $row;
+        }
+
+        oci_free_statement($cursor);
+
+        $nurse = collect($result)->first();
 
         return view('edycjaPielegniarki', ['nurse' => $nurse]);
     }

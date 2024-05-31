@@ -45,7 +45,7 @@
                         <tr>
                             <th scope="row">{{ $med->id }}</th>
                             <td>{{ $med->name }}</td>
-                            <td>{{ $med->instrucion }}</td>
+                            <td>{{ $med->instruction }}</td>
                             <td>{{ $med->warehouse_quantity }}</td>
                             <td>{{ $med->drug_category }}</td>
                             <td>{{ $med->price }}</td>

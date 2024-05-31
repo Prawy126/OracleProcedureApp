@@ -10,55 +10,35 @@
     @include('shared.scripts')
 
     <div class="container">
-        <h2 class="mt-4">Edytuj dane</h2>
-        <form method="POST" action="{{ route('nurseUpdate', $nurse['ID']) }}">
+        <h2 class="mt-4">Edycja Pielęgniarki</h2>
+        <form action="{{ route('nursesUpdate', $nurse['ID']) }}" method="POST">
             @csrf
             @method('PUT')
-
-            <div class="form-group row mb-4">
-                <label for="inputID" class="col-md-2 col-form-label">ID:</label>
-                <div class="col-md-4">
-                    <input type="number" class="form-control" id="inputID" name="id" value="{{ $nurse['ID']}}" readonly>
+            <div class="row">
+                <div class="form-group col-md-2">
+                    <label for="inputName">Imię</label>
+                    <input type="text" class="form-control" name="name" id="inputName" placeholder="Imię" value="{{ $nurse['NAME'] }}" required>
                 </div>
-            </div>
-            <div class="form-group row mb-4">
-                <label for="inputImie" class="col-md-2 col-form-label">Imię:</label>
-                <div class="col-md-4">
-                    <input type="text" class="form-control" id="inputImie" name="name" value="{{ $nurse['NAME'] }}">
+                <div class="form-group col-md-2">
+                    <label for="inputSurname">Nazwisko</label>
+                    <input type="text" class="form-control" name="surname" id="inputSurname" placeholder="Nazwisko" value="{{ $nurse['SURNAME'] }}" required>
                 </div>
-            </div>
-            <div class="form-group row mb-4">
-                <label for="inputNazwisko" class="col-md-2 col-form-label">Nazwisko:</label>
-                <div class="col-md-4">
-                    <input type="text" class="form-control" id="inputNazwisko" name="surname" value="{{ $nurse['SURNAME'] }}">
+                <div class="form-group col-md-2">
+                    <label for="inputNumber">Numer</label>
+                    <input type="number" class="form-control" name="number" id="inputNumber" placeholder="Numer" value="{{ $nurse['NUMBER'] }}" required>
                 </div>
-            </div>
-            <div class="form-group row mb-4">
-                <label for="inputNumerLicencji" class="col-md-2 col-form-label">Numer licencji:</label>
-                <div class="col-md-4">
-                    <input type="text" class="form-control" id="inputNumerLicencji" name="license_number" value="{{ $nurse['LICENSE_NUMBER'] }}">
+                <div class="form-group col-md-2">
+                    <label for="inputUserID">ID Użytkownika</label>
+                    <input type="number" class="form-control" name="user_id" id="inputUserID" placeholder="ID Użytkownika" value="{{ $nurse['USER_ID']}}" required>
                 </div>
-            </div>
-            <div class="form-group row mb-4">
-                <label for="inputIDKonta" class="col-md-2 col-form-label">ID konta:</label>
-                <div class="col-md-4">
-                    <input type="number" class="form-control" id="inputIDKonta" name="user_id" value="{{ $nurse['USER_ID'] }}">
-                </div>
-            </div>
-            <div class="form-group row mb-4">
-                <div class="offset-md-2 col-md-1">
-                    <button type="submit" class="btn btn-primary mb-2">Zatwierdź</button>
-                </div>
-                <div class="offset-md-1 col-md-1">
-                    <button type="button" class="btn btn-primary">Wyjście</button>
+                <div class="form-group col-md-2">
+                    <button type="submit" class="btn btn-primary">Aktualizuj</button>
                 </div>
             </div>
         </form>
-
     </div>
 
     @include('shared.footer')
 
 </body>
-
 </html>

@@ -11,7 +11,7 @@
 
     <div class="container mb-12" style="padding-bottom: 50px;">
         <h2 class="mt-4">Edytuj dane: Leki</h2>
-        <form  method="POST" action="{{ route('medicinUpdate', $medicin['ID']) }}">
+        <form method="POST" action="{{ route('medicinUpdate', $medicin['ID']) }}">
             @csrf
             @method('PUT')
             <div class="form-group row mb-4">
@@ -29,7 +29,7 @@
             <div class="form-group row mb-4">
                 <label for="inputInstrukcja" class="col-md-2 col-form-label">Instrukcja:</label>
                 <div class="col-md-4">
-                    <textarea class="form-control" id="inputInstrukcja" rows="6" name="instrucion" value="{{ $medicin['INSTRUCION'] }}"></textarea>
+                    <textarea class="form-control" id="inputInstrukcja" rows="6" name="instruction">{{ $medicin['INSTRUCTION'] }}</textarea>
                 </div>
             </div>
             <div class="form-group row mb-4">
@@ -64,11 +64,4 @@
                     <button class="btn btn-primary">Wyjście</button>
                 </div>
             </div>
-        </form>
-    </div>
 
-    @include('shared.footer')
-
-</body>
-
-</html>

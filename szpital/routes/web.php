@@ -7,7 +7,6 @@ use App\Http\Controllers\ProcedureController;
 use App\Http\Controllers\RoomController;
 use Illuminate\Support\Facades\Route;
 
-
 Route::get('/', function () {
     return view('welcome');
 });
@@ -19,7 +18,7 @@ Route::get('/zaloguj', function () {
 // Poprawione trasy
 Route::get('/lekarzeTab', [DoctorController::class, 'index'])->name('doctorIndex');
 Route::post('/lekarzeTab', [DoctorController::class, 'store'])->name('doctorStore');
-Route::get('/leakrzeTab/{id}/edycjaLeakrze', [DoctorController::class, 'edit'])->name('doctorEdit');
+Route::get('/lekarzeTab/{id}/edycjaLekarza', [DoctorController::class, 'edit'])->name('doctorEdit');
 Route::put('/lekarzeTab/{id}', [DoctorController::class, 'update'])->name('doctorUpdate');
 Route::delete('/lekarzeTab/{id}', [DoctorController::class, 'destroy'])->name('doctorDelete');
 
@@ -33,7 +32,7 @@ Route::get('/pacjenciTab', [PatientController::class, 'index'])->name('patientIn
 
 Route::get('/lekiTab', [MedicinController::class, 'index'])->name('medicinIndex');
 Route::post('/lekiTab', [MedicinController::class, 'store'])->name('medicinStore');
-Route::get('/lekiTab/{id}/edycjaLeki', [MedicinController::class, 'edit'])->name('medicinEdit');
+Route::get('/lekiTab/{id}/edycjaLeku', [MedicinController::class, 'edit'])->name('medicinEdit');
 Route::put('/lekiTab/{id}', [MedicinController::class, 'update'])->name('medicinUpdate');
 Route::delete('/lekiTab/{id}', [MedicinController::class, 'destroy'])->name('medicinDelete');
 
@@ -49,11 +48,6 @@ Route::post('/procedures', [ProcedureController::class, 'store'])->name('procedu
 Route::put('/procedures/{id}', [ProcedureController::class, 'update'])->name('proceduresUpdate');
 Route::delete('/procedures/{id}', [ProcedureController::class, 'destroy'])->name('proceduresDestroy');
 
-Route::get('/pacjenciTab', function () {
-    return view('pacjenciTab');
-})->name('pacjenciTab');
-
 Route::get('/admin', function() {
     return view('admin');
 })->name('admin');
-

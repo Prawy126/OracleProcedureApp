@@ -21,7 +21,8 @@ class RoomSeeder extends Seeder
             'rnumber'=>'2B',
             'rlocation'=>'Rzeszów',
             'status'=>'wolny',
-            'type_room'=>'czteroosobowy'
+            'type_room'=>'czteroosobowy',
+            'seats'=>1
         ]]);
     }
 }

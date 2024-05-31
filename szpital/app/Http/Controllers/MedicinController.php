@@ -1,7 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
-use App\Models\medicin;
+use App\Models\Medicin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use PDO;
@@ -10,7 +10,7 @@ class MedicinController extends Controller
 {
     public function index()
     {
-        $medicines = medicin::all();
+        $medicines = Medicin::all();
         return view('lekiTab', [
             'medicines' => $medicines,
         ]);
@@ -57,7 +57,8 @@ class MedicinController extends Controller
     public function update(Request $request, $id)
     {
         DB::transaction(function() use ($request, $id) {
-            DB::statement('UPDATE_MEDICIN(:name, :instruction, :warehouse_quantity, :drug_category, :price, :dose_unit); END;', [
+            DB::statement('BEGIN UPDATE_MEDICIN(:id, :name, :instruction, :warehouse_quantity, :drug_category, :price, :dose_unit); END;', [
+                'id' => $id,
                 'name' => $request->input('name'),
                 'instruction' => $request->input('instruction'),
                 'warehouse_quantity' => $request->input('warehouse_quantity'),
