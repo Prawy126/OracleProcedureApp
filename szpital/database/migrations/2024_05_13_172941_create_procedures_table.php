@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(treatment_type::class)->constrained();
             $table->foreignIdFor(room::class)->constrained();
-            $table->timestamps('date');
+            $table->timestamp('date');
             $table->time('time');
             $table->decimal('cost',10,2);
             $table->integer('status');
