@@ -11,10 +11,10 @@
 
     <div class="container">
         <h2 class="mt-4">Zabiegi</h2>
-        <form>
+        <form action="{{ route('procedures.index') }}" method="GET">
             <div class="row">
                 <div class="form-group col-md-2">
-                    <input type="text" class="form-control" id="inputWyszukiwanie" placeholder="Wyszukaj">
+                    <input type="text" class="form-control" name="search" placeholder="Wyszukaj">
                 </div>
                 <div class="form-group col-md-2">
                     <button type="submit" class="btn btn-primary">Zatwierdź</button>
@@ -23,85 +23,45 @@
         </form>
     </div>
 
-
     <div class="container mt-4">
         <div class="table-responsive">
             <table class="table table-bordered table-hover">
                 <thead>
                     <tr>
                         <th scope="col">#</th>
-                        <th scope="col">Kolumna 1</th>
-                        <th scope="col">Kolumna 2</th>
-                        <th scope="col">Kolumna 3</th>
-                        <th scope="col">Kolumna 4</th>
-                        <th scope="col">Kolumna 5</th>
-                        <th scope="col">Kolumna 6</th>
-                        <th scope="col">Kolumna 7</th>
+                        <th scope="col">ID</th>
+                        <th scope="col">ID Rodzaju zabiegu</th>
+                        <th scope="col">ID Sali</th>
+                        <th scope="col">Data</th>
+                        <th scope="col">Czas trwania</th>
+                        <th scope="col">Koszt</th>
+                        <th scope="col">Status</th>
                         <th scope="col"></th>
                         <th scope="col"></th>
                     </tr>
                 </thead>
                 <tbody>
+                    <!-- Assuming you have a procedures variable passed to the view containing the procedures data -->
+                    @foreach($procedures as $procedure)
                     <tr>
-                        <th scope="row">1</th>
-                        <td>Dane 1</td>
-                        <td>Dane 2</td>
-                        <td>Dane 3</td>
-                        <td>Dane 4</td>
-                        <td>Dane 5</td>
-                        <td>Dane 6</td>
-                        <td>Dane 7</td>
-                        <td><a href="#">Edytuj</a></td>
-                        <td><button type="button" class="btn btn-danger">Usuń</button></td>
+                        <th scope="row">{{ $procedure->id }}</th>
+                        <td>{{ $procedure->id }}</td>
+                        <td>{{ $procedure->treatment_type_id }}</td>
+                        <td>{{ $procedure->room_id }}</td>
+                        <td>{{ $procedure->time }}</td>
+                        <td>{{ $procedure->duration }}</td>
+                        <td>{{ $procedure->cost }}</td>
+                        <td>{{ $procedure->status }}</td>
+                        <td><a href="{{ route('procedures.edit', $procedure->id) }}">Edytuj</a></td>
+                        <td>
+                            <form action="{{ route('procedures.destroy', $procedure->id) }}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger">Usuń</button>
+                            </form>
+                        </td>
                     </tr>
-                    <tr>
-                        <th scope="row">2</th>
-                        <td>Dane 8</td>
-                        <td>Dane 9</td>
-                        <td>Dane 10</td>
-                        <td>Dane 11</td>
-                        <td>Dane 12</td>
-                        <td>Dane 13</td>
-                        <td>Dane 14</td>
-                        <td><a href="#">Edytuj</a></td>
-                        <td><button type="button" class="btn btn-danger">Usuń</button></td>
-                    </tr>
-                    <tr>
-                        <th scope="row">3</th>
-                        <td>Dane 15</td>
-                        <td>Dane 16</td>
-                        <td>Dane 17</td>
-                        <td>Dane 18</td>
-                        <td>Dane 19</td>
-                        <td>Dane 20</td>
-                        <td>Dane 21</td>
-                        <td><a href="#">Edytuj</a></td>
-                        <td><button type="button" class="btn btn-danger">Usuń</button></td>
-                    </tr>
-                    <tr>
-                        <th scope="row">4</th>
-                        <td>Dane 22</td>
-                        <td>Dane 23</td>
-                        <td>Dane 24</td>
-                        <td>Dane 25</td>
-                        <td>Dane 26</td>
-                        <td>Dane 27</td>
-                        <td>Dane 28</td>
-                        <td><a href="#">Edytuj</a></td>
-                        <td><button type="button" class="btn btn-danger">Usuń</button></td>
-                    </tr>
-                    <tr>
-                        <th scope="row">5</th>
-                        <td>Dane 29</td>
-                        <td>Dane 30</td>
-                        <td>Dane 31</td>
-                        <td>Dane 32</td>
-                        <td>Dane 33</td>
-                        <td>Dane 34</td>
-                        <td>Dane 35</td>
-                        <td><a href="#">Edytuj</a></td>
-                        <td><button type="button" class="btn btn-danger">Usuń</button></td>
-                    </tr>
+                    @endforeach
                 </tbody>
             </table>
         </div>
@@ -109,30 +69,30 @@
 
     <div class="container">
         <h2 class="mt-4">Dodawanie zabiegu</h2>
-        <form>
+        <form action="{{ route('procedures.store') }}" method="POST">
+            @csrf
             <div class="row">
                 <div class="form-group col-md-1">
-                    <input type="number" class="form-control" id="inputID" placeholder="ID">
+                    <input type="number" class="form-control" name="id" placeholder="ID">
                 </div>
                 <div class="form-group col-md-2">
-                    <input type="number" class="form-control" id="inputIDRodzajZabiegu"
-                        placeholder="ID Rodzaju zabiegu">
+                    <input type="number" class="form-control" name="treatment_type_id" placeholder="ID Rodzaju zabiegu">
                 </div>
                 <div class="form-group col-md-1">
-                    <input type="number" class="form-control" id="inputIDSala" placeholder="ID Sali">
+                    <input type="number" class="form-control" name="room_id" placeholder="ID Sali">
                 </div>
                 <div class="form-group col-md-2">
-                    <input type="date" class="form-control" id="inputData" placeholder="Data">
+                    <input type="date" class="form-control" name="time" placeholder="Data">
                 </div>
                 <div class="form-group col-md-2">
-                    <input type="text" class="form-control" id="inputCzasTrwania" placeholder="Czas trwania">
+                    <input type="text" class="form-control" name="duration" placeholder="Czas trwania">
                     <!--Domyślnie zero i będzie liczony do momentu zmiany statusu na "zakończony"-->
                 </div>
                 <div class="form-group col-md-1">
-                    <input type="number" class="form-control" id="inputKoszt" placeholder="Koszt">
+                    <input type="number" class="form-control" name="cost" placeholder="Koszt">
                 </div>
                 <div class="form-group col-md-1">
-                    <input type="number" class="form-control" id="inpuStatus" placeholder="Status">
+                    <input type="number" class="form-control" name="status" placeholder="Status">
                 </div>
                 <div class="form-group col-md-1">
                     <button type="submit" class="btn btn-primary">Dodaj</button>

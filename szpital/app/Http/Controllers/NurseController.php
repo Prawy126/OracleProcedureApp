@@ -30,7 +30,7 @@ class NursController extends Controller
             'userId' => $userId
         ]);
 
-        return redirect()->route('nurses.index');
+        return redirect()->route('nursesIndex');
     }
 
     public function show($id)
@@ -40,7 +40,7 @@ class NursController extends Controller
             'nurse' => null
         ]);
 
-        return view('showNurse', ['nurse' => $nurse]);
+        return view('edycjaPielegniarki', ['nurse' => $nurse]);
     }
 
     public function update(Request $request, $id)
@@ -58,7 +58,7 @@ class NursController extends Controller
             'userId' => $userId
         ]);
 
-        return redirect()->route('nurses.index');
+        return redirect()->route('nurseIndex');
     }
 
     public function destroy($id)
@@ -67,6 +67,6 @@ class NursController extends Controller
             'id' => $id
         ]);
 
-        return redirect()->route('nurses.index');
+        return redirect()->route('nurseIndex');
     }
 }

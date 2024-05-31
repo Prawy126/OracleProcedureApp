@@ -11,41 +11,43 @@
 
     <div class="container">
         <h2 class="mt-4">Edytuj dane: Sale</h2>
-        <form>
+        <form method="POST" action="{{ route('roomUpdate', ['id' => $room->id]) }}">
+            @csrf
+            @method('PUT')
             <div class="form-group row mb-4">
                 <label for="inputID" class="col-md-2 col-form-label">ID:</label>
                 <div class="col-md-4">
-                    <input type="number" class="form-control" id="inputID" placeholder="ID">
+                    <input type="number" class="form-control" id="inputID" name="rnumber" placeholder="ID" value="{{ $room->id }}">
                 </div>
             </div>
             <div class="form-group row mb-4">
                 <label for="inputNumerSali" class="col-md-2 col-form-label">Numer sali:</label>
                 <div class="col-md-4">
-                    <input type="number" class="form-control" id="inputNumerSali" placeholder="Numer sali">
+                    <input type="number" class="form-control" id="inputNumerSali" name="rlocation" placeholder="Numer sali" value="{{ $room->location }}">
                 </div>
             </div>
             <div class="form-group row mb-4">
                 <label for="inputLokalizacja" class="col-md-2 col-form-label">Lokalizacja:</label>
                 <div class="col-md-4">
-                    <input type="text" class="form-control" id="inputLokalizacja" placeholder="Lokalizacja">
+                    <input type="text" class="form-control" id="inputLokalizacja" name="status" placeholder="Lokalizacja" value="{{ $room->status }}">
                 </div>
             </div>
             <div class="form-group row mb-4">
                 <label for="inputStatusSali" class="col-md-2 col-form-label">Status sali:</label>
                 <div class="col-md-4">
-                    <input type="text" class="form-control" id="inputStatusSali" placeholder="Status sali">
+                    <input type="text" class="form-control" id="inputStatusSali" name="type_room" placeholder="Status sali" value="{{ $room->type }}">
                 </div>
             </div>
             <div class="form-group row mb-4">
                 <label for="inputTypSali" class="col-md-2 col-form-label">Typ sali:</label>
                 <div class="col-md-4">
-                    <input type="text" class="form-control" id="inputTypSali" placeholder="Typ sali">
+                    <input type="text" class="form-control" id="inputTypSali" name="type_room" placeholder="Typ sali" value="{{ $room->type }}">
                 </div>
             </div>
             <div class="form-group row mb-4">
                 <label for="inputLiczbaMiejsc" class="col-md-2 col-form-label">Liczba miejsc:</label>
                 <div class="col-md-4">
-                    <input type="number" class="form-control" id="inputLiczbaMiejsc" placeholder="Liczba miejsc">
+                    <input type="number" class="form-control" id="inputLiczbaMiejsc" name="type_room" placeholder="Liczba miejsc" value="{{ $room->seats }}">
                 </div>
             </div>
             <div class="form-group row mb-4">
@@ -57,6 +59,7 @@
                 </div>
             </div>
         </form>
+
     </div>
 
     @include('shared.footer')

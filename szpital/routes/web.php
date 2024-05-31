@@ -3,6 +3,7 @@ use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\MedicinController;
 use App\Http\Controllers\NurseController;
 use App\Http\Controllers\PatientController;
+use App\Http\Controllers\ProcedureController;
 use App\Http\Controllers\RoomController;
 use Illuminate\Support\Facades\Route;
 
@@ -41,6 +42,12 @@ Route::get('/rooms/{id}', [RoomController::class, 'show'])->name('roomsShow');
 Route::post('/rooms', [RoomController::class, 'store'])->name('roomsStore');
 Route::put('/rooms/{id}', [RoomController::class, 'update'])->name('roomsUpdate');
 Route::delete('/rooms/{id}', [RoomController::class, 'destroy'])->name('roomsDestroy');
+
+Route::get('/procedures', [ProcedureController::class, 'index'])->name('proceduresIndex');
+Route::get('/procedures/{id}/edit', [ProcedureController::class, 'show'])->name('proceduresShow');
+Route::post('/procedures', [ProcedureController::class, 'store'])->name('proceduresStore');
+Route::put('/procedures/{id}', [ProcedureController::class, 'update'])->name('proceduresUpdate');
+Route::delete('/procedures/{id}', [ProcedureController::class, 'destroy'])->name('proceduresDestroy');
 
 Route::get('/pacjenciTab', function () {
     return view('pacjenciTab');

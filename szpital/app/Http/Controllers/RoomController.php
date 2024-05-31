@@ -25,7 +25,7 @@ class RoomController extends Controller
             $cursor->closeCursor();
         });
 
-        return response()->json($room);
+        return view('edycjaSale', compact($room));
     }
 
     public function store(Request $request)
@@ -39,7 +39,7 @@ class RoomController extends Controller
             $stmt->execute();
         });
 
-        return redirect()->route('rooms.index');
+        return redirect()->route('roomIndex');
     }
 
     public function update(Request $request, $id)
@@ -54,7 +54,7 @@ class RoomController extends Controller
             $stmt->execute();
         });
 
-        return redirect()->route('rooms.index');
+        return redirect()->route('roomIndex');
     }
 
     public function destroy($id)
@@ -65,6 +65,6 @@ class RoomController extends Controller
             $stmt->execute();
         });
 
-        return redirect()->route('rooms.index');
+        return redirect()->route('roomIndex');
     }
 }

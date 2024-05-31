@@ -47,7 +47,7 @@ class MedicinController extends Controller
         DB::getPdo()->commit();
 
         if (empty($result)) {
-            return redirect()->route('medicinIndex')->with('error', 'Medicin not found.');
+            return redirect()->route('medicinIndex');
         }
 
         $medicin = $result[0];
@@ -77,9 +77,9 @@ class MedicinController extends Controller
                 DB::statement('BEGIN DELETE_MEDICIN(:id); END;', ['id' => $id]);
             });
 
-            return redirect()->route('medicinIndex')->with('success', 'Medicin deleted successfully.');
+            return redirect()->route('medicinIndex');
         } catch (\Exception $e) {
-            return redirect()->route('medicinIndex')->with('error', 'Error deleting medicin: ' . $e->getMessage());
+            return redirect()->route('medicinIndex');
         }
     }
 }

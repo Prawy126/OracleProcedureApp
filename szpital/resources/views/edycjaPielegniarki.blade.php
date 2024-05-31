@@ -11,53 +11,38 @@
 
     <div class="container">
         <h2 class="mt-4">Edytuj dane</h2>
-        <form>
+        <form method="POST" action="{{ route('nurseUpdate', $nurse['ID']) }}">
+            @csrf
+            @method('PUT')
+
             <div class="form-group row mb-4">
                 <label for="inputID" class="col-md-2 col-form-label">ID:</label>
                 <div class="col-md-4">
-                    <input type="number" class="form-control" id="inputID" placeholder="ID">
+                    <input type="number" class="form-control" id="inputID" name="id" value="{{ $nurse['ID']}}" readonly>
                 </div>
             </div>
             <div class="form-group row mb-4">
-                <label for="inputNazwaLeku" class="col-md-2 col-form-label">Nazwa leku:</label>
+                <label for="inputImie" class="col-md-2 col-form-label">Imię:</label>
                 <div class="col-md-4">
-                    <input type="text" class="form-control" id="inputNazwaLeku" placeholder="Nazwa leku">
+                    <input type="text" class="form-control" id="inputImie" name="name" value="{{ $nurse['NAME'] }}">
                 </div>
             </div>
             <div class="form-group row mb-4">
-                <label for="inputInstrukcja" class="col-md-2 col-form-label">Instrukcja:</label>
+                <label for="inputNazwisko" class="col-md-2 col-form-label">Nazwisko:</label>
                 <div class="col-md-4">
-                    <textarea class="form-control" id="inputInstrukcja" rows="6" placeholder="Instrukcja"></textarea>
+                    <input type="text" class="form-control" id="inputNazwisko" name="surname" value="{{ $nurse['SURNAME'] }}">
                 </div>
             </div>
             <div class="form-group row mb-4">
-                <label for="inputFormaLeku" class="col-md-2 col-form-label">Forma leku:</label>
+                <label for="inputNumerLicencji" class="col-md-2 col-form-label">Numer licencji:</label>
                 <div class="col-md-4">
-                    <input type="text" class="form-control" id="inputFormaLeku" placeholder="Forma leku">
+                    <input type="text" class="form-control" id="inputNumerLicencji" name="license_number" value="{{ $nurse['LICENSE_NUMBER'] }}">
                 </div>
             </div>
             <div class="form-group row mb-4">
-                <label for="inputIloscMagazyn" class="col-md-2 col-form-label">Ilość w magazynie:</label>
+                <label for="inputIDKonta" class="col-md-2 col-form-label">ID konta:</label>
                 <div class="col-md-4">
-                    <input type="number" class="form-control" id="inputIloscMagazyn" placeholder="Ilość w magazynie">
-                </div>
-            </div>
-            <div class="form-group row mb-4">
-                <label for="inputKategoriaLeku" class="col-md-2 col-form-label">Kategoria Leku:</label>
-                <div class="col-md-4">
-                    <input type="text" class="form-control" id="inputKategoriaLeku" placeholder="Kategoria Leku">
-                </div>
-            </div>
-            <div class="form-group row mb-4">
-                <label for="inputCena" class="col-md-2 col-form-label">Cena:</label>
-                <div class="col-md-4">
-                    <input type="number" class="form-control" id="inputCena" placeholder="Cena">
-                </div>
-            </div>
-            <div class="form-group row mb-4">
-                <label for="inputDawkaJednostka" class="col-md-2 col-form-label">Dawka jednostka:</label>
-                <div class="col-md-4">
-                    <input type="text" class="form-control" id="inputDawkaJednostka" placeholder="Dawka jednostka">
+                    <input type="number" class="form-control" id="inputIDKonta" name="user_id" value="{{ $nurse['USER_ID'] }}">
                 </div>
             </div>
             <div class="form-group row mb-4">
@@ -65,10 +50,11 @@
                     <button type="submit" class="btn btn-primary mb-2">Zatwierdź</button>
                 </div>
                 <div class="offset-md-1 col-md-1">
-                    <button class="btn btn-primary">Wyjście</button>
+                    <button type="button" class="btn btn-primary">Wyjście</button>
                 </div>
             </div>
         </form>
+
     </div>
 
     @include('shared.footer')
