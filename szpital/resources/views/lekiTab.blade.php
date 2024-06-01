@@ -30,12 +30,12 @@
                 <thead>
                     <tr>
                         <th scope="col">#</th>
-                        <th scope="col">Kolumna 0</th>
-                        <th scope="col">Kolumna 1</th>
-                        <th scope="col">Kolumna 2</th>
-                        <th scope="col">Kolumna 3</th>
-                        <th scope="col">Kolumna 4</th>
-                        <th scope="col">Kolumna 5</th>
+                        <th scope="col">Nazwa</th>
+                        <th scope="col">Instrukcja</th>
+                        <th scope="col">Ilość w magazynie</th>
+                        <th scope="col">Kategoria</th>
+                        <th scope="col">Cena</th>
+                        <th scope="col">Dawka jednostka</th>
                         <th scope="col"></th>
                         <th scope="col"></th>
                     </tr>
@@ -50,7 +50,7 @@
                             <td>{{ $med->drug_category }}</td>
                             <td>{{ $med->price }}</td>
                             <td>{{ $med->dose_unit }}</td>
-                            <td><a href="{{ route('medicinEdit',$med->id) }}">Edytuj</a></td>
+                            <td><a href="{{ route('medicinEdit',$med->id) }}" class="btn btn-warning">Edytuj</a></td>
                             <td>
                                 <form action="{{ route('medicinDelete', $med->id) }}" method="POST">
                                     @csrf

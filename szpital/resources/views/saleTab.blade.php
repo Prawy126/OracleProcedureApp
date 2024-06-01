@@ -33,6 +33,7 @@
                         <th scope="col">Lokalizacja</th>
                         <th scope="col">Status</th>
                         <th scope="col">Typ sali</th>
+                        <th scope="col">Miejsca</th>
                         <th scope="col"></th>
                         <th scope="col"></th>
                     </tr>
@@ -45,6 +46,7 @@
                             <td>{{ $r->rlocation }}</td>
                             <td>{{ $r->status }}</td>
                             <td>{{ $r->type_room }}</td>
+                            <td>{{ $r->seats }}</td>
                             <td><a href="{{ route('roomsShow', $r->id) }}" class="btn btn-warning">Edytuj</a></td>
                             <td>
                                 <form action="{{ route('roomsDestroy', $r->id) }}" method="POST">

@@ -29,7 +29,6 @@
                 <thead>
                     <tr>
                         <th scope="col">#</th>
-                        <th scope="col">ID</th>
                         <th scope="col">ID Rodzaju zabiegu</th>
                         <th scope="col">ID Sali</th>
                         <th scope="col">Data</th>
@@ -41,7 +40,6 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Assuming you have a procedures variable passed to the view containing the procedures data -->
                     @foreach($procedures as $procedure)
                     <tr>
                         <th scope="row">{{ $procedure->id }}</th>

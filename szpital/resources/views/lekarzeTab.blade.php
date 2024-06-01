@@ -29,11 +29,11 @@
                 <thead>
                     <tr>
                         <th scope="col">#</th>
-                        <th scope="col">IMIĘ</th>
-                        <th scope="col">NAZWISKO</th>
-                        <th scope="col">SPECJALIZACJA</th>
-                        <th scope="col">LICENCJA</th>
-                        <th scope="col">ID KONTA</th>
+                        <th scope="col">Imię</th>
+                        <th scope="col">Nazwisko</th>
+                        <th scope="col">Specjalizacja</th>
+                        <th scope="col">Licencja</th>
+                        <th scope="col">Id konta</th>
                         <th scope="col"></th>
                         <th scope="col"></th>
                     </tr>

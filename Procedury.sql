@@ -575,7 +575,7 @@ CREATE OR REPLACE PROCEDURE UPDATE_PROCEDURE_STATUSES AS
     CURSOR c_procedures IS
         SELECT ID, "DATE", TIME, STATUS
         FROM PROCEDURES
-        WHERE STATUS IN (1, 2, 3); -- 1: przed zabiegiem, 2: w trakcie, 3: ju¿ po
+        WHERE STATUS IN (1, 2, 3); -- 1: przed zabiegiem, 2: w trakcie, 3: juï¿½ po
 
     l_current_time TIMESTAMP;
     l_end_time TIMESTAMP;
@@ -595,9 +595,9 @@ BEGIN
             UPDATE PROCEDURES SET STATUS = 2 WHERE ID = r.ID;
             l_description := 'W trakcie zabiegu';
         ELSE
-            -- Ju¿ po zabiegu
+            -- Juï¿½ po zabiegu
             UPDATE PROCEDURES SET STATUS = 3 WHERE ID = r.ID;
-            l_description := 'Ju¿ po zabiegu';
+            l_description := 'Juï¿½ po zabiegu';
         END IF;
 
         -- Aktualizacja opisu w tabeli STATUSES
