@@ -199,16 +199,17 @@ START WITH 1
 INCREMENT BY 1
 NOCACHE;
 
-CREATE OR REPLACE PROCEDURE ADD_ROOM(
-    p_rnumber IN VARCHAR2,
-    p_rlocation IN VARCHAR2,
-    p_status IN VARCHAR2,
-    p_type_room IN VARCHAR2)
-IS
-BEGIN
-    INSERT INTO rooms (id, rnumber, rlocation, status, type_room)
-    VALUES (room_seq.NEXTVAL, p_rnumber, p_rlocation, p_status, p_type_room);
-END;
+CREATE OR REPLACE PROCEDURE ADD_ROOM (
+       p_rnumber IN NUMBER,
+       p_rlocation IN VARCHAR2,
+       p_status IN VARCHAR2,
+       p_type_room IN VARCHAR2,
+       p_seats IN INTEGER
+   ) AS
+   BEGIN
+       INSERT INTO rooms (rnumber, rlocation, status, type_room, seats)
+       VALUES (p_rnumber, p_rlocation, p_status, p_type_room, p_seats);
+   END;
 
 
 
@@ -542,9 +543,20 @@ BEGIN
     DELETE FROM USERS WHERE ID = p_ID;
 END;
 
+CREATE OR REPLACE FUNCTION GET_END_TIME(
+    p_start_time TIMESTAMP,
+    p_duration DATE
+) RETURN TIMESTAMP IS
+    l_end_time TIMESTAMP;
 BEGIN
-    -- Usuniêcie uzytkownika
-    DELETE_USER(23);
+    l_end_time := p_start_time + (p_duration - TO_DATE('01-JAN-1970', 'DD-MON-YYYY'));
+    RETURN l_end_time;
+END;
+
+CREATE OR REPLACE TRIGGER trg_update_procedure_statuses
+AFTER INSERT OR UPDATE OR DELETE ON PROCEDURES
+BEGIN
+    UPDATE_PROCEDURE_STATUSES;
 END;
 
 CREATE OR REPLACE FUNCTION GET_END_TIME(
@@ -556,6 +568,8 @@ BEGIN
     l_end_time := p_start_time + (p_duration - TO_DATE('01-JAN-1970', 'DD-MON-YYYY'));
     RETURN l_end_time;
 END;
+/
+
 
 CREATE OR REPLACE PROCEDURE UPDATE_PROCEDURE_STATUSES AS
     CURSOR c_procedures IS
@@ -565,56 +579,53 @@ CREATE OR REPLACE PROCEDURE UPDATE_PROCEDURE_STATUSES AS
 
     l_current_time TIMESTAMP;
     l_end_time TIMESTAMP;
+    l_description CLOB;
 BEGIN
     l_current_time := SYSTIMESTAMP;
 
     FOR r IN c_procedures LOOP
-        l_end_time := GET_END_TIME(r.DATE, r.TIME);
+        l_end_time := GET_END_TIME(r."DATE", r.TIME);
 
-        IF l_current_time < r.DATE THEN
+        IF l_current_time < r."DATE" THEN
             -- Przed zabiegiem
             UPDATE PROCEDURES SET STATUS = 1 WHERE ID = r.ID;
-        ELSIF l_current_time BETWEEN r.DATE AND l_end_time THEN
+            l_description := 'Przed zabiegiem';
+        ELSIF l_current_time BETWEEN r."DATE" AND l_end_time THEN
             -- W trakcie zabiegu
             UPDATE PROCEDURES SET STATUS = 2 WHERE ID = r.ID;
+            l_description := 'W trakcie zabiegu';
         ELSE
             -- Ju¿ po zabiegu
             UPDATE PROCEDURES SET STATUS = 3 WHERE ID = r.ID;
+            l_description := 'Ju¿ po zabiegu';
         END IF;
+
+        -- Aktualizacja opisu w tabeli STATUSES
+        UPDATE STATUSES SET DESCRIPTION = l_description WHERE ID = r.ID;
     END LOOP;
 
     COMMIT;
 END;
 /
 
-
-
-
-
+CREATE OR REPLACE TRIGGER trg_update_procedure_statuses
+AFTER INSERT OR UPDATE OR DELETE ON PROCEDURES
 BEGIN
-    DBMS_SCHEDULER.create_job (
-        job_name        => 'UPDATE_PROCEDURE_STATUSES_JOB',
-        job_type        => 'PLSQL_BLOCK',
-        job_action      => 'BEGIN UPDATE_PROCEDURE_STATUSES; END;',
-        start_date      => SYSTIMESTAMP,
-        repeat_interval => 'FREQ=MINUTELY; INTERVAL=1', -- Wykonywanie co minutê
-        enabled         => TRUE
-    );
+    UPDATE_PROCEDURE_STATUSES;
 END;
 /
 
-CREATE OR REPLACE PROCEDURE ADD_ROOM (
-       p_rnumber IN NUMBER,
-       p_rlocation IN VARCHAR2,
-       p_status IN VARCHAR2,
-       p_type_room IN VARCHAR2,
-       p_seats IN INTEGER
-   ) AS
-   BEGIN
-       INSERT INTO rooms (rnumber, rlocation, status, type_room, seats)
-       VALUES (p_rnumber, p_rlocation, p_status, p_type_room, p_seats);
-   END;
+
+-- Utworzenie wyzwalacza
+CREATE OR REPLACE TRIGGER trg_update_procedure_statuses
+AFTER INSERT OR UPDATE OR DELETE ON PROCEDURES
+BEGIN
+    UPDATE_PROCEDURE_STATUSES;
+END;
 /
+
+
+
 
 
 
