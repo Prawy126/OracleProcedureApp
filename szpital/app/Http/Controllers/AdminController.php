@@ -58,6 +58,6 @@ class AdminController extends Controller
                 break;
         }
 
-        return view('adminPanel', compact('view', 'data'));
+        return view('admin', compact('view', 'data'));
     }
 }

@@ -498,6 +498,7 @@ BEGIN
     RETURN l_hashed_password;
 END;
 
+-- Sorawdzanie has³a
 CREATE OR REPLACE FUNCTION CHECK_PASSWORD(p_username IN VARCHAR2, p_password IN VARCHAR2) RETURN BOOLEAN IS
     l_hashed_password VARCHAR2(200);
     l_stored_password VARCHAR2(200);
@@ -620,7 +621,59 @@ AFTER INSERT OR UPDATE OR DELETE ON PROCEDURES
 BEGIN
     UPDATE_PROCEDURE_STATUSES;
 END;
+
+--Sprawdzanie typu konta
+CREATE OR REPLACE PROCEDURE CHECK_AND_UPDATE_ACCOUNT_TYPES AS
+    CURSOR c_users IS
+        SELECT ID FROM USERS;
+    l_count INTEGER;
+    l_user_id USERS.ID%TYPE;
+BEGIN
+    FOR r IN c_users LOOP
+        l_user_id := r.ID;
+
+        -- Sprawdzenie i aktualizacja dla pielêgniarek
+        SELECT COUNT(*) INTO l_count FROM NURSES WHERE USER_ID = l_user_id;
+        IF l_count > 0 THEN
+            UPDATE USERS SET ACCOUNT_TYPE = 'nurse' WHERE ID = l_user_id;
+            CONTINUE;
+        END IF;
+
+        -- Sprawdzenie i aktualizacja dla lekarzy
+        SELECT COUNT(*) INTO l_count FROM DOCTORS WHERE USER_ID = l_user_id;
+        IF l_count > 0 THEN
+            UPDATE USERS SET ACCOUNT_TYPE = 'doctor' WHERE ID = l_user_id;
+            CONTINUE;
+        END IF;
+
+        -- Sprawdzenie i aktualizacja dla pacjentów
+        SELECT COUNT(*) INTO l_count FROM PATIENTS WHERE USER_ID = l_user_id;
+        IF l_count > 0 THEN
+            UPDATE USERS SET ACCOUNT_TYPE = 'patient' WHERE ID = l_user_id;
+            CONTINUE;
+        END IF;
+
+        -- Jeœli nie ma przypisania, ustawienie na 'none'
+        UPDATE USERS SET ACCOUNT_TYPE = 'none' WHERE ID = l_user_id;
+    END LOOP;
+
+    COMMIT;
+END;
 /
+
+BEGIN
+    DBMS_SCHEDULER.create_job (
+        job_name        => 'CHECK_AND_UPDATE_ACCOUNT_TYPES_JOB',
+        job_type        => 'PLSQL_BLOCK',
+        job_action      => 'BEGIN CHECK_AND_UPDATE_ACCOUNT_TYPES; END;',
+        start_date      => SYSTIMESTAMP,
+        repeat_interval => 'FREQ=MINUTELY; INTERVAL=1', -- Wykonywanie co minutê
+        enabled         => TRUE
+    );
+END;
+/
+
+
 
 
 

@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('name',20);
             $table->string('surname',25);
             $table->foreignIdFor(Nurse::class)->constrained();
-            $table->foreignIdFor(User::class)->constrained();
+            $table->foreignIdFor(User::class)->unique()->constrained()->onDelete('cascade');
             $table->integer('time_visit');
             $table->foreignIdFor(Room::class)->constrained();
 

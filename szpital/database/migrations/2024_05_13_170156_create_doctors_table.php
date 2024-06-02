@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('surname',25);
             $table->string('specialization',50);
             $table->string('license_number',50);
-            $table->foreignIdFor(User::class)->constrained();
+            $table->foreignIdFor(User::class)->unique()->constrained()->onDelete('cascade');
 
         });
     }

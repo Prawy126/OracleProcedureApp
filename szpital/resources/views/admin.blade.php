@@ -82,13 +82,13 @@
                         'treatmentDoctors' => $data['treatmentDoctors'],
                     ])
                 @elseif($view == 'medicineAssignment')
-                    @include('adminElements.medicineAssignment', [
+                    @include('adminElements.medicinAssigment', [
                         'medicins' => $data['medicins'],
                         'patients' => $data['patients'],
                         'assignments' => $data['assignments'],
                     ])
                 @elseif($view == 'nurseAssignment')
-                    @include('adminElements.nurseAssignment', [
+                    @include('adminElements.nurseAssigment', [
                         'nurses' => $data['nurses'],
                         'patients' => $data['patients'],
                     ])
