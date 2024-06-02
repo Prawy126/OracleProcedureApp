@@ -1,4 +1,6 @@
 <?php
+
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\MedicinController;
 use App\Http\Controllers\NurseController;
@@ -48,6 +50,5 @@ Route::post('/procedures', [ProcedureController::class, 'store'])->name('procedu
 Route::put('/procedures/{id}', [ProcedureController::class, 'update'])->name('proceduresUpdate');
 Route::delete('/procedures/{id}', [ProcedureController::class, 'destroy'])->name('proceduresDestroy');
 
-Route::get('/admin', function() {
-    return view('admin');
-})->name('admin');
+Route::get('/admin', [AdminController::class, 'showAdminPanel'])->name('admin');
+

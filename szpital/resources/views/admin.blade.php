@@ -63,7 +63,7 @@
                                 <a href="?view=medicineAssignment">Medicine Assignment</a>
                             </li>
                             <li class="list-group-item">
-                                <a href="?view=nurseAssignment">Nurse Assignment</a>
+                                <a href="?view=nurseAssigment">Nurse Assignment</a>
                             </li>
                             <li class="list-group-item">
                                 <a href="?view=nurseTreatments">Nurse Treatments</a>
@@ -79,8 +79,8 @@
                     @include('adminElements.doctorsTreatments')
                 @elseif($view == 'medicineAssignment')
                     @include('adminElements.medicineAssignment')
-                @elseif($view == 'nurseAssignment')
-                    @include('adminElements.nurseAssignment')
+                @elseif($view == 'nurseAssigment')
+                    @include('adminElements.nurseAssigment')
                 @elseif($view == 'nurseTreatments')
                     @include('adminElements.nurseTreatments')
                 @else
