@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class medicin extends Model
+class Medicin extends Model
 {
     use HasFactory;
     protected $fillable = ['name','instruction','warehouse_quantity','drug_category','price','dose_unit'];
@@ -16,7 +16,7 @@ class medicin extends Model
 
     public function assigment_medicine(): HasMany
     {
-        return $this->hasMany(assignment_medicine::class);
+        return $this->hasMany(AssignmentMedicine::class);
     }
 
 

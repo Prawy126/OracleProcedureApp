@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
-class room extends Model
+class Room extends Model
 {
     use HasFactory;
 
@@ -17,12 +17,12 @@ class room extends Model
 
     public function procedure(): HasOne
     {
-        return $this->hasOne(procedure::class);
+        return $this->hasOne(Procedure::class);
     }
 
     public function patients(): HasMany
     {
-        return $this->hasMany(patient::class);
+        return $this->hasMany(Patient::class);
     }
 
 }

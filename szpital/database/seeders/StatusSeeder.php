@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\status;
+use App\Models\Status;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -14,6 +14,6 @@ class StatusSeeder extends Seeder
     public function run(): void
     {
         //
-        status::truncate();
+        Status::truncate();
     }
 }

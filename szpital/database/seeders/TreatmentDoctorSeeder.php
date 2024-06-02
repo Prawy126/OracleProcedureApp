@@ -2,11 +2,12 @@
 
 namespace Database\Seeders;
 
-use App\Models\treatments_doctor;
+use App\Models\TreatmentDoctor;
+use App\Models\TreatmentType;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class TreatmentsDoctorSeeder extends Seeder
+class TreatmentDoctorSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -14,6 +15,6 @@ class TreatmentsDoctorSeeder extends Seeder
     public function run(): void
     {
         //
-        treatments_doctor::truncate();
+        TreatmentDoctor::truncate();
     }
 }

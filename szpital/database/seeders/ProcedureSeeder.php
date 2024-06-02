@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\procedure;
+use App\Models\Procedure;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -14,6 +14,6 @@ class ProcedureSeeder extends Seeder
     public function run(): void
     {
         //
-        procedure::truncate();
+        Procedure::truncate();
     }
 }

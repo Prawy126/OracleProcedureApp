@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\room;
+use App\Models\Room;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Schema;
@@ -15,9 +15,9 @@ class RoomSeeder extends Seeder
     public function run(): void
     {
 
-        room::truncate();
+        Room::truncate();
 
-        room::insert([[
+        Room::insert([[
             'rnumber'=>'2B',
             'rlocation'=>'Rzeszów',
             'status'=>'wolny',

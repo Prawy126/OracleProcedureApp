@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\treatment_type;
+use App\Models\TreatmentType;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -14,6 +14,6 @@ class TreatmentTypeSeeder extends Seeder
     public function run(): void
     {
         //
-        treatment_type::truncate();
+        TreatmentType::truncate();
     }
 }

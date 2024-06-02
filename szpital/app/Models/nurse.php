@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
-class nurse extends Model
+class Nurse extends Model
 {
     use HasFactory;
 
@@ -18,12 +18,12 @@ class nurse extends Model
 
     public function patient(): HasMany
     {
-        return $this->hasMany(patient::class);
+        return $this->hasMany(Patient::class);
     }
 
     public function treatment_nurse(): HasMany
     {
-        return $this->hasMany(treatments_nurse::class);
+        return $this->hasMany(TreatmentsNurse::class);
     }
     public function user(): HasOne
     {

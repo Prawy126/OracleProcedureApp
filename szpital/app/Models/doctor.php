@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
-class doctor extends Model
+class Doctor extends Model
 {
     use HasFactory;
     protected $fillable = ['name','surname','spezialization','license_number','user_id'];
@@ -22,6 +22,6 @@ class doctor extends Model
 
     public function treatments_doctor(): HasMany
     {
-        return $this->hasMany(treatments_doctor::class);
+        return $this->hasMany(TreatmentDoctor::class);
     }
 }

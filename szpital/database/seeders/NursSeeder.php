@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\nurse;
+use App\Models\Nurse;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -14,9 +14,9 @@ class NursSeeder extends Seeder
     public function run(): void
     {
         //🧟🧟
-        nurse::truncate();
+        Nurse::truncate();
 
-        nurse::insert([[
+        Nurse::insert([[
             'name'=> 'Anna',
             'surname'=>'Nowak',
             'number'=>'12s132sad1',

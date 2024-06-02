@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
-class procedure extends Model
+class Procedure extends Model
 {
     use HasFactory;
 
@@ -18,25 +18,25 @@ class procedure extends Model
 
     public function room(): HasOne
     {
-        return $this->hasOne(room::class);
+        return $this->hasOne(Room::class);
     }
 
     public function status(): BelongsTo
     {
-        return $this->belongsTo(status::class);
+        return $this->belongsTo(Status::class);
     }
 
     public function treatments_nurse(): HasMany
     {
-        return $this->hasMany(treatments_nurse::class);
+        return $this->hasMany(TreatmentNurse::class);
     }
     public function treatmens_doctor(): HasMany
     {
-        return $this->hasMany(treatments_doctor::class);
+        return $this->hasMany(TreatmentDoctor::class);
     }
 
     public function treatment_type(): BelongsTo
     {
-        return $this->belongsTo(treatment_type::class);
+        return $this->belongsTo(TreatmentType::class);
     }
 }

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class treatments_doctor extends Model
+class TreatmentDoctor extends Model
 {
     use HasFactory;
 
@@ -16,10 +16,10 @@ class treatments_doctor extends Model
 
     public function doctor(): HasMany
     {
-        return $this->hasMany(doctor::class);
+        return $this->hasMany(Doctor::class);
     }
     public function prcedure(): HasMany
     {
-        return $this->hasMany(procedure::class);
+        return $this->hasMany(Procedure::class);
     }
 }

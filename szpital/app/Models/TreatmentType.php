@@ -6,18 +6,17 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class status extends Model
+class TreatmentType extends Model
 {
     use HasFactory;
 
-
-    protected $fillable = ['status','description'];
+    protected $fillable = ['name','description','recommendations_before_surgery','recommendations_after_surgery'];
 
     public $timestamps = false;
 
     public function procedure(): HasMany
     {
-        return $this->hasMany(procedure::class);
+        return $this->hasMany(Procedure::class);
     }
 
 }

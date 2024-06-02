@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class treatments_nurse extends Model
+class TreatmentsNurse extends Model
 {
     use HasFactory;
 
@@ -16,12 +16,12 @@ class treatments_nurse extends Model
 
     public function procedure(): HasMany
     {
-        return $this->hasMany(procedure::class);
+        return $this->hasMany(Procedure::class);
     }
 
     public function nurse(): HasMany
     {
-        return $this->hasMany(nurse::class);
+        return $this->hasMany(Nurse::class);
     }
 
 }

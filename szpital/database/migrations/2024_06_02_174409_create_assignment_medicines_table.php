@@ -1,7 +1,7 @@
 <?php
 
-use App\Models\medicin;
-use App\Models\patient;
+use App\Models\Medicin;
+use App\Models\Patient;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -14,8 +14,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('assignment_medicines', function (Blueprint $table) {
-            $table->foreignIdFor(patient::class)->constrained();
-            $table->foreignIdFor(medicin::class)->constrained();
+            $table->foreignIdFor(Patient::class)->constrained();
+            $table->foreignIdFor(Medicin::class)->constrained();
             $table->integer('dose');
             $table->date('date_start');
             $table->date('date_end');
