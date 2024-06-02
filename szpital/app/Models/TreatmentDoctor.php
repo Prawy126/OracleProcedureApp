@@ -10,7 +10,7 @@ class TreatmentDoctor extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['procedure_id','doctor_id'];
+    protected $fillable = ['doctor_id','procedure_id'];
 
     public $timestamps = false;
 

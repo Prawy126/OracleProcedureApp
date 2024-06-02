@@ -10,8 +10,8 @@
                 </select>
             </div>
             <div class="form-group col-md-6">
-                <label for="patientId">Id pacjenta</label>
-                <select id="patientId" class="form-select" name="patient_id">
+                <label for="doctorId">Id lekarza</label>
+                <select id="doctorId" class="form-select" name="=doctor_id">
                     <option value="1">1</option>
                     <option value="2">2</option>
                     <option value="3">3</option>

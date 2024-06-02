@@ -65,6 +65,9 @@
                             <li class="list-group-item">
                                 <a href="?view=nurseAssignment">Nurse Assignment</a>
                             </li>
+                            <li class="list-group-item">
+                                <a href="?view=nurseTreatments">Nurse Treatments</a>
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -78,6 +81,8 @@
                     @include('adminElements.medicineAssignment')
                 @elseif($view == 'nurseAssignment')
                     @include('adminElements.nurseAssignment')
+                @elseif($view == 'nurseTreatments')
+                    @include('adminElements.nurseTreatments')
                 @else
                     <p>Wybierz opcję z menu po lewej stronie.</p>
                 @endif

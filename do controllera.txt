@@ -1,7 +1,7 @@
 public function showAdminPanel(Request $request)
     {
         $view = $request->get('view');
-        $availableViews = ['accounts', 'doctorsTreatments', 'medicineAssignment', 'nurseAssignment'];
+        $availableViews = ['accounts', 'doctorsTreatments', 'medicineAssignment', 'nurseAssignment', 'nurseTreatments'];
 
         // Check if the requested view is in the list of available views
         if (!in_array($view, $availableViews)) {

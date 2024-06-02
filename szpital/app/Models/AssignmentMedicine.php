@@ -12,7 +12,7 @@ class AssignmentMedicine extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['patient_id','medicin_id','dows','date_start','date_end','expiration_date', 'availability'];
+    protected $fillable = ['medicin_id','patient_id','dows','date_start','date_end','expiration_date', 'availability'];
 
     public $timestamps = false;
 
