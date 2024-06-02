@@ -63,7 +63,7 @@
                                 <a href="?view=medicineAssignment">Medicine Assignment</a>
                             </li>
                             <li class="list-group-item">
-                                <a href="?view=nurseAssigment">Nurse Assignment</a>
+                                <a href="?view=nurseAssignment">Nurse Assignment</a>
                             </li>
                             <li class="list-group-item">
                                 <a href="?view=nurseTreatments">Nurse Treatments</a>
@@ -74,15 +74,29 @@
             </div>
             <div class="col-md-9">
                 @if ($view == 'accounts')
-                    @include('adminElements.accounts')
+                    @include('adminElements.accounts', ['accounts' => $data['accounts']])
                 @elseif($view == 'doctorsTreatments')
-                    @include('adminElements.doctorsTreatments')
+                    @include('adminElements.doctorsTreatments', [
+                        'doctors' => $data['doctors'],
+                        'procedures' => $data['procedures'],
+                        'treatmentDoctors' => $data['treatmentDoctors'],
+                    ])
                 @elseif($view == 'medicineAssignment')
-                    @include('adminElements.medicineAssignment')
-                @elseif($view == 'nurseAssigment')
-                    @include('adminElements.nurseAssigment')
+                    @include('adminElements.medicineAssignment', [
+                        'medicins' => $data['medicins'],
+                        'patients' => $data['patients'],
+                        'assignments' => $data['assignments'],
+                    ])
+                @elseif($view == 'nurseAssignment')
+                    @include('adminElements.nurseAssignment', [
+                        'nurses' => $data['nurses'],
+                        'patients' => $data['patients'],
+                    ])
                 @elseif($view == 'nurseTreatments')
-                    @include('adminElements.nurseTreatments')
+                    @include('adminElements.nurseTreatments', [
+                        'nurses' => $data['nurses'],
+                        'procedures' => $data['procedures'],
+                    ])
                 @else
                     <p>Wybierz opcję z menu po lewej stronie.</p>
                 @endif
