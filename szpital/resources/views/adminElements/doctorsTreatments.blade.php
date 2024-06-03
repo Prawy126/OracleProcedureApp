@@ -29,6 +29,8 @@
                     <tr>
                         <th scope="col">Id lekarza</th>
                         <th scope="col">Id zabiegu</th>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -36,6 +38,14 @@
                         <tr>
                             <td>{{ $treatmentDoctor->doctor_id }}</td>
                             <td>{{ $treatmentDoctor->procedure_id }}</td>
+                            <td><a href="" class="btn btn-warning">Edytuj</a></td>
+                            <td>
+                            <form action="" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger">Usuń</button>
+                            </form>
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>

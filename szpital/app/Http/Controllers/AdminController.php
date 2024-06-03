@@ -9,6 +9,7 @@ use App\Models\Nurse;
 use App\Models\Patient;
 use App\Models\Procedure;
 use App\Models\TreatmentDoctor;
+use App\Models\TreatmentNurse;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -17,11 +18,13 @@ class AdminController extends Controller
     public function showAdminPanel(Request $request)
     {
         $view = $request->get('view');
-        $availableViews = ['accounts', 'doctorsTreatments', 'medicineAssignment', 'nurseAssignment', 'nurseTreatments'];
+        $availableViews = ['accounts', 'doctorsTreatments', 'medicineAssignment', 'nurseTreatments'];
 
         if (!in_array($view, $availableViews)) {
             $view = null;
         }
+
+        $nurseTreatments = new TreatmentNurseController();
 
         $data = [];
         switch ($view) {
@@ -44,16 +47,11 @@ class AdminController extends Controller
                     'assignments' => AssignmentMedicine::all(),
                 ];
                 break;
-            case 'nurseAssignment':
-                $data = [
-                    'nurses' => Nurse::all(),
-                    'patients' => Patient::all(),
-                ];
-                break;
             case 'nurseTreatments':
                 $data = [
                     'nurses' => Nurse::all(),
                     'procedures' => Procedure::all(),
+                    'treatmentNurses' => TreatmentNurse::all(),
                 ];
                 break;
         }

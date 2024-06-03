@@ -70,11 +70,9 @@
         <h2 class="mt-4">Dodawanie sal</h2>
         <form action="{{ route('roomsStore') }}" method="POST">
             @csrf
-            //🧟
             <div class="row">
-                //dodaj kolumnę żeby liczba osób się wyświetlała oraz zmień typ pola w formularzu żeby przyjmował znaki i w sumie możesz pozamieniać przyciski na żółte
                 <div class="form-group col-md-2">
-                    <input type="number" class="form-control" name="rnumber" id="inputNumerSali" placeholder="Numer sali" required>
+                    <input type="text" class="form-control" name="rnumber" id="inputNumerSali" placeholder="Numer sali" required>
                 </div>
                 <div class="form-group col-md-2">
                     <input type="text" class="form-control" name="rlocation" id="inputLokalizacja" placeholder="Lokalizacja" required>
@@ -82,10 +80,10 @@
                 <div class="form-group col-md-2">
                     <input type="text" class="form-control" name="status" id="inputStatusSali" placeholder="Status sali" required>
                 </div>
-                <div class="form-group col-md-1">
+                <div class="form-group col-md-2">
                     <input type="text" class="form-control" name="type_room" id="inputTypSali" placeholder="Typ sali" required>
                 </div>
-                <div class="form-group col-md-1">
+                <div class="form-group col-md-2">
                     <input type="text" class="form-control" name="seats" id="inputTypSali" placeholder="Liczba ludzi" required>
                 </div>
                 <div class="form-group col-md-2">

@@ -61,6 +61,8 @@
                         <th scope="col">Data zakończenia</th>
                         <th scope="col">Data ważności</th>
                         <th scope="col">Dostępność</th>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -73,6 +75,15 @@
                             <td>{{ $assignment->date_end }}</td>
                             <td>{{ $assignment->expiration_date }}</td>
                             <td>{{ $assignment->availability ? 'Dostępny' : 'Niedostępny' }}</td>
+                            <td><a href="" class="btn btn-warning">Edytuj</a></td>
+                            <td>
+                            <form action="" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger">Usuń</button>
+                            </form>
+                            </td>
+
                         </tr>
                     @endforeach
                 </tbody>

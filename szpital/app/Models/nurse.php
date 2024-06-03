@@ -23,7 +23,7 @@ class Nurse extends Model
 
     public function treatment_nurse(): HasMany
     {
-        return $this->hasMany(TreatmentsNurse::class);
+        return $this->hasMany(TreatmentNurse::class);
     }
     public function user(): HasOne
     {

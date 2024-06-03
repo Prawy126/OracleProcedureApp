@@ -63,9 +63,6 @@
                                 <a href="?view=medicineAssignment">Medicine Assignment</a>
                             </li>
                             <li class="list-group-item">
-                                <a href="?view=nurseAssignment">Nurse Assignment</a>
-                            </li>
-                            <li class="list-group-item">
                                 <a href="?view=nurseTreatments">Nurse Treatments</a>
                             </li>
                         </ul>
@@ -87,15 +84,11 @@
                         'patients' => $data['patients'],
                         'assignments' => $data['assignments'],
                     ])
-                @elseif($view == 'nurseAssignment')
-                    @include('adminElements.nurseAssigment', [
-                        'nurses' => $data['nurses'],
-                        'patients' => $data['patients'],
-                    ])
                 @elseif($view == 'nurseTreatments')
                     @include('adminElements.nurseTreatments', [
                         'nurses' => $data['nurses'],
                         'procedures' => $data['procedures'],
+                        'treatmentNurses' => $data['treatmentNurses'],
                     ])
                 @else
                     <p>Wybierz opcję z menu po lewej stronie.</p>
