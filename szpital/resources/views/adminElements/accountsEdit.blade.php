@@ -1,3 +1,13 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+
+@include('shared.head')
+
+<body>
+
+    @include('shared.navbar')
+
+    @include('shared.scripts')
 <div class="container mt-3">
     <form action="{{ route('users.update', $id) }}" method="POST">
         @csrf
@@ -22,3 +32,4 @@
         </div>
     </form>
 </div>
+

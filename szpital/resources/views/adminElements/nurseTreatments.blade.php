@@ -38,7 +38,7 @@
                         <tr>
                             <td>{{ $treatmentNurse->nurse_id }}</td>
                             <td>{{ $treatmentNurse->procedure_id }}</td>
-                            <<td><a href="" class="btn btn-warning">Edytuj</a></td>
+                            <td><a href="" class="btn btn-warning">Edytuj</a></td>
                             <td>
                             <form action="" method="POST">
                                 @csrf

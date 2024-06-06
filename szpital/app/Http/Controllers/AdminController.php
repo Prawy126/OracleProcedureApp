@@ -30,7 +30,7 @@ class AdminController extends Controller
         switch ($view) {
             case 'accounts':
                 $data = [
-                    'accounts' => User::all(),
+                    'users' => User::all(),
                 ];
                 break;
             case 'doctorsTreatments':

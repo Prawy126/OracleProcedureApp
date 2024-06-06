@@ -71,7 +71,7 @@
             </div>
             <div class="col-md-9">
                 @if ($view == 'accounts')
-                    @include('adminElements.accounts', ['accounts' => $data['accounts']])
+                    @include('adminElements.accounts', ['users' => $data['users']])
                 @elseif($view == 'doctorsTreatments')
                     @include('adminElements.doctorsTreatments', [
                         'doctors' => $data['doctors'],

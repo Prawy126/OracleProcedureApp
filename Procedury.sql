@@ -622,7 +622,6 @@ BEGIN
     UPDATE_PROCEDURE_STATUSES;
 END;
 
---Sprawdzanie typu konta
 CREATE OR REPLACE PROCEDURE CHECK_AND_UPDATE_ACCOUNT_TYPES AS
     CURSOR c_users IS
         SELECT ID FROM USERS;
@@ -631,6 +630,12 @@ CREATE OR REPLACE PROCEDURE CHECK_AND_UPDATE_ACCOUNT_TYPES AS
 BEGIN
     FOR r IN c_users LOOP
         l_user_id := r.ID;
+
+        -- Sprawdzenie i aktualizacja dla administratorów
+        SELECT COUNT(*) INTO l_count FROM USERS WHERE ID = l_user_id AND ACCOUNT_TYPE = 'admin';
+        IF l_count > 0 THEN
+            CONTINUE;  -- Jeœli u¿ytkownik jest adminem, nie aktualizujemy jego typu konta
+        END IF;
 
         -- Sprawdzenie i aktualizacja dla pielêgniarek
         SELECT COUNT(*) INTO l_count FROM NURSES WHERE USER_ID = l_user_id;
@@ -659,7 +664,6 @@ BEGIN
 
     COMMIT;
 END;
-/
 
 BEGIN
     DBMS_SCHEDULER.create_job (
@@ -670,6 +674,29 @@ BEGIN
         repeat_interval => 'FREQ=MINUTELY; INTERVAL=1', -- Wykonywanie co minutê
         enabled         => TRUE
     );
+END;
+
+-- Logowanie Doktora
+CREATE TABLE doctors_audit (
+    doctor_id NUMBER,
+    action VARCHAR2(10),
+    action_time TIMESTAMP
+);
+
+CREATE OR REPLACE TRIGGER trg_doctors_audit
+AFTER INSERT OR UPDATE OR DELETE ON doctors
+FOR EACH ROW
+BEGIN
+    IF INSERTING THEN
+        INSERT INTO doctors_audit (doctor_id, action, action_time)
+        VALUES (:NEW.id, 'INSERT', SYSTIMESTAMP);
+    ELSIF UPDATING THEN
+        INSERT INTO doctors_audit (doctor_id, action, action_time)
+        VALUES (:NEW.id, 'UPDATE', SYSTIMESTAMP);
+    ELSIF DELETING THEN
+        INSERT INTO doctors_audit (doctor_id, action, action_time)
+        VALUES (:OLD.id, 'DELETE', SYSTIMESTAMP);
+    END IF;
 END;
 /
 
