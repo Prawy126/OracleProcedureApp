@@ -41,24 +41,31 @@ class UserController extends Controller
     }
 
     public function update(Request $request, $id)
-    {
-        $validated = $request->validate([
-            'login' => 'required|string|max:255',
-            'password' => 'required|string|max:255',
-            'account_type' => 'required|string|max:255',
+{
+    // Validate the input
+    $validated = $request->validate([
+        'login' => 'required|string|max:255',
+        'password' => 'required|string|max:255',
+        'account_type' => 'required|string|max:255',
+    ]);
+
+    DB::transaction(function () use ($request, $validated, $id) {
+        DB::statement('BEGIN UPDATE_USER(:id, :login, :password, :account_type); END;', [
+            'id' => $id,
+            'login' => $validated['login'],
+            'password' => $validated['password'],
+            'account_type' => $validated['account_type'],
         ]);
+    });
 
-        DB::transaction(function () use ($request, $validated, $id) {
-            DB::statement('BEGIN UPDATE_USER(:id, :login, :password, :account_type); END;', [
-                'id' => $id,
-                'login' => $validated['login'],
-                'password' => $validated['password'],
-                'account_type' => $validated['account_type'],
-            ]);
-        });
+    $users = DB::table('users')->get();
 
-        return redirect()->route('admin')->with('success', 'User updated successfully.');
-    }
+    return view('admin', [
+        'view' => 'accounts',
+        'data' => ['users' => $users]
+    ])->with('success', 'User updated successfully.');
+}
+
 
     public function destroy($id)
     {
