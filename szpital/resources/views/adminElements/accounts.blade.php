@@ -1,4 +1,3 @@
-
 <div class="container mt-3">
     <form action="{{ route('users.store') }}" method="POST">
         @csrf

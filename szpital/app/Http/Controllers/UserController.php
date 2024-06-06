@@ -9,11 +9,11 @@ class UserController extends Controller
 {
     //🧟🧟🧟
     public function index()
-    {
-        $users = DB::select('SELECT ID, LOGIN, ACCOUNT_TYPE FROM USERS');
-        $view = 'accounts';
-        return redirect()->back();
-    }
+{
+    $users = DB::select('SELECT ID, LOGIN, ACCOUNT_TYPE FROM USERS');
+    return view('adminElements.accounts', ['users' => $users]);
+}
+
 
     public function store(Request $request)
     {
@@ -73,6 +73,10 @@ class UserController extends Controller
             DB::statement('BEGIN DELETE_USER(:id); END;', ['id' => $id]);
         });
 
-        return redirect()->route('users.index')->with('success', 'User deleted successfully.');
+        $users = DB::table('users')->get();
+        return view('admin', [
+            'view' => 'accounts',
+            'data' => ['users' => $users]
+        ])->with('success', 'User updated successfully.');
     }
 }
