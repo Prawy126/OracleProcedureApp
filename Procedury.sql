@@ -1,144 +1,151 @@
-CREATE OR REPLACE PROCEDURE ADD_DOCTOR(
-    p_name IN VARCHAR2,
-    p_surname IN VARCHAR2,
-    p_specialization IN VARCHAR2,
-    p_license_number IN VARCHAR2,
-    p_user_id IN NUMBER)
-IS
-BEGIN
-    INSERT INTO doctors (name, surname, specialization, license_number, user_id)
-    VALUES (p_name, p_surname, p_specialization, p_license_number, p_user_id);
-END;
+CREATE OR REPLACE PACKAGE hospital_pkg IS
 
-CREATE OR REPLACE PROCEDURE GET_DOCTOR(
-    p_doctor_id IN NUMBER,
-    p_doctor OUT SYS_REFCURSOR)
-IS
-BEGIN
-    OPEN p_doctor FOR
-    SELECT * FROM doctors WHERE id = p_doctor_id;
-END;
+    -- Composite record types
+    TYPE doctor_rec IS RECORD (
+        id              NUMBER,
+        name            VARCHAR2(20),
+        surname         VARCHAR2(25),
+        specialization  VARCHAR2(50),
+        license_number  VARCHAR2(50),
+        user_id         NUMBER
+    );
 
+    TYPE patient_rec IS RECORD (
+        id              NUMBER,
+        name            VARCHAR2(20),
+        surname         VARCHAR2(25),
+        nurse_id        NUMBER,
+        user_id         NUMBER,
+        time_visit      NUMBER,
+        room_id         NUMBER
+    );
 
-CREATE OR REPLACE PROCEDURE UPDATE_DOCTOR(
-    p_doctor_id IN NUMBER,
-    p_name IN VARCHAR2,
-    p_surname IN VARCHAR2,
-    p_specialization IN VARCHAR2,
-    p_license_number IN VARCHAR2,
-    p_user_id IN NUMBER)
-IS
-BEGIN
-    UPDATE doctors
-    SET name = p_name,
-        surname = p_surname,
-        specialization = p_specialization,
-        license_number = p_license_number,
-        user_id = p_user_id
-    WHERE id = p_doctor_id;
-END;
+    TYPE nurse_rec IS RECORD (
+        id              NUMBER,
+        name            VARCHAR2(20),
+        surname         VARCHAR2(30),
+        number          VARCHAR2(30),
+        user_id         NUMBER
+    );
 
+    -- Procedure declarations
+    PROCEDURE add_doctor(p_doctor IN doctor_rec);
+    PROCEDURE get_doctor(p_doctor_id IN NUMBER, p_doctor OUT SYS_REFCURSOR);
+    PROCEDURE update_doctor(p_doctor IN doctor_rec);
+    PROCEDURE delete_doctor(p_doctor_id IN NUMBER);
 
-CREATE OR REPLACE PROCEDURE DELETE_DOCTOR(
-    p_doctor_id IN NUMBER)
-IS
-BEGIN
-    DELETE FROM doctors WHERE id = p_doctor_id;
-END;
+    PROCEDURE add_patient(p_patient IN patient_rec);
+    PROCEDURE get_patient(p_patient_id IN NUMBER, p_patient OUT SYS_REFCURSOR);
+    PROCEDURE update_patient(p_patient IN patient_rec);
+    PROCEDURE delete_patient(p_patient_id IN NUMBER);
 
-CREATE OR REPLACE PROCEDURE ADD_PATIENT(
-    p_name IN VARCHAR2,
-    p_surname IN VARCHAR2,
-    p_nurse_id IN NUMBER,
-    p_user_id IN NUMBER,
-    p_time_visit IN NUMBER,
-    p_room_id IN NUMBER)
-IS
-BEGIN
-    INSERT INTO patients (name, surname, nurse_id, user_id, time_visit, room_id)
-    VALUES (p_name, p_surname, p_nurse_id, p_user_id, p_time_visit, p_room_id);
-END;
+    PROCEDURE add_nurse(p_nurse IN nurse_rec);
+    PROCEDURE get_nurse(p_nurse_id IN NUMBER, p_nurse OUT SYS_REFCURSOR);
+    PROCEDURE update_nurse(p_nurse IN nurse_rec);
+    PROCEDURE delete_nurse(p_nurse_id IN NUMBER);
 
-CREATE OR REPLACE PROCEDURE GET_PATIENT(
-    p_patient_id IN NUMBER,
-    p_patient OUT SYS_REFCURSOR)
-IS
-BEGIN
-    OPEN p_patient FOR
-    SELECT * FROM patients WHERE id = p_patient_id;
-END;
+END hospital_pkg;
 
+CREATE OR REPLACE PACKAGE BODY hospital_pkg IS
 
-CREATE OR REPLACE PROCEDURE UPDATE_PATIENT(
-    p_patient_id IN NUMBER,
-    p_name IN VARCHAR2,
-    p_surname IN VARCHAR2,
-    p_nurse_id IN NUMBER,
-    p_user_id IN NUMBER,
-    p_time_visit IN NUMBER,
-    p_room_id IN NUMBER)
-IS
-BEGIN
-    UPDATE patients
-    SET name = p_name,
-        surname = p_surname,
-        nurse_id = p_nurse_id,
-        user_id = p_user_id,
-        time_visit = p_time_visit
-    WHERE id = p_patient_id;
-END;
+    -- Add a doctor
+    PROCEDURE add_doctor(p_doctor IN doctor_rec) IS
+    BEGIN
+        INSERT INTO doctors (name, surname, specialization, license_number, user_id)
+        VALUES (p_doctor.name, p_doctor.surname, p_doctor.specialization, p_doctor.license_number, p_doctor.user_id);
+    END add_doctor;
 
-CREATE OR REPLACE PROCEDURE DELETE_PATIENT(
-    p_patient_id IN NUMBER)
-IS
-BEGIN
-    DELETE FROM patients WHERE id = p_patient_id;
-END;
+    -- Get a doctor
+    PROCEDURE get_doctor(p_doctor_id IN NUMBER, p_doctor OUT SYS_REFCURSOR) IS
+    BEGIN
+        OPEN p_doctor FOR
+        SELECT * FROM doctors WHERE id = p_doctor_id;
+    END get_doctor;
 
-CREATE OR REPLACE PROCEDURE ADD_NURSE(
-    p_name IN VARCHAR2,
-    p_surname IN VARCHAR2,
-    p_number IN VARCHAR2,
-    p_user_id IN NUMBER)
-IS
-BEGIN
-    INSERT INTO NURSES (NAME, SURNAME, "NUMBER", USER_ID)
-    VALUES (p_name, p_surname, p_number, p_user_id);
-END;
+    -- Update a doctor
+    PROCEDURE update_doctor(p_doctor IN doctor_rec) IS
+    BEGIN
+        UPDATE doctors
+        SET name = p_doctor.name,
+            surname = p_doctor.surname,
+            specialization = p_doctor.specialization,
+            license_number = p_doctor.license_number,
+            user_id = p_doctor.user_id
+        WHERE id = p_doctor.id;
+    END update_doctor;
 
+    -- Delete a doctor
+    PROCEDURE delete_doctor(p_doctor_id IN NUMBER) IS
+    BEGIN
+        DELETE FROM doctors WHERE id = p_doctor_id;
+    END delete_doctor;
 
-CREATE OR REPLACE PROCEDURE GET_NURSE(
-    p_nurse_id IN NUMBER,
-    p_nurse OUT SYS_REFCURSOR)
-IS
-BEGIN
-    OPEN p_nurse FOR
-    SELECT * FROM nurses WHERE id = p_nurse_id;
-END;
+    -- Add a patient
+    PROCEDURE add_patient(p_patient IN patient_rec) IS
+    BEGIN
+        INSERT INTO patients (name, surname, nurse_id, user_id, time_visit, room_id)
+        VALUES (p_patient.name, p_patient.surname, p_patient.nurse_id, p_patient.user_id, p_patient.time_visit, p_patient.room_id);
+    END add_patient;
 
+    -- Get a patient
+    PROCEDURE get_patient(p_patient_id IN NUMBER, p_patient OUT SYS_REFCURSOR) IS
+    BEGIN
+        OPEN p_patient FOR
+        SELECT * FROM patients WHERE id = p_patient_id;
+    END get_patient;
 
-CREATE OR REPLACE PROCEDURE UPDATE_NURSE(
-    p_nurse_id IN NUMBER,
-    p_name IN VARCHAR2,
-    p_surname IN VARCHAR2,
-    p_number IN VARCHAR2,
-    p_user_id IN NUMBER)
-IS
-BEGIN
-    UPDATE nurses
-    SET name = p_name,
-        surname = p_surname,
-        "NUMBER" = p_number,
-        user_id = p_user_id
-    WHERE id = p_nurse_id;
-END;
+    -- Update a patient
+    PROCEDURE update_patient(p_patient IN patient_rec) IS
+    BEGIN
+        UPDATE patients
+        SET name = p_patient.name,
+            surname = p_patient.surname,
+            nurse_id = p_patient.nurse_id,
+            user_id = p_patient.user_id,
+            time_visit = p_patient.time_visit,
+            room_id = p_patient.room_id
+        WHERE id = p_patient.id;
+    END update_patient;
 
-CREATE OR REPLACE PROCEDURE DELETE_NURSE(
-    p_nurse_id IN NUMBER)
-IS
-BEGIN
-    DELETE FROM nurses WHERE id = p_nurse_id;
-END;
+    -- Delete a patient
+    PROCEDURE delete_patient(p_patient_id IN NUMBER) IS
+    BEGIN
+        DELETE FROM patients WHERE id = p_patient_id;
+    END delete_patient;
+
+    -- Add a nurse
+    PROCEDURE add_nurse(p_nurse IN nurse_rec) IS
+    BEGIN
+        INSERT INTO nurses (name, surname, number, user_id)
+        VALUES (p_nurse.name, p_nurse.surname, p_nurse.number, p_nurse.user_id);
+    END add_nurse;
+
+    -- Get a nurse
+    PROCEDURE get_nurse(p_nurse_id IN NUMBER, p_nurse OUT SYS_REFCURSOR) IS
+    BEGIN
+        OPEN p_nurse FOR
+        SELECT * FROM nurses WHERE id = p_nurse_id;
+    END get_nurse;
+
+    -- Update a nurse
+    PROCEDURE update_nurse(p_nurse IN nurse_rec) IS
+    BEGIN
+        UPDATE nurses
+        SET name = p_nurse.name,
+            surname = p_nurse.surname,
+            number = p_nurse.number,
+            user_id = p_nurse.user_id
+        WHERE id = p_nurse.id;
+    END update_nurse;
+
+    -- Delete a nurse
+    PROCEDURE delete_nurse(p_nurse_id IN NUMBER) IS
+    BEGIN
+        DELETE FROM nurses WHERE id = p_nurse_id;
+    END delete_nurse;
+
+END hospital_pkg;
+
 
 CREATE OR REPLACE PROCEDURE ADD_MEDICINE(
     p_name IN VARCHAR2,
