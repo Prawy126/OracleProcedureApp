@@ -14,6 +14,11 @@ class DoctorController extends Controller
         $doctors = Doctor::all();
         return view('lekarzeTab', ['doctors' => $doctors]);
     }
+    public function dashboard()
+    {
+        $doctors = Doctor::all();
+        return view('lekarz', ['doctors' => $doctors]);
+    }
 
     public function store(Request $request)
     {

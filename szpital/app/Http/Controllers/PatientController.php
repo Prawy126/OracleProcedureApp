@@ -16,6 +16,12 @@ class PatientController extends Controller
         return view('pacjenciTab', ['patients' => $patients]);
     }
 
+    public function dashboard()
+    {
+        $patients = Patient::all();
+        return view('pacjent', ['patients' => $patients]);
+    }
+
     public function store(Request $request)
     {
         // Debugging request data

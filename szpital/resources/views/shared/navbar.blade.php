@@ -30,7 +30,14 @@
           </div>
         </li>
       </ul>
-      <button class="btn btn-outline-success" type="submit">Wyloguj się</button>
 
+      @if(Auth::check())
+        <form action="{{ route('logout') }}" method="POST" class="form-inline my-2 my-lg-0">
+          @csrf
+          <button class="btn btn-outline-danger my-2 my-sm-0" type="submit">Wyloguj się</button>
+        </form>
+      @else
+        <a class="btn btn-outline-success my-2 my-sm-0" href="{{ route('login') }}">Zaloguj się</a>
+      @endif
     </div>
-  </nav>
+</nav>

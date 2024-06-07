@@ -147,163 +147,279 @@ CREATE OR REPLACE PACKAGE BODY users_pkg IS
 END users_pkg;
 
 
-CREATE OR REPLACE PROCEDURE ADD_MEDICINE(
-    p_name IN VARCHAR2,
-    p_instruction IN CLOB,
-    p_warehouse_quantity IN NUMBER,
-    p_drug_category IN VARCHAR2,
-    p_price IN NUMBER,
-    p_dose_unit IN VARCHAR2)
-IS
-BEGIN
-    INSERT INTO MEDICINS ("NAME", "INSTRUCTION", "WAREHOUSE_QUANTITY", "DRUG_CATEGORY", "PRICE", "DOSE_UNIT")
-    VALUES (p_name, p_instruction, p_warehouse_quantity, p_drug_category, p_price, p_dose_unit);
-END;
+CREATE OR REPLACE PACKAGE szpital AS
+    -- Typy rekordów
+    TYPE medicin_rec IS RECORD (
+        id NUMBER,
+        name VARCHAR2(200),
+        instruction CLOB,
+        warehouse_quantity NUMBER,
+        drug_category VARCHAR2(200),
+        price NUMBER,
+        dose_unit VARCHAR2(200)
+    );
 
+    TYPE room_rec IS RECORD (
+        id NUMBER,
+        rnumber VARCHAR2(200),
+        rlocation VARCHAR2(200),
+        status VARCHAR2(200),
+        type_room VARCHAR2(200),
+        seats INTEGER
+    );
 
+    TYPE treatment_type_rec IS RECORD (
+        id NUMBER,
+        name VARCHAR2(200),
+        description CLOB,
+        recommendations_before_surgery CLOB,
+        recommendations_after_surgery CLOB,
+        created_at TIMESTAMP,
+        updated_at TIMESTAMP
+    );
 
-CREATE OR REPLACE PROCEDURE GET_MEDICIN(
-    p_medicin_id IN NUMBER,
-    p_medicin OUT SYS_REFCURSOR)
-IS
-BEGIN
-    OPEN p_medicin FOR
-    SELECT * FROM medicins WHERE id = p_medicin_id;
-END;
+    -- Procedury dla medicins
+    PROCEDURE add_medicine(
+        p_name IN VARCHAR2,
+        p_instruction IN CLOB,
+        p_warehouse_quantity IN NUMBER,
+        p_drug_category IN VARCHAR2,
+        p_price IN NUMBER,
+        p_dose_unit IN VARCHAR2
+    );
 
+    PROCEDURE get_medicin(
+        p_medicin_id IN NUMBER,
+        p_medicin OUT SYS_REFCURSOR
+    );
 
-CREATE OR REPLACE PROCEDURE UPDATE_MEDICIN(
-    p_medicin_id IN NUMBER,
-    p_name IN VARCHAR2,
-    p_instruction IN CLOB,
-    p_warehouse_quantity IN NUMBER,
-    p_drug_category IN VARCHAR2,
-    p_price IN NUMBER,
-    p_dose_unit IN VARCHAR2)
-IS
-BEGIN
-    UPDATE medicins
-    SET name = p_name,
-        instruction = p_instruction,
-        warehouse_quantity = p_warehouse_quantity,
-        drug_category = p_drug_category,
-        price = p_price,
-        dose_unit = p_dose_unit
-    WHERE id = p_medicin_id;
-END;
+    PROCEDURE update_medicin(
+        p_medicin_id IN NUMBER,
+        p_name IN VARCHAR2,
+        p_instruction IN CLOB,
+        p_warehouse_quantity IN NUMBER,
+        p_drug_category IN VARCHAR2,
+        p_price IN NUMBER,
+        p_dose_unit IN VARCHAR2
+    );
 
-CREATE OR REPLACE PROCEDURE DELETE_MEDICIN(
-    p_medicin_id IN NUMBER)
-IS
-BEGIN
-    DELETE FROM medicins WHERE id = p_medicin_id;
-END;
+    PROCEDURE delete_medicin(
+        p_medicin_id IN NUMBER
+    );
 
+    -- Procedury dla rooms
+    PROCEDURE add_room(
+        p_rnumber IN VARCHAR2,
+        p_rlocation IN VARCHAR2,
+        p_status IN VARCHAR2,
+        p_type_room IN VARCHAR2,
+        p_seats IN INTEGER
+    );
 
--- sekwencja dla room 
-CREATE SEQUENCE room_seq
-START WITH 1
-INCREMENT BY 1
-NOCACHE;
+    PROCEDURE get_room(
+        p_room_id IN NUMBER,
+        p_room OUT SYS_REFCURSOR
+    );
 
-CREATE OR REPLACE PROCEDURE ADD_ROOM (
-       p_rlocation IN VARCHAR2,
-       p_status IN VARCHAR2,
-       p_type_room IN VARCHAR2,
-       p_seats IN INTEGER
-   ) AS
-   BEGIN
-       INSERT INTO rooms (rnumber, rlocation, status, type_room, seats)
-       VALUES (room_seq.NEXTVAL, p_rlocation, p_status, p_type_room, p_seats);
-   END;
+    PROCEDURE update_room(
+        p_room_id IN NUMBER,
+        p_rnumber IN VARCHAR2,
+        p_rlocation IN VARCHAR2,
+        p_status IN VARCHAR2,
+        p_type_room IN VARCHAR2
+    );
 
+    PROCEDURE delete_room(
+        p_room_id IN NUMBER
+    );
 
+    -- Procedury dla treatment_types
+    PROCEDURE add_treatment_type(
+        p_ID IN NUMBER,
+        p_NAME IN VARCHAR2,
+        p_DESCRIPTION IN CLOB,
+        p_RECOMMENDATIONS_BEFORE_SURGERY IN CLOB,
+        p_RECOMMENDATIONS_AFTER_SURGERY IN CLOB,
+        p_CREATED_AT IN TIMESTAMP
+    );
 
+    PROCEDURE get_treatment_type(
+        p_ID IN NUMBER,
+        p_NAME OUT VARCHAR2,
+        p_DESCRIPTION OUT CLOB,
+        p_RECOMMENDATIONS_BEFORE_SURGERY OUT CLOB,
+        p_RECOMMENDATIONS_AFTER_SURGERY OUT CLOB,
+        p_CREATED_AT OUT TIMESTAMP,
+        p_UPDATED_AT OUT TIMESTAMP
+    );
 
-CREATE OR REPLACE PROCEDURE GET_ROOM(
-    p_room_id IN NUMBER,
-    p_room OUT SYS_REFCURSOR)
-IS
-BEGIN
-    OPEN p_room FOR
-    SELECT * FROM rooms WHERE id = p_room_id;
-END;
+    PROCEDURE update_treatment_type(
+        p_ID IN NUMBER,
+        p_NAME IN VARCHAR2,
+        p_DESCRIPTION IN CLOB,
+        p_RECOMMENDATIONS_BEFORE_SURGERY IN CLOB,
+        p_RECOMMENDATIONS_AFTER_SURGERY IN CLOB,
+        p_UPDATED_AT IN TIMESTAMP
+    );
 
+    PROCEDURE delete_treatment_type(
+        p_ID IN NUMBER
+    );
+END szpital;
+/
 
-CREATE OR REPLACE PROCEDURE UPDATE_ROOM(
-    p_room_id IN NUMBER,
-    p_rnumber IN VARCHAR2,
-    p_rlocation IN VARCHAR2,
-    p_status IN VARCHAR2,
-    p_type_room IN VARCHAR2)
-IS
-BEGIN
-    UPDATE rooms
-    SET rnumber = p_rnumber,
-        rlocation = p_rlocation,
-        status = p_status,
-        type_room = p_type_room
-    WHERE id = p_room_id;
-END;
+CREATE OR REPLACE PACKAGE BODY szpital AS
 
+    -- Procedury dla medicins
+    PROCEDURE add_medicine(
+        p_name IN VARCHAR2,
+        p_instruction IN CLOB,
+        p_warehouse_quantity IN NUMBER,
+        p_drug_category IN VARCHAR2,
+        p_price IN NUMBER,
+        p_dose_unit IN VARCHAR2
+    ) IS
+    BEGIN
+        INSERT INTO MEDICINS ("NAME", "INSTRUCTION", "WAREHOUSE_QUANTITY", "DRUG_CATEGORY", "PRICE", "DOSE_UNIT")
+        VALUES (p_name, p_instruction, p_warehouse_quantity, p_drug_category, p_price, p_dose_unit);
+    END add_medicine;
 
-CREATE OR REPLACE PROCEDURE DELETE_ROOM(
-    p_room_id IN NUMBER)
-IS
-BEGIN
-    DELETE FROM rooms WHERE id = p_room_id;
-END;
+    PROCEDURE get_medicin(
+        p_medicin_id IN NUMBER,
+        p_medicin OUT SYS_REFCURSOR
+    ) IS
+    BEGIN
+        OPEN p_medicin FOR
+        SELECT * FROM medicins WHERE id = p_medicin_id;
+    END get_medicin;
 
-CREATE OR REPLACE PROCEDURE ADD_TREATMENT_TYPE (
-    p_ID IN NUMBER,
-    p_NAME IN VARCHAR2,
-    p_DESCRIPTION IN CLOB,
-    p_RECOMMENDATIONS_BEFORE_SURGERY IN CLOB,
-    p_RECOMMENDATIONS_AFTER_SURGERY IN CLOB,
-    p_CREATED_AT IN TIMESTAMP
-) AS
-BEGIN
-    INSERT INTO TREATMENT_TYPES ("ID", "NAME", "DESCRIPTION", RECOMMENDATIONS_BEFORE_SURGERY, RECOMMENDATIONS_AFTER_SURGERY, CREATED_AT)
-    VALUES (p_ID, p_NAME, p_DESCRIPTION, p_RECOMMENDATIONS_BEFORE_SURGERY, p_RECOMMENDATIONS_AFTER_SURGERY, p_CREATED_AT);
-END;
+    PROCEDURE update_medicin(
+        p_medicin_id IN NUMBER,
+        p_name IN VARCHAR2,
+        p_instruction IN CLOB,
+        p_warehouse_quantity IN NUMBER,
+        p_drug_category IN VARCHAR2,
+        p_price IN NUMBER,
+        p_dose_unit IN VARCHAR2
+    ) IS
+    BEGIN
+        UPDATE medicins
+        SET name = p_name,
+            instruction = p_instruction,
+            warehouse_quantity = p_warehouse_quantity,
+            drug_category = p_drug_category,
+            price = p_price,
+            dose_unit = p_dose_unit
+        WHERE id = p_medicin_id;
+    END update_medicin;
 
-CREATE OR REPLACE PROCEDURE GET_TREATMENT_TYPE (
-    p_ID IN NUMBER,
-    p_NAME OUT VARCHAR2,
-    p_DESCRIPTION OUT CLOB,
-    p_RECOMMENDATIONS_BEFORE_SURGERY OUT CLOB,
-    p_RECOMMENDATIONS_AFTER_SURGERY OUT CLOB,
-    p_CREATED_AT OUT TIMESTAMP,
-    p_UPDATED_AT OUT TIMESTAMP
-) AS
-BEGIN
-    SELECT NAME, DESCRIPTION, RECOMMENDATIONS_BEFORE_SURGERY, RECOMMENDATIONS_AFTER_SURGERY, CREATED_AT, UPDATED_AT
-    INTO p_NAME, p_DESCRIPTION, p_RECOMMENDATIONS_BEFORE_SURGERY, p_RECOMMENDATIONS_AFTER_SURGERY, p_CREATED_AT, p_UPDATED_AT
-    FROM TREATMENT_TYPES
-    WHERE ID = p_ID;
-END;
+    PROCEDURE delete_medicin(
+        p_medicin_id IN NUMBER
+    ) IS
+    BEGIN
+        DELETE FROM medicins WHERE id = p_medicin_id;
+    END delete_medicin;
 
-CREATE OR REPLACE PROCEDURE UPDATE_TREATMENT_TYPE (
-    p_ID IN NUMBER,
-    p_NAME IN VARCHAR2,
-    p_DESCRIPTION IN CLOB,
-    p_RECOMMENDATIONS_BEFORE_SURGERY IN CLOB,
-    p_RECOMMENDATIONS_AFTER_SURGERY IN CLOB,
-    p_UPDATED_AT IN TIMESTAMP
-) AS
-BEGIN
-    UPDATE TREATMENT_TYPES
-    SET NAME = p_NAME, DESCRIPTION = p_DESCRIPTION, RECOMMENDATIONS_BEFORE_SURGERY = p_RECOMMENDATIONS_AFTER_SURGERY,
-        RECOMMENDATIONS_AFTER_SURGERY = p_RECOMMENDATIONS_AFTER_SURGERY, UPDATED_AT = p_UPDATED_AT
-    WHERE ID = p_ID;
-END;
+    -- Procedury dla rooms
+    PROCEDURE add_room(
+        p_rnumber IN VARCHAR2,
+        p_rlocation IN VARCHAR2,
+        p_status IN VARCHAR2,
+        p_type_room IN VARCHAR2,
+        p_seats IN INTEGER
+    ) IS
+    BEGIN
+        INSERT INTO rooms (rnumber, rlocation, status, type_room, seats)
+        VALUES (p_rnumber, p_rlocation, p_status, p_type_room, p_seats);
+    END add_room;
 
-CREATE OR REPLACE PROCEDURE DELETE_TREATMENT_TYPE (
-    p_ID IN NUMBER
-) AS
-BEGIN
-    DELETE FROM TREATMENT_TYPES WHERE ID = p_ID;
-END;
+    PROCEDURE get_room(
+        p_room_id IN NUMBER,
+        p_room OUT SYS_REFCURSOR
+    ) IS
+    BEGIN
+        OPEN p_room FOR
+        SELECT * FROM rooms WHERE id = p_room_id;
+    END get_room;
+
+    PROCEDURE update_room(
+        p_room_id IN NUMBER,
+        p_rnumber IN VARCHAR2,
+        p_rlocation IN VARCHAR2,
+        p_status IN VARCHAR2,
+        p_type_room IN VARCHAR2
+    ) IS
+    BEGIN
+        UPDATE rooms
+        SET rnumber = p_rnumber,
+            rlocation = p_rlocation,
+            status = p_status,
+            type_room = p_type_room
+        WHERE id = p_room_id;
+    END update_room;
+
+    PROCEDURE delete_room(
+        p_room_id IN NUMBER
+    ) IS
+    BEGIN
+        DELETE FROM rooms WHERE id = p_room_id;
+    END delete_room;
+
+    -- Procedury dla treatment_types
+    PROCEDURE add_treatment_type(
+        p_ID IN NUMBER,
+        p_NAME IN VARCHAR2,
+        p_DESCRIPTION IN CLOB,
+        p_RECOMMENDATIONS_BEFORE_SURGERY IN CLOB,
+        p_RECOMMENDATIONS_AFTER_SURGERY IN CLOB,
+        p_CREATED_AT IN TIMESTAMP
+    ) IS
+    BEGIN
+        INSERT INTO TREATMENT_TYPES ("ID", "NAME", "DESCRIPTION", RECOMMENDATIONS_BEFORE_SURGERY, RECOMMENDATIONS_AFTER_SURGERY, CREATED_AT)
+        VALUES (p_ID, p_NAME, p_DESCRIPTION, p_RECOMMENDATIONS_BEFORE_SURGERY, p_RECOMMENDATIONS_AFTER_SURGERY, p_CREATED_AT);
+    END add_treatment_type;
+
+    PROCEDURE get_treatment_type(
+        p_ID IN NUMBER,
+        p_NAME OUT VARCHAR2,
+        p_DESCRIPTION OUT CLOB,
+        p_RECOMMENDATIONS_BEFORE_SURGERY OUT CLOB,
+        p_RECOMMENDATIONS_AFTER_SURGERY OUT CLOB,
+        p_CREATED_AT OUT TIMESTAMP,
+        p_UPDATED_AT OUT TIMESTAMP
+    ) IS
+    BEGIN
+        SELECT NAME, DESCRIPTION, RECOMMENDATIONS_BEFORE_SURGERY, RECOMMENDATIONS_AFTER_SURGERY, CREATED_AT, UPDATED_AT
+        INTO p_NAME, p_DESCRIPTION, p_RECOMMENDATIONS_BEFORE_SURGERY, p_RECOMMENDATIONS_AFTER_SURGERY, p_CREATED_AT, p_UPDATED_AT
+        FROM TREATMENT_TYPES
+        WHERE ID = p_ID;
+    END get_treatment_type;
+
+    PROCEDURE update_treatment_type(
+        p_ID IN NUMBER,
+        p_NAME IN VARCHAR2,
+        p_DESCRIPTION IN CLOB,
+        p_RECOMMENDATIONS_BEFORE_SURGERY IN CLOB,
+        p_RECOMMENDATIONS_AFTER_SURGERY IN CLOB,
+        p_UPDATED_AT IN TIMESTAMP
+    ) IS
+    BEGIN
+        UPDATE TREATMENT_TYPES
+        SET NAME = p_NAME, DESCRIPTION = p_DESCRIPTION, RECOMMENDATIONS_BEFORE_SURGERY = p_RECOMMENDATIONS_AFTER_SURGERY,
+            RECOMMENDATIONS_AFTER_SURGERY = p_RECOMMENDATIONS_AFTER_SURGERY, UPDATED_AT = p_UPDATED_AT
+        WHERE ID = p_ID;
+    END update_treatment_type;
+
+    PROCEDURE delete_treatment_type(
+        p_ID IN NUMBER
+    ) IS
+    BEGIN
+        DELETE FROM TREATMENT_TYPES WHERE ID = p_ID;
+    END delete_treatment_type;
+
+END szpital;
+/
+
 
 
 CREATE OR REPLACE PROCEDURE ADD_TREATMENTS_DOCTORS (
@@ -539,7 +655,7 @@ CREATE OR REPLACE PROCEDURE CREATE_USER (
 ) AS
 BEGIN
     INSERT INTO USERS (ID, LOGIN, PASSWORD, ACCOUNT_TYPE)
-    VALUES (p_ID, p_LOGIN, HASH_PASSWORD(p_PASSWORD), p_ACCOUNT_TYPE);
+    VALUES (p_ID, p_LOGIN, p_PASSWORD, p_ACCOUNT_TYPE);
 END;
 
 CREATE OR REPLACE PROCEDURE GET_USER (
@@ -562,7 +678,7 @@ CREATE OR REPLACE PROCEDURE UPDATE_USER (
 ) AS
 BEGIN
     UPDATE USERS
-    SET LOGIN = p_LOGIN, PASSWORD = HASH_PASSWORD(p_PASSWORD), ACCOUNT_TYPE = p_ACCOUNT_TYPE
+    SET LOGIN = p_LOGIN, PASSWORD = p_PASSWORD, ACCOUNT_TYPE = p_ACCOUNT_TYPE
     WHERE ID = p_ID;
 END;
 
@@ -756,5 +872,43 @@ BEGIN
         VALUES (:OLD.id, 'DELETE', SYSTIMESTAMP);
     END IF;
 END;
+/
+
+CREATE OR REPLACE PROCEDURE login (
+    p_login IN VARCHAR2,
+    p_password IN VARCHAR2,
+    p_result OUT NUMBER
+) IS
+BEGIN
+    -- Use the CHECK_PASSWORD function to validate the password
+    IF CHECK_PASSWORD(p_login, p_password) THEN
+        p_result := 1; -- TRUE
+    ELSE
+        p_result := 0; -- FALSE
+    END IF;
+END;
+/
+
+CREATE OR REPLACE PACKAGE szpital_stats AS
+    TYPE stats_rec IS RECORD (
+        patient_count NUMBER,
+        procedure_count NUMBER,
+        doctor_count NUMBER,
+        nurse_count NUMBER
+    );
+
+    PROCEDURE get_stats(p_stats OUT stats_rec);
+END szpital_stats;
+/
+
+CREATE OR REPLACE PACKAGE BODY szpital_stats AS
+    PROCEDURE get_stats(p_stats OUT stats_rec) IS
+    BEGIN
+        SELECT COUNT(*) INTO p_stats.patient_count FROM patients;
+        SELECT COUNT(*) INTO p_stats.procedure_count FROM procedures;
+        SELECT COUNT(*) INTO p_stats.doctor_count FROM doctors;
+        SELECT COUNT(*) INTO p_stats.nurse_count FROM nurses;
+    END get_stats;
+END szpital_stats;
 /
 

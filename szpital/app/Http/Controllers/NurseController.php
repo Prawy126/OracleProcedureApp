@@ -25,6 +25,13 @@ class NurseController extends Controller
         ]);
     }
 
+    public function dashboard()
+    {
+
+
+        return view('pielegniarka');
+    }
+
     public function store(Request $request)
     {
         // Debugging

@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Schema;
 
 class UserSeeder extends Seeder
@@ -19,24 +20,24 @@ class UserSeeder extends Seeder
 
         User::insert([[
             'login' => 'login',
-            'password' => 'haslo',
-            'account_type' => 'patient'
+            'password' => Hash::make('haslo'),
+            'account_type' => 'admin'
         ],
 
         [
             'login' => 'login2',
-            'password' => 'haslo',
+            'password' => Hash::make('haslo'),
             'account_type' => 'nurse'
         ],
 
         [
             'login' => 'login3',
-            'password' => 'haslo',
+            'password' => Hash::make('haslo'),
             'account_type' => 'doctor'
         ],
         [
             'login' => 'login4',
-            'password' => 'haslo',
+            'password' => Hash::make('haslo'),
             'account_type' => 'doctor'
         ],
     ]);

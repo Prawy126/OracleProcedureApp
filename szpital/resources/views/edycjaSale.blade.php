@@ -23,7 +23,7 @@
             <div class="form-group row mb-4">
                 <label for="inputNumerSali" class="col-md-2 col-form-label">Numer sali:</label>
                 <div class="col-md-4">
-                    <input type="number" class="form-control" id="inputNumerSali" name="rnumber" placeholder="Numer sali" value="{{ $room['RNUMBER'] }}">
+                    <input type="text" class="form-control" id="inputNumerSali" name="rnumber" placeholder="Numer sali" value="{{ $room['RNUMBER'] }}">
                 </div>
             </div>
             <div class="form-group row mb-4">

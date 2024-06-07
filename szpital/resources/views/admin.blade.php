@@ -16,7 +16,7 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Liczba pacjentów:</h5>
-                        <p class="card-text">45</p>
+                        <p class="card-text">{{$stats['patient_count']}}</p>
                     </div>
                 </div>
             </div>
@@ -25,7 +25,7 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Zaplanowanych zabiegów: </h5>
-                        <p class="card-text">45</p>
+                        <p class="card-text">{{$stats['procedure_count']}}</p>
                     </div>
                 </div>
             </div>
@@ -34,7 +34,7 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Liczba lekarzy:</h5>
-                        <p class="card-text">45</p>
+                        <p class="card-text">{{$stats['doctor_count']}}</p>
                     </div>
                 </div>
             </div>
@@ -43,7 +43,7 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Liczba pielęgniarek:</h5>
-                        <p class="card-text">45</p>
+                        <p class="card-text">{{$stats['nurse_count']}}</p>
                     </div>
                 </div>
             </div>

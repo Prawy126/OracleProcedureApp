@@ -10,6 +10,13 @@ use App\Http\Controllers\RoomController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\AuthController;
+
+Route::get('login', [AuthController::class, 'showLoginForm'])->name('login');
+Route::post('login', [AuthController::class, 'login']);
+Route::post('logout', [AuthController::class, 'logout'])->name('logout');
+
+
 //dopisz import dla UserController
 //Zawartość w pliku do controllera.txt
 /*
@@ -69,7 +76,7 @@ Route::put('/lekiTab/{id}', [MedicinController::class, 'update'])->name('medicin
 Route::delete('/lekiTab/{id}', [MedicinController::class, 'destroy'])->name('medicinDelete');
 
 Route::get('/saleTab', [RoomController::class, 'index'])->name('roomIndex');
-Route::get('/rooms/{id}', [RoomController::class, 'show'])->name('roomsShow');
+Route::get('/rooms/{id}', [RoomController::class, 'edit'])->name('roomsShow');
 Route::post('/rooms', [RoomController::class, 'store'])->name('roomsStore');
 Route::put('/rooms/{id}', [RoomController::class, 'update'])->name('roomsUpdate');
 Route::delete('/rooms/{id}', [RoomController::class, 'destroy'])->name('roomsDestroy');
@@ -88,3 +95,6 @@ Route::get('users/{user}/edit', [UserController::class, 'edit'])->name('users.ed
 Route::put('users/{user}', [UserController::class, 'update'])->name('users.update');
 Route::delete('users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
 
+Route::get('/doctor/dashboard', [DoctorController::class, 'dashboard'])->name('doctor.dashboard');
+Route::get('/nurse/dashboard', [NurseController::class, 'dashboard'])->name('nurse.dashboard');
+Route::get('/patient/dashboard', [PatientController::class, 'dashboard'])->name('patient.dashboard');
