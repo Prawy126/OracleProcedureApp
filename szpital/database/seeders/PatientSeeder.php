@@ -14,5 +14,13 @@ class PatientSeeder extends Seeder
     public function run(): void
     {
         Patient::truncate();
+        Patient::insert([[
+            'name'=> 'Anna',
+            'surname'=>'Nowak',
+            'nurse_id'=>1,
+            'user_id'=>4,
+            'time_visit'=>32,
+            'room_id'=>1
+        ]]);
     }
 }

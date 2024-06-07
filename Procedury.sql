@@ -1,4 +1,4 @@
-CREATE OR REPLACE PACKAGE hospital_pkg IS
+CREATE OR REPLACE PACKAGE users_pkg IS
 
     -- Composite record types
     TYPE doctor_rec IS RECORD (
@@ -24,7 +24,7 @@ CREATE OR REPLACE PACKAGE hospital_pkg IS
         id              NUMBER,
         name            VARCHAR2(20),
         surname         VARCHAR2(30),
-        number          VARCHAR2(30),
+        "number"        VARCHAR2(30),
         user_id         NUMBER
     );
 
@@ -44,9 +44,9 @@ CREATE OR REPLACE PACKAGE hospital_pkg IS
     PROCEDURE update_nurse(p_nurse IN nurse_rec);
     PROCEDURE delete_nurse(p_nurse_id IN NUMBER);
 
-END hospital_pkg;
+END users_pkg;
 
-CREATE OR REPLACE PACKAGE BODY hospital_pkg IS
+CREATE OR REPLACE PACKAGE BODY users_pkg IS
 
     -- Add a doctor
     PROCEDURE add_doctor(p_doctor IN doctor_rec) IS
@@ -144,7 +144,7 @@ CREATE OR REPLACE PACKAGE BODY hospital_pkg IS
         DELETE FROM nurses WHERE id = p_nurse_id;
     END delete_nurse;
 
-END hospital_pkg;
+END users_pkg;
 
 
 CREATE OR REPLACE PROCEDURE ADD_MEDICINE(
@@ -207,7 +207,6 @@ INCREMENT BY 1
 NOCACHE;
 
 CREATE OR REPLACE PROCEDURE ADD_ROOM (
-       p_rnumber IN NUMBER,
        p_rlocation IN VARCHAR2,
        p_status IN VARCHAR2,
        p_type_room IN VARCHAR2,
@@ -215,7 +214,7 @@ CREATE OR REPLACE PROCEDURE ADD_ROOM (
    ) AS
    BEGIN
        INSERT INTO rooms (rnumber, rlocation, status, type_room, seats)
-       VALUES (p_rnumber, p_rlocation, p_status, p_type_room, p_seats);
+       VALUES (room_seq.NEXTVAL, p_rlocation, p_status, p_type_room, p_seats);
    END;
 
 
@@ -690,6 +689,7 @@ CREATE TABLE doctors_audit (
     action_time TIMESTAMP
 );
 
+-- Triger do logowania doktora
 CREATE OR REPLACE TRIGGER trg_doctors_audit
 AFTER INSERT OR UPDATE OR DELETE ON doctors
 FOR EACH ROW
@@ -707,27 +707,54 @@ BEGIN
 END;
 /
 
+--Pacjent
+-- Logowanie Patienta
+CREATE TABLE patients_audit (
+    patient_id NUMBER,
+    action VARCHAR2(10),
+    action_time TIMESTAMP
+);
 
+-- Triger do logowania patienta
+CREATE OR REPLACE TRIGGER trg_patients_audit
+AFTER INSERT OR UPDATE OR DELETE ON patients
+FOR EACH ROW
+BEGIN
+    IF INSERTING THEN
+        INSERT INTO patients_audit (patient_id, action, action_time)
+        VALUES (:NEW.id, 'INSERT', SYSTIMESTAMP);
+    ELSIF UPDATING THEN
+        INSERT INTO patients_audit (patient_id, action, action_time)
+        VALUES (:NEW.id, 'UPDATE', SYSTIMESTAMP);
+    ELSIF DELETING THEN
+        INSERT INTO patients_audit (patient_id, action, action_time)
+        VALUES (:OLD.id, 'DELETE', SYSTIMESTAMP);
+    END IF;
+END;
+/
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+--Pielêgniarki
+-- Logowanie Pielêgniarki
+CREATE TABLE nurses_audit (
+    nurse_id NUMBER,
+    action VARCHAR2(10),
+    action_time TIMESTAMP
+);
+-- Triger do logowania pielêgniarki
+CREATE OR REPLACE TRIGGER trg_nurses_audit
+AFTER INSERT OR UPDATE OR DELETE ON nurses
+FOR EACH ROW
+BEGIN
+    IF INSERTING THEN
+        INSERT INTO nurses_audit (nurse_id, action, action_time)
+        VALUES (:NEW.id, 'INSERT', SYSTIMESTAMP);
+    ELSIF UPDATING THEN
+        INSERT INTO nurses_audit (nurse_id, action, action_time)
+        VALUES (:NEW.id, 'UPDATE', SYSTIMESTAMP);
+    ELSIF DELETING THEN
+        INSERT INTO nurses_audit (nurse_id, action, action_time)
+        VALUES (:OLD.id, 'DELETE', SYSTIMESTAMP);
+    END IF;
+END;
+/
 

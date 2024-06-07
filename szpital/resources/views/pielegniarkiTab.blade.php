@@ -43,7 +43,7 @@
                             <th scope="row">{{ $nur->id }}</th>
                             <td>{{ $nur->name }}</td>
                             <td>{{ $nur->surname }}</td>
-                            <td>{{ $nur->number }}</td>
+                            <td>{{ $nur->number_license }}</td>
                             <td>{{ $nur->user_id }}</td>
                             <td><a href="{{ route('nursesShow', $nur->id) }}" class="btn btn-warning">Edytuj</a></td>
                             <td>
@@ -76,7 +76,7 @@
                     <input type="text" class="form-control" name="surname" id="inputSurname" placeholder="Nazwisko">
                 </div>
                 <div class="form-group col-md-2">
-                    <input type="text" class="form-control" name="number" id="inputNumber" placeholder="Numer">
+                    <input type="text" class="form-control" name="number_license" id="inputNumber" placeholder="Numer">
                 </div>
                 <div class="form-group col-md-2">
                     <input type="number" class="form-control" name="user_id" id="inputUserID" placeholder="ID Użytkownika">

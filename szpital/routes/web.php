@@ -56,6 +56,11 @@ Route::put('/nurses/{id}', [NurseController::class, 'update'])->name('nursesUpda
 Route::delete('/nurses/{id}', [NurseController::class, 'destroy'])->name('nursesDestroy');
 
 Route::get('/pacjenciTab', [PatientController::class, 'index'])->name('patientIndex');
+Route::post('/patients', [PatientController::class, 'store'])->name('patientsStore');
+Route::get('/patients/{id}', [PatientController::class, 'show'])->name('patientsShow');
+Route::put('/patients/{id}', [PatientController::class, 'update'])->name('patientsUpdate');
+Route::delete('/patients/{id}', [PatientController::class, 'destroy'])->name('patientsDestroy');
+
 
 Route::get('/lekiTab', [MedicinController::class, 'index'])->name('medicinIndex');
 Route::post('/lekiTab', [MedicinController::class, 'store'])->name('medicinStore');

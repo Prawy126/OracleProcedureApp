@@ -14,14 +14,7 @@ class NursSeeder extends Seeder
     public function run(): void
     {
         //🧟🧟
-        Nurse::truncate();
 
-        Nurse::insert([[
-            'name'=> 'Anna',
-            'surname'=>'Nowak',
-            'number'=>'12s132sad1',
-            'user_id'=>2
-        ]]);
 
     }
 }

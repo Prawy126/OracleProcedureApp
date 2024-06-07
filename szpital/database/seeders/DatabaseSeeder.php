@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Patient;
 use App\Models\room;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -23,8 +24,9 @@ class DatabaseSeeder extends Seeder
         $this->call([
             UserSeeder::class,
             RoomSeeder::class,
-            NursSeeder::class,
-            DoctorSeeder::class
+            NurseSeeder::class,
+            DoctorSeeder::class,
+            PatientSeeder::class
         ]);
     }
 }

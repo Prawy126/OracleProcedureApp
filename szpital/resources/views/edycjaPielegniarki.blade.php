@@ -25,7 +25,7 @@
                 </div>
                 <div class="form-group col-md-2">
                     <label for="inputNumber">Numer</label>
-                    <input type="number" class="form-control" name="number" id="inputNumber" placeholder="Numer" value="{{ $nurse['NUMBER'] }}" required>
+                    <input type="text" class="form-control" name="number_license" id="inputNumber_license" placeholder="Numer" value="{{ $nurse['NUMBER_LICENSE'] }}" required>
                 </div>
                 <div class="form-group col-md-2">
                     <label for="inputUserID">ID Użytkownika</label>

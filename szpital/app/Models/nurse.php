@@ -12,7 +12,7 @@ class Nurse extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name','surname','number','user_id'];
+    protected $fillable = ['name','surname','number_license','user_id'];
 
     public $timestamps = false;
 
