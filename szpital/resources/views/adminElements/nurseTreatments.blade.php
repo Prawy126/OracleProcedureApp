@@ -38,8 +38,8 @@
                             <td>{{ $treatmentNurse->nurse_id }}</td>
                             <td>{{ $treatmentNurse->procedure_id }}</td>
                             <td>
-                                <a href="{{ route('treatmentNurses.edit', $treatmentsNurse->id) }}" class="btn btn-warning">Edytuj</a>
-                                <form action="{{ route('treatmentNurses.destroy', $treatmentsNurse->id) }}" method="POST" style="display:inline;">
+                                <a href="{{ route('treatmentNurses.edit', $treatmentNurse->id) }}" class="btn btn-warning">Edytuj</a>
+                                <form action="{{ route('treatmentNurses.destroy', $treatmentNurse->id) }}" method="POST" style="display:inline;">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-danger">Usuń</button>
