@@ -11,7 +11,7 @@ class TreatmentTypeController extends Controller
     {
         $search = $request->get('search');
         $treatmentTypes = DB::select('SELECT * FROM TREATMENT_TYPES WHERE NAME LIKE ?', ['%' . $search . '%']);
-        return view('treatmentTypes.index', compact('treatmentTypes'));
+        return view('typZabiegowTab', compact('treatmentTypes'));
     }
 
     public function create()
@@ -30,7 +30,7 @@ class TreatmentTypeController extends Controller
             'p_CREATED_AT' => now(),
         ]);
 
-        return redirect()->route('treatmentTypes.index')->with('success', 'Treatment Type added successfully');
+        return redirect()->route('typZapiegowTab')->with('success', 'Treatment Type added successfully');
     }
 
     public function edit($id)

@@ -1,3 +1,5 @@
+@include('shared.head')
+@include('shared.navbar')
 <div class="container mt-4">
     <div class="table-responsive">
         <table class="table table-bordered table-hover">
@@ -19,16 +21,14 @@
                 @foreach($treatmentTypes as $treatmentType)
                 <tr>
                     <th scope="row">{{ $loop->iteration }}</th>
-                    <td>{{ $treatmentType->ID }}</td>
-                    <td>{{ $treatmentType->NAME }}</td>
-                    <td>{{ $treatmentType->DESCRIPTION }}</td>
-                    <td>{{ $treatmentType->RECOMMENDATIONS_BEFORE_SURGERY }}</td>
-                    <td>{{ $treatmentType->RECOMMENDATIONS_AFTER_SURGERY }}</td>
-                    <td>{{ $treatmentType->CREATED_AT }}</td>
-                    <td>{{ $treatmentType->UPDATED_AT }}</td>
-                    <td><a href="{{ route('treatmentTypes.edit', $treatmentType->ID) }}">Edytuj</a></td>
+                    <td>{{ $treatmentType->id }}</td>
+                    <td>{{ $treatmentType->name }}</td>
+                    <td>{{ $treatmentType->description }}</td>
+                    <td>{{ $treatmentType->recommendations_after_surgery }}</td>
+                    <td>{{ $treatmentType->recommendations_before_surgery }}</td>
+                    <td><a href="{{ route('treatmentTypes.edit', $treatmentType->id) }}">Edytuj</a></td>
                     <td>
-                        <form action="{{ route('treatmentTypes.destroy', $treatmentType->ID) }}" method="POST">
+                        <form action="{{ route('treatmentTypes.destroy', $treatmentType->id) }}" method="POST">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn btn-danger">Usuń</button>

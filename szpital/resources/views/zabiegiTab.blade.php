@@ -43,7 +43,6 @@
                     @foreach($procedures as $procedure)
                     <tr>
                         <th scope="row">{{ $procedure->id }}</th>
-                        <td>{{ $procedure->id }}</td>
                         <td>{{ $procedure->treatment_type_id }}</td>
                         <td>{{ $procedure->room_id }}</td>
                         <td>{{ $procedure->date }}</td>
@@ -70,9 +69,6 @@
         <form action="{{ route('proceduresStore') }}" method="POST">
             @csrf
             <div class="row">
-                <div class="form-group col-md-1">
-                    <input type="number" class="form-control" name="id" placeholder="ID">
-                </div>
                 <div class="form-group col-md-2">
                     <input type="number" class="form-control" name="treatment_type_id" placeholder="ID Rodzaju zabiegu">
                 </div>
@@ -80,7 +76,7 @@
                     <input type="number" class="form-control" name="room_id" placeholder="ID Sali">
                 </div>
                 <div class="form-group col-md-2">
-                    <input type="date" class="form-control" name="date" placeholder="Data">
+                    <input type="datetime" class="form-control" name="date" placeholder="Data">
                 </div>
                 <div class="form-group col-md-2">
                     <input type="text" class="form-control" name="time" placeholder="Czas trwania">
