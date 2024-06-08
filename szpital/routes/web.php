@@ -11,6 +11,7 @@ use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\TreatmentTypeController;
 
 Route::get('login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('login', [AuthController::class, 'login']);
@@ -98,3 +99,9 @@ Route::delete('users/{user}', [UserController::class, 'destroy'])->name('users.d
 Route::get('/doctor/dashboard', [DoctorController::class, 'dashboard'])->name('doctor.dashboard');
 Route::get('/nurse/dashboard', [NurseController::class, 'dashboard'])->name('nurse.dashboard');
 Route::get('/patient/dashboard', [PatientController::class, 'dashboard'])->name('patient.dashboard');
+
+Route::get('/treatment-types', [TreatmentTypeController::class, 'index'])->name('treatmentTypes.index');
+Route::post('/treatment-types', [TreatmentTypeController::class, 'store'])->name('treatmentTypes.store');
+Route::get('/treatment-types/{id}/edit', [TreatmentTypeController::class, 'edit'])->name('treatmentTypes.edit');
+Route::put('/treatment-types/{id}', [TreatmentTypeController::class, 'update'])->name('treatmentTypes.update');
+Route::delete('/treatment-types/{id}', [TreatmentTypeController::class, 'destroy'])->name('treatmentTypes.destroy');
