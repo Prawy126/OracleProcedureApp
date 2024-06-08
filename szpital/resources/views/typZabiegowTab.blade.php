@@ -1,5 +1,6 @@
 @include('shared.head')
 @include('shared.navbar')
+@include('shared.scripts')
 <div class="container mt-4">
     <div class="table-responsive">
         <table class="table table-bordered table-hover">

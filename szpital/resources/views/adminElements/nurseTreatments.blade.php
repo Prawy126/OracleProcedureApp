@@ -1,11 +1,11 @@
 <div class="col-md-12">
-    <form action="" method="POST">
+    <form action="{{ route('treatmentNurses.store') }}" method="POST">
         @csrf
         <div class="form-row">
             <div class="form-group col-md-6">
                 <label for="nurseId">Id pielęgniarki</label>
                 <select id="nurseId" class="form-select" name="nurse_id">
-                    @foreach($nurses as $nurse)
+                    @foreach($data['nurses'] as $nurse)
                         <option value="{{ $nurse->id }}">{{ $nurse->id }} {{ $nurse->name }} {{ $nurse->surname }}</option>
                     @endforeach
                 </select>
@@ -13,8 +13,8 @@
             <div class="form-group col-md-6">
                 <label for="procedureId">Id zabiegu</label>
                 <select id="procedureId" class="form-select" name="procedure_id">
-                    @foreach($procedures as $procedure)
-                        <option value="{{ $procedure->id }}">{{ $procedure->id }} {{ $procedure->procedure_name }} {{ $procedure->date }}</option>
+                    @foreach($data['procedures'] as $procedure)
+                        <option value="{{ $procedure->id }}">{{ $procedure->id }} {{ $procedure->date }}</option>
                     @endforeach
                 </select>
             </div>
@@ -34,13 +34,13 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse($treatmentNurses as $treatmentNurse)
+                    @forelse($data['treatmentNurses'] as $treatmentNurse)
                         <tr>
                             <td>{{ $treatmentNurse->nurse_id }}</td>
                             <td>{{ $treatmentNurse->procedure_id }}</td>
-                            <td><a href="" class="btn btn-warning">Edytuj</a></td>
+                            <td><a href="{{ route('treatmentNurses.edit', $treatmentNurse->nurse_id) }}" class="btn btn-warning">Edytuj</a></td>
                             <td>
-                            <form action="" method="POST">
+                            <form action="{{ route('treatmentNurses.destroy', $treatmentNurse->nurse_id) }}" method="POST">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-danger">Usuń</button>

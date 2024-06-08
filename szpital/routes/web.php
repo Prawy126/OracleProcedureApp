@@ -11,6 +11,7 @@ use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\TreatmentNurseController;
 use App\Http\Controllers\TreatmentTypeController;
 
 Route::get('login', [AuthController::class, 'showLoginForm'])->name('login');
@@ -105,3 +106,8 @@ Route::post('/treatment-types', [TreatmentTypeController::class, 'store'])->name
 Route::get('/treatment-types/{id}/edit', [TreatmentTypeController::class, 'edit'])->name('treatmentTypes.edit');
 Route::put('/treatment-types/{id}', [TreatmentTypeController::class, 'update'])->name('treatmentTypes.update');
 Route::delete('/treatment-types/{id}', [TreatmentTypeController::class, 'destroy'])->name('treatmentTypes.destroy');
+
+Route::get('/treatment-nurses', [TreatmentNurseController::class, 'index'])->name('admin');
+Route::post('/treatment-nurses', [TreatmentNurseController::class, 'store'])->name('treatmentNurses.store');
+Route::put('/treatment-nurses/{nurse_id}', [TreatmentNurseController::class, 'update'])->name('treatmentNurses.update');
+Route::delete('/treatment-nurses/{nurse_id}', [TreatmentNurseController::class, 'destroy'])->name('treatmentNurses.destroy');
