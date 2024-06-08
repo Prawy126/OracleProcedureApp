@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use DB;
+use Illuminate\Support\Facades\DB;
+use PDO;
 
 class ProcedureController extends Controller
 {
@@ -20,32 +21,63 @@ class ProcedureController extends Controller
 
     public function store(Request $request)
     {
-        $id = $request->input('id');
         $treatmentTypeId = $request->input('treatment_type_id');
         $roomId = $request->input('room_id');
-        $createdAt = now();
+        $date = $request->input('date');
         $time = $request->input('time');
         $cost = $request->input('cost');
         $status = $request->input('status');
 
-        DB::statement("CALL ADD_PROCEDURE(?, ?, ?, ?, ?, ?, ?)", [
-            $id, $treatmentTypeId, $roomId, $createdAt, $time, $cost, $status
+        DB::statement("CALL ADD_PROCEDURE(?, ?, ?, ?, ?, ?)", [
+            $treatmentTypeId, $roomId, $date, $time, $cost, $status
         ]);
 
         return redirect()->route('proceduresIndex');
+    }
+
+    public function show($id)
+    {
+        $procedure = null;
+
+        DB::transaction(function () use ($id, &$procedure) {
+            $pdo = DB::getPdo();
+            $stmt = $pdo->prepare('
+                BEGIN
+                    HOSPITAL.GET_PROCEDURE(:id, :procedure);
+                END;
+            ');
+
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            $stmt->bindParam(':procedure', $procedure, PDO::PARAM_STMT);
+            $stmt->execute();
+
+            // Fetch data from cursor
+            oci_execute($procedure, OCI_DEFAULT);
+            oci_fetch_all($procedure, $result, 0, -1, OCI_FETCHSTATEMENT_BY_ROW);
+
+            if (!empty($result)) {
+                $procedure = $result[0];
+            }
+        });
+
+        if (empty($procedure)) {
+            return redirect()->route('proceduresIndex')->with('error', 'Procedure not found.');
+        }
+        //dd($procedure);
+        return view('edycjaZabiegi', compact('procedure'));
     }
 
     public function update(Request $request, $id)
     {
         $treatmentTypeId = $request->input('treatment_type_id');
         $roomId = $request->input('room_id');
-        $updatedAt = now();
+        $date = $request->input('date');
         $time = $request->input('time');
         $cost = $request->input('cost');
         $status = $request->input('status');
 
         DB::statement("CALL UPDATE_PROCEDURE(?, ?, ?, ?, ?, ?, ?)", [
-            $id, $treatmentTypeId, $roomId, $updatedAt, $time, $cost, $status
+            $id, $treatmentTypeId, $roomId, $date, $time, $cost, $status
         ]);
 
         return redirect()->route('proceduresIndex');
@@ -57,13 +89,4 @@ class ProcedureController extends Controller
 
         return redirect()->route('proceduresIndex');
     }
-
-    public function show($id)
-    {
-        $procedure = DB::select("SELECT * FROM PROCEDURES WHERE ID = ?", [$id]);
-
-        return view('edycjaZabiegi', compact('procedure'));
-    }
-
 }
-
