@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use DB;
+use Illuminate\Support\Facades\DB;
 
 class ProcedureController extends Controller
 {
@@ -20,16 +20,16 @@ class ProcedureController extends Controller
 
     public function store(Request $request)
     {
-        $id = $request->input('id');
+        //$id = $request->input('id');
         $treatmentTypeId = $request->input('treatment_type_id');
         $roomId = $request->input('room_id');
-        $createdAt = now();
+        $date = $request->input('date');
         $time = $request->input('time');
         $cost = $request->input('cost');
         $status = $request->input('status');
 
-        DB::statement("CALL ADD_PROCEDURE(?, ?, ?, ?, ?, ?, ?)", [
-            $id, $treatmentTypeId, $roomId, $createdAt, $time, $cost, $status
+        DB::statement("CALL ADD_PROCEDURE( ?, ?, ?, ?, ?, ?)", [
+             $treatmentTypeId, $roomId, $date, $time, $cost, $status
         ]);
 
         return redirect()->route('proceduresIndex');
@@ -44,8 +44,8 @@ class ProcedureController extends Controller
         $cost = $request->input('cost');
         $status = $request->input('status');
 
-        DB::statement("CALL UPDATE_PROCEDURE(?, ?, ?, ?, ?, ?, ?)", [
-            $id, $treatmentTypeId, $roomId, $updatedAt, $time, $cost, $status
+        DB::statement("CALL UPDATE_PROCEDURE( ?, ?, ?, ?, ?, ?)", [
+             $treatmentTypeId, $roomId, $updatedAt, $time, $cost, $status
         ]);
 
         return redirect()->route('proceduresIndex');

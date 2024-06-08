@@ -11,7 +11,7 @@
 
     <div class="container">
         <h2 class="mt-4">Zabiegi</h2>
-        <form action="{{ route('procedures.index') }}" method="GET">
+        <form action="{{ route('proceduresIndex') }}" method="GET">
             <div class="row">
                 <div class="form-group col-md-2">
                     <input type="text" class="form-control" name="search" placeholder="Wyszukaj">
@@ -46,13 +46,13 @@
                         <td>{{ $procedure->id }}</td>
                         <td>{{ $procedure->treatment_type_id }}</td>
                         <td>{{ $procedure->room_id }}</td>
+                        <td>{{ $procedure->date }}</td>
                         <td>{{ $procedure->time }}</td>
-                        <td>{{ $procedure->duration }}</td>
                         <td>{{ $procedure->cost }}</td>
                         <td>{{ $procedure->status }}</td>
-                        <td><a href="{{ route('procedures.edit', $procedure->id) }}">Edytuj</a></td>
+                        <td><a href="{{ route('proceduresShow', $procedure->id) }}">Edytuj</a></td>
                         <td>
-                            <form action="{{ route('procedures.destroy', $procedure->id) }}" method="POST">
+                            <form action="{{ route('proceduresDestroy', $procedure->id) }}" method="POST">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-danger">Usuń</button>
@@ -67,7 +67,7 @@
 
     <div class="container">
         <h2 class="mt-4">Dodawanie zabiegu</h2>
-        <form action="{{ route('procedures.store') }}" method="POST">
+        <form action="{{ route('proceduresStore') }}" method="POST">
             @csrf
             <div class="row">
                 <div class="form-group col-md-1">
@@ -80,10 +80,10 @@
                     <input type="number" class="form-control" name="room_id" placeholder="ID Sali">
                 </div>
                 <div class="form-group col-md-2">
-                    <input type="date" class="form-control" name="time" placeholder="Data">
+                    <input type="date" class="form-control" name="date" placeholder="Data">
                 </div>
                 <div class="form-group col-md-2">
-                    <input type="text" class="form-control" name="duration" placeholder="Czas trwania">
+                    <input type="text" class="form-control" name="time" placeholder="Czas trwania">
                     <!--Domyślnie zero i będzie liczony do momentu zmiany statusu na "zakończony"-->
                 </div>
                 <div class="form-group col-md-1">
