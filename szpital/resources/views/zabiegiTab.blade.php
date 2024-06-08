@@ -42,7 +42,6 @@
                 <tbody>
                     @foreach($procedures as $procedure)
                     <tr>
-                        <th scope="row">{{ $procedure->id }}</th>
                         <td>{{ $procedure->id }}</td>
                         <td>{{ $procedure->treatment_type_id }}</td>
                         <td>{{ $procedure->room_id }}</td>
