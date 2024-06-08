@@ -10,8 +10,8 @@
     @include('shared.scripts')
 
     <div class="container">
-        <h2 class="mt-4">Zabiegi</h2>
-        <form action="{{ route('procedures.index') }}" method="GET">
+        <h2 class="mt-4">Rodzaje Zabiegów</h2>
+        <form action="{{ route('treatmentTypes.index') }}" method="GET">
             <div class="row">
                 <div class="form-group col-md-2">
                     <input type="text" class="form-control" name="search" placeholder="Wyszukaj">
@@ -29,30 +29,31 @@
                 <thead>
                     <tr>
                         <th scope="col">#</th>
-                        <th scope="col">ID Rodzaju zabiegu</th>
-                        <th scope="col">ID Sali</th>
-                        <th scope="col">Data</th>
-                        <th scope="col">Czas trwania</th>
-                        <th scope="col">Koszt</th>
-                        <th scope="col">Status</th>
+                        <th scope="col">ID</th>
+                        <th scope="col">Nazwa</th>
+                        <th scope="col">Opis</th>
+                        <th scope="col">Zalecenia przed operacją</th>
+                        <th scope="col">Zalecenia po operacji</th>
+                        <th scope="col">Utworzono</th>
+                        <th scope="col">Zaktualizowano</th>
                         <th scope="col"></th>
                         <th scope="col"></th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($procedures as $procedure)
+                    @foreach($treatmentTypes as $treatmentType)
                     <tr>
-                        <th scope="row">{{ $procedure->id }}</th>
-                        <td>{{ $procedure->id }}</td>
-                        <td>{{ $procedure->treatment_type_id }}</td>
-                        <td>{{ $procedure->room_id }}</td>
-                        <td>{{ $procedure->time }}</td>
-                        <td>{{ $procedure->duration }}</td>
-                        <td>{{ $procedure->cost }}</td>
-                        <td>{{ $procedure->status }}</td>
-                        <td><a href="{{ route('procedures.edit', $procedure->id) }}">Edytuj</a></td>
+                        <th scope="row">{{ $loop->iteration }}</th>
+                        <td>{{ $treatmentType->ID }}</td>
+                        <td>{{ $treatmentType->NAME }}</td>
+                        <td>{{ $treatmentType->DESCRIPTION }}</td>
+                        <td>{{ $treatmentType->RECOMMENDATIONS_BEFORE_SURGERY }}</td>
+                        <td>{{ $treatmentType->RECOMMENDATIONS_AFTER_SURGERY }}</td>
+                        <td>{{ $treatmentType->CREATED_AT }}</td>
+                        <td>{{ $treatmentType->UPDATED_AT }}</td>
+                        <td><a href="{{ route('treatmentTypes.edit', $treatmentType->ID) }}">Edytuj</a></td>
                         <td>
-                            <form action="{{ route('procedures.destroy', $procedure->id) }}" method="POST">
+                            <form action="{{ route('treatmentTypes.destroy', $treatmentType->ID) }}" method="POST">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-danger">Usuń</button>
@@ -66,31 +67,24 @@
     </div>
 
     <div class="container">
-        <h2 class="mt-4">Dodawanie zabiegu</h2>
-        <form action="{{ route('procedures.store') }}" method="POST">
+        <h2 class="mt-4">Dodawanie Rodzaju Zabiegu</h2>
+        <form action="{{ route('treatmentTypes.store') }}" method="POST">
             @csrf
             <div class="row">
                 <div class="form-group col-md-1">
                     <input type="number" class="form-control" name="id" placeholder="ID">
                 </div>
                 <div class="form-group col-md-2">
-                    <input type="number" class="form-control" name="treatment_type_id" placeholder="ID Rodzaju zabiegu">
-                </div>
-                <div class="form-group col-md-1">
-                    <input type="number" class="form-control" name="room_id" placeholder="ID Sali">
+                    <input type="text" class="form-control" name="name" placeholder="Nazwa">
                 </div>
                 <div class="form-group col-md-2">
-                    <input type="date" class="form-control" name="time" placeholder="Data">
+                    <textarea class="form-control" name="description" placeholder="Opis"></textarea>
                 </div>
                 <div class="form-group col-md-2">
-                    <input type="text" class="form-control" name="duration" placeholder="Czas trwania">
-                    <!--Domyślnie zero i będzie liczony do momentu zmiany statusu na "zakończony"-->
+                    <textarea class="form-control" name="recommendations_before_surgery" placeholder="Zalecenia przed operacją"></textarea>
                 </div>
-                <div class="form-group col-md-1">
-                    <input type="number" class="form-control" name="cost" placeholder="Koszt">
-                </div>
-                <div class="form-group col-md-1">
-                    <input type="number" class="form-control" name="status" placeholder="Status">
+                <div class="form-group col-md-2">
+                    <textarea class="form-control" name="recommendations_after_surgery" placeholder="Zalecenia po operacji"></textarea>
                 </div>
                 <div class="form-group col-md-1">
                     <button type="submit" class="btn btn-primary">Dodaj</button>
