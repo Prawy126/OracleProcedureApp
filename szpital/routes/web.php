@@ -109,5 +109,6 @@ Route::delete('/treatment-types/{id}', [TreatmentTypeController::class, 'destroy
 
 Route::get('/treatment-nurses', [TreatmentNurseController::class, 'index'])->name('admin');
 Route::post('/treatment-nurses', [TreatmentNurseController::class, 'store'])->name('treatmentNurses.store');
+Route::get('/treatment-nurses/{id}/edit', [TreatmentNurseController::class, 'edit'])->name('treatmentNurses.edit');
 Route::put('/treatment-nurses/{nurse_id}', [TreatmentNurseController::class, 'update'])->name('treatmentNurses.update');
 Route::delete('/treatment-nurses/{nurse_id}', [TreatmentNurseController::class, 'destroy'])->name('treatmentNurses.destroy');

@@ -15,5 +15,11 @@ class TreatmentTypeSeeder extends Seeder
     {
         //
         TreatmentType::truncate();
+        TreatmentType::insert([[
+            'name' => 'test',
+            'description' => 'Losowy ciąg znaków',
+            'recommendations_before_surgery' => 'Jakieś zalecenia',
+            'recommendations_after_surgery' => 'Może będzie dobrze'
+        ]]);
     }
 }

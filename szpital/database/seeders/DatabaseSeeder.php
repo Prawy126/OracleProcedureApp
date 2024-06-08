@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Patient;
 use App\Models\room;
+use App\Models\Status;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -26,7 +27,10 @@ class DatabaseSeeder extends Seeder
             RoomSeeder::class,
             NurseSeeder::class,
             DoctorSeeder::class,
-            PatientSeeder::class
+            PatientSeeder::class,
+            StatusSeeder::class,
+            TreatmentTypeSeeder::class
+
         ]);
     }
 }

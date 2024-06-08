@@ -10,8 +10,8 @@ class TreatmentNurse extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['nurse_id','procedure_id'];
-
+    protected $table = 'TREATMENTS_NURSES';
+    protected $fillable = ['nurse_id', 'procedure_id'];
     public $timestamps = false;
 
     public function procedure(): HasMany

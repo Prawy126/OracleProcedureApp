@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -28,9 +27,21 @@ class ProcedureController extends Controller
         $cost = $request->input('cost');
         $status = $request->input('status');
 
-        DB::statement("CALL ADD_PROCEDURE(?, ?, ?, ?, ?, ?)", [
-            $treatmentTypeId, $roomId, $date, $time, $cost, $status
-        ]);
+        DB::transaction(function () use ($treatmentTypeId, $roomId, $date, $time, $cost, $status) {
+            $pdo = DB::getPdo();
+            $stmt = $pdo->prepare('
+                CALL ADD_PROCEDURE(:p0, :p1, TO_TIMESTAMP(:p2, \'YYYY-MM-DD HH24:MI:SS\'), :p3, :p4, :p5)
+            ');
+
+            $stmt->bindParam(':p0', $treatmentTypeId, PDO::PARAM_INT);
+            $stmt->bindParam(':p1', $roomId, PDO::PARAM_INT);
+            $stmt->bindParam(':p2', $date, PDO::PARAM_STR);
+            $stmt->bindParam(':p3', $time, PDO::PARAM_STR);
+            $stmt->bindParam(':p4', $cost, PDO::PARAM_INT);
+            $stmt->bindParam(':p5', $status, PDO::PARAM_INT);
+
+            $stmt->execute();
+        });
 
         return redirect()->route('proceduresIndex');
     }
@@ -51,7 +62,6 @@ class ProcedureController extends Controller
             $stmt->bindParam(':procedure', $procedure, PDO::PARAM_STMT);
             $stmt->execute();
 
-            // Fetch data from cursor
             oci_execute($procedure, OCI_DEFAULT);
             oci_fetch_all($procedure, $result, 0, -1, OCI_FETCHSTATEMENT_BY_ROW);
 
@@ -63,7 +73,7 @@ class ProcedureController extends Controller
         if (empty($procedure)) {
             return redirect()->route('proceduresIndex')->with('error', 'Procedure not found.');
         }
-        //dd($procedure);
+
         return view('edycjaZabiegi', compact('procedure'));
     }
 
@@ -76,16 +86,34 @@ class ProcedureController extends Controller
         $cost = $request->input('cost');
         $status = $request->input('status');
 
-        DB::statement("CALL UPDATE_PROCEDURE(?, ?, ?, ?, ?, ?, ?)", [
-            $id, $treatmentTypeId, $roomId, $date, $time, $cost, $status
-        ]);
+        DB::transaction(function () use ($id, $treatmentTypeId, $roomId, $date, $time, $cost, $status) {
+            $pdo = DB::getPdo();
+            $stmt = $pdo->prepare('
+                CALL UPDATE_PROCEDURE(:p0, :p1, :p2, :p3, :p4, :p5, :p6)
+            ');
+
+            $stmt->bindParam(':p0', $id, PDO::PARAM_INT);
+            $stmt->bindParam(':p1', $treatmentTypeId, PDO::PARAM_INT);
+            $stmt->bindParam(':p2', $roomId, PDO::PARAM_INT);
+            $stmt->bindParam(':p3', $date, PDO::PARAM_STR);
+            $stmt->bindParam(':p4', $time, PDO::PARAM_STR);
+            $stmt->bindParam(':p5', $cost, PDO::PARAM_INT);
+            $stmt->bindParam(':p6', $status, PDO::PARAM_INT);
+
+            $stmt->execute();
+        });
 
         return redirect()->route('proceduresIndex');
     }
 
     public function destroy($id)
     {
-        DB::statement("CALL DELETE_PROCEDURE(?)", [$id]);
+        DB::transaction(function () use ($id) {
+            $pdo = DB::getPdo();
+            $stmt = $pdo->prepare('CALL DELETE_PROCEDURE(:p0)');
+            $stmt->bindParam(':p0', $id, PDO::PARAM_INT);
+            $stmt->execute();
+        });
 
         return redirect()->route('proceduresIndex');
     }

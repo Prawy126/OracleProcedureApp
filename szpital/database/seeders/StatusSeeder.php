@@ -15,5 +15,9 @@ class StatusSeeder extends Seeder
     {
         //
         Status::truncate();
+        Status::insert([[
+            'status'=>1,
+            'description'=> "Fajny opis"
+        ]]);
     }
 }

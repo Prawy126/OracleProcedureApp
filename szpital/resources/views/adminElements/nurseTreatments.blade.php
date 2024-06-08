@@ -1,4 +1,4 @@
-<div class="col-md-12">
+<div class="container">
     <form action="{{ route('treatmentNurses.store') }}" method="POST">
         @csrf
         <div class="form-row">
@@ -23,14 +23,13 @@
     </form>
     <div class="card mt-4">
         <div class="card-body">
-            <h5 class="card-title mb-4">Stan leków:</h5>
+            <h5 class="card-title mb-4">Stan pielęgniarki:</h5>
             <table class="table table-bordered mb-4">
                 <thead>
                     <tr>
                         <th scope="col">Nurse ID</th>
                         <th scope="col">Procedure ID</th>
-                        <th scope="col"></th>
-                        <th scope="col"></th>
+                        <th scope="col">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -38,18 +37,18 @@
                         <tr>
                             <td>{{ $treatmentNurse->nurse_id }}</td>
                             <td>{{ $treatmentNurse->procedure_id }}</td>
-                            <td><a href="{{ route('treatmentNurses.edit', $treatmentNurse->nurse_id) }}" class="btn btn-warning">Edytuj</a></td>
                             <td>
-                            <form action="{{ route('treatmentNurses.destroy', $treatmentNurse->nurse_id) }}" method="POST">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger">Usuń</button>
-                            </form>
+                                <a href="{{ route('treatmentNurses.edit', $treatmentsNurse->id) }}" class="btn btn-warning">Edytuj</a>
+                                <form action="{{ route('treatmentNurses.destroy', $treatmentsNurse->id) }}" method="POST" style="display:inline;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger">Usuń</button>
+                                </form>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="4">Brak danych.</td>
+                            <td colspan="3">Brak danych.</td>
                         </tr>
                     @endforelse
                 </tbody>
