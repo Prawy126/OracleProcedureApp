@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AssignmentMedicineController;
 use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\MedicinController;
 use App\Http\Controllers\NurseController;
@@ -11,37 +12,14 @@ use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\TreatmentDoctorController;
 use App\Http\Controllers\TreatmentNurseController;
 use App\Http\Controllers\TreatmentTypeController;
+use App\Models\TreatmentDoctor;
 
 Route::get('login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('login', [AuthController::class, 'login']);
 Route::post('logout', [AuthController::class, 'logout'])->name('logout');
-
-
-//dopisz import dla UserController
-//Zawartość w pliku do controllera.txt
-/*
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣤⣤⣤⣤⣤⣶⣦⣤⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⢀⣴⣿⡿⠛⠉⠙⠛⠛⠛⠛⠻⢿⣿⣷⣤⡀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⣼⣿⠋⠀⠀⠀⠀⠀⠀⠀⢀⣀⣀⠈⢻⣿⣿⡄⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⣸⣿⡏⠀⠀⠀⣠⣶⣾⣿⣿⣿⠿⠿⠿⢿⣿⣿⣿⣄⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⣿⣿⠁⠀⠀⢰⣿⣿⣯⠁⠀⠀⠀⠀⠀⠀⠀⠈⠙⢿⣷⡄⠀
-⠀⠀⣀⣤⣴⣶⣶⣿⡟⠀⠀⠀⢸⣿⣿⣿⣆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣷⠀
-⠀⢰⣿⡟⠋⠉⣹⣿⡇⠀⠀⠀⠘⣿⣿⣿⣿⣷⣦⣤⣤⣤⣶⣶⣶⣶⣿⣿⣿⠀
-⠀⢸⣿⡇⠀⠀⣿⣿⡇⠀⠀⠀⠀⠹⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠃⠀
-⠀⣸⣿⡇⠀⠀⣿⣿⡇⠀⠀⠀⠀⠀⠉⠻⠿⣿⣿⣿⣿⡿⠿⠿⠛⢻⣿⡇⠀⠀
-⠀⣿⣿⠁⠀⠀⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣧⠀⠀
-⠀⣿⣿⠀⠀⠀⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿⠀⠀
-⠀⣿⣿⠀⠀⠀⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿⠀⠀
-⠀⢿⣿⡆⠀⠀⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⡇⠀⠀
-⠀⠸⣿⣧⡀⠀⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⠃⠀⠀
-⠀⠀⠛⢿⣿⣿⣿⣿⣇⠀⠀⠀⠀⠀⣰⣿⣿⣷⣶⣶⣶⣶⠶⠀⢠⣿⣿⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⣿⣿⠀⠀⠀⠀⠀⣿⣿⡇⠀⣽⣿⡏⠁⠀⠀⢸⣿⡇⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⣿⣿⠀⠀⠀⠀⠀⣿⣿⡇⠀⢹⣿⡆⠀⠀⠀⣸⣿⠇⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⢿⣿⣦⣄⣀⣠⣴⣿⣿⠁⠀⠈⠻⣿⣿⣿⣿⡿⠏⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠈⠛⠻⠿⠿⠿⠿⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-*/
 
 Route::get('/', function () {
     return view('welcome');
@@ -107,8 +85,26 @@ Route::get('/treatment-types/{id}/edit', [TreatmentTypeController::class, 'edit'
 Route::put('/treatment-types/{id}', [TreatmentTypeController::class, 'update'])->name('treatmentTypes.update');
 Route::delete('/treatment-types/{id}', [TreatmentTypeController::class, 'destroy'])->name('treatmentTypes.destroy');
 
-Route::get('/treatment-nurses', [TreatmentNurseController::class, 'index'])->name('admin');
+Route::get('/treatment-nurses', [TreatmentNurseController::class, 'index'])->name('treatmentNurses.index');
 Route::post('/treatment-nurses', [TreatmentNurseController::class, 'store'])->name('treatmentNurses.store');
 Route::get('/treatment-nurses/{id}/edit', [TreatmentNurseController::class, 'edit'])->name('treatmentNurses.edit');
 Route::put('/treatment-nurses/{id}', [TreatmentNurseController::class, 'update'])->name('treatmentNurses.update');
 Route::delete('/treatment-nurses/{id}', [TreatmentNurseController::class, 'destroy'])->name('treatmentNurses.destroy');
+
+Route::get('/admin/accounts', [UserController::class, 'index'])->name('accounts');
+
+Route::get('/admin/doctor-treatments', [TreatmentDoctorController::class, 'index'])->name('treatmentDoctor.index');
+
+Route::get('/admin/medicin-assigment', [AssignmentMedicineController::class, 'index'])->name('assigmentMedicin.index');
+
+<?php
+
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\StatusController;
+
+Route::get('/statuses', [StatusController::class, 'index'])->name('statusIndex');
+Route::post('/statuses', [StatusController::class, 'store'])->name('statusesStore');
+Route::get('/statuses/{status}/edit', [StatusController::class, 'edit'])->name('statusesShow');
+Route::put('/statuses/{status}', [StatusController::class, 'update'])->name('statusesUpdate');
+Route::delete('/statuses/{status}', [StatusController::class, 'destroy'])->name('statusesDestroy');
+

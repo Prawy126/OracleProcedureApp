@@ -49,50 +49,43 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-6">
                 <div class="card">
                     <div class="card-body">
                         <ul class="list-group">
                             <li class="list-group-item">
-                                <a href="?view=accounts">Accounts</a>
+                                <a href="{{route('accounts')}}">Konta</a>
                             </li>
                             <li class="list-group-item">
-                                <a href="?view=doctorsTreatments">Doctors Treatments</a>
+                                <a href="{{route('treatmentDoctor.index')}}">Zabiegi-Lekarze</a>
                             </li>
                             <li class="list-group-item">
-                                <a href="?view=medicineAssignment">Medicine Assignment</a>
+                                <a href="{{route('assigmentMedicin.index')}}">Przypisania leków</a>
                             </li>
                             <li class="list-group-item">
-                                <a href="?view=nurseTreatments">Nurse Treatments</a>
+                                <a href="{{route('treatmentNurses.index')}}">Zabiegi-Pielęgniarki</a>
                             </li>
                         </ul>
                     </div>
                 </div>
             </div>
-            <div class="col-md-9">
-                @if ($view == 'accounts')
-                    @include('adminElements.accounts', ['users' => $data['users']])
-                @elseif($view == 'doctorsTreatments')
-                    @include('adminElements.doctorsTreatments', [
-                        'doctors' => $data['doctors'],
-                        'procedures' => $data['procedures'],
-                        'treatmentDoctors' => $data['treatmentDoctors'],
-                    ])
-                @elseif($view == 'medicineAssignment')
-                    @include('adminElements.medicinAssigment', [
-                        'medicins' => $data['medicins'],
-                        'patients' => $data['patients'],
-                        'assignments' => $data['assignments'],
-                    ])
-                @elseif($view == 'nurseTreatments')
-                    @include('adminElements.nurseTreatments', [
-                        'nurses' => $data['nurses'],
-                        'procedures' => $data['procedures'],
-                        'treatmentNurses' => $data['treatmentNurses'],
-                    ])
-                @else
-                    <p>Wybierz opcję z menu po lewej stronie.</p>
-                @endif
+            <div class="col-md-6">
+                <div class="card">
+                    <h2>Zabiegi:</h2>
+                    <div class="card-body">
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <a href="{{route('proceduresIndex')}}">Zabiegi tab</a>
+                            </li>
+                            <li class="list-group-item">
+                                <a href="{{route('treatmentTypes.index')}}">Typy zabiegów</a>
+                            </li>
+                            <li class="list-group-item">
+                                <a href="{{route('statusIndex')}}">Statusy</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
 

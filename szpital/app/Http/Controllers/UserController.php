@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
-    //🧟🧟🧟
     public function index()
 {
     $users = DB::select('SELECT ID, LOGIN, ACCOUNT_TYPE FROM USERS');
@@ -60,10 +59,7 @@ class UserController extends Controller
 
     $users = DB::table('users')->get();
 
-    return view('admin', [
-        'view' => 'accounts',
-        'data' => ['users' => $users]
-    ])->with('success', 'User updated successfully.');
+    return view('adminElements.accounts',['users' => $users]);
 }
 
 
@@ -74,9 +70,6 @@ class UserController extends Controller
         });
 
         $users = DB::table('users')->get();
-        return view('admin', [
-            'view' => 'accounts',
-            'data' => ['users' => $users]
-        ])->with('success', 'User updated successfully.');
+        return view('adminElements.accounts', ['users' => $users]);
     }
 }
