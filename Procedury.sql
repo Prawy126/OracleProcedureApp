@@ -555,31 +555,44 @@ BEGIN
     DELETE FROM ASSIGNMENT_MEDICINES WHERE PATIENT_ID = p_PATIENT_ID;
 END;
 
+CREATE OR REPLACE FUNCTION GET_END_TIME(
+    p_start_time TIMESTAMP,
+    p_duration INTERVAL DAY TO SECOND
+) RETURN VARCHAR2 IS
+    l_end_time TIMESTAMP;
+BEGIN
+    l_end_time := p_start_time + p_duration;
+    RETURN TO_CHAR(l_end_time, 'HH24:MI');
+END;
+
+
 CREATE OR REPLACE PROCEDURE ADD_PROCEDURE (
     p_ID IN NUMBER,
     p_TREATMENT_TYPE_ID IN NUMBER,
     p_ROOM_ID IN NUMBER,
     p_DATE IN TIMESTAMP,
-    p_TIME IN DATE,
+    p_DURATION IN INTERVAL DAY TO SECOND,
     p_COST IN NUMBER,
     p_STATUS IN NUMBER
 ) AS
+    v_end_time VARCHAR2(5);
 BEGIN
-    INSERT INTO PROCEDURES ("ID", TREATMENT_TYPE_ID, ROOM_ID, "DATE", "TIME", "COST", STATUS)
-    VALUES (p_ID, p_TREATMENT_TYPE_ID, p_ROOM_ID, p_DATE, p_TIME, p_COST, p_STATUS);
+    v_end_time := GET_END_TIME(p_DATE, p_DURATION);
+    INSERT INTO PROCEDURES (ID, TREATMENT_TYPE_ID, ROOM_ID, "DATE", "TIME", "COST", STATUS)
+    VALUES (p_ID, p_TREATMENT_TYPE_ID, p_ROOM_ID, p_DATE, v_end_time, p_COST, p_STATUS);
 END;
 
-CREATE OR REPLACE PROCEDURE UPDATE_PROCEDURE (
+CREATE OR REPLACE PROCEDURE GET_PROCEDURE (
     p_ID IN NUMBER,
     p_TREATMENT_TYPE_ID OUT NUMBER,
     p_ROOM_ID OUT NUMBER,
     p_DATE OUT TIMESTAMP,
-    p_TIME OUT DATE,
+    p_TIME OUT VARCHAR2,
     p_COST OUT NUMBER,
     p_STATUS OUT NUMBER
 ) AS
 BEGIN
-    SELECT TREATMENT_TYPE_ID, ROOM_ID, "DATE", TIME, COST, STATUS
+    SELECT TREATMENT_TYPE_ID, ROOM_ID, "DATE", "TIME", "COST", STATUS
     INTO p_TREATMENT_TYPE_ID, p_ROOM_ID, p_DATE, p_TIME, p_COST, p_STATUS
     FROM PROCEDURES
     WHERE ID = p_ID;
@@ -590,22 +603,24 @@ CREATE OR REPLACE PROCEDURE UPDATE_PROCEDURE (
     p_TREATMENT_TYPE_ID IN NUMBER,
     p_ROOM_ID IN NUMBER,
     p_DATE IN TIMESTAMP,
-    p_TIME IN DATE,
+    p_DURATION IN INTERVAL DAY TO SECOND,
     p_COST IN NUMBER,
     p_STATUS IN NUMBER
 ) AS
+    v_end_time VARCHAR2(5);
 BEGIN
+    v_end_time := GET_END_TIME(p_DATE, p_DURATION);
     UPDATE PROCEDURES
     SET TREATMENT_TYPE_ID = p_TREATMENT_TYPE_ID,
         ROOM_ID = p_ROOM_ID,
         "DATE" = p_DATE,
-        TIME = p_TIME,
-        COST = p_COST,
+        "TIME" = v_end_time,
+        "COST" = p_COST,
         STATUS = p_STATUS
     WHERE ID = p_ID;
 END;
 
-CREATE OR REPLACE PROCEDURE DELETE_PROCEURE (
+CREATE OR REPLACE PROCEDURE DELETE_PROCEDURE (
     p_ID IN NUMBER
 ) AS
 BEGIN
@@ -691,19 +706,27 @@ END;
 
 CREATE OR REPLACE FUNCTION GET_END_TIME(
     p_start_time TIMESTAMP,
-    p_duration DATE
+    p_duration VARCHAR2
 ) RETURN TIMESTAMP IS
     l_end_time TIMESTAMP;
+    l_hours NUMBER;
+    l_minutes NUMBER;
 BEGIN
-    l_end_time := p_start_time + (p_duration - TO_DATE('01-JAN-1970', 'DD-MON-YYYY'));
+    -- Parse the duration string into hours and minutes
+    l_hours := TO_NUMBER(SUBSTR(p_duration, 1, INSTR(p_duration, ':') - 1));
+    l_minutes := TO_NUMBER(SUBSTR(p_duration, INSTR(p_duration, ':') + 1));
+
+    -- Calculate the end time
+    l_end_time := p_start_time + INTERVAL '1' HOUR * l_hours + INTERVAL '1' MINUTE * l_minutes;
     RETURN l_end_time;
 END;
+
 
 CREATE OR REPLACE PROCEDURE UPDATE_PROCEDURE_STATUSES AS
     CURSOR c_procedures IS
         SELECT ID, "DATE", TIME, STATUS
         FROM PROCEDURES
-        WHERE STATUS IN (1, 2, 3); -- 1: przed zabiegiem, 2: w trakcie, 3: juï¿½ po
+        WHERE STATUS IN (1, 2, 3); -- 1: przed zabiegiem, 2: w trakcie, 3: ju¿ po
 
     l_current_time TIMESTAMP;
     l_end_time TIMESTAMP;
@@ -723,9 +746,9 @@ BEGIN
             UPDATE PROCEDURES SET STATUS = 2 WHERE ID = r.ID;
             l_description := 'W trakcie zabiegu';
         ELSE
-            -- Juï¿½ po zabiegu
+            -- Ju¿ po zabiegu
             UPDATE PROCEDURES SET STATUS = 3 WHERE ID = r.ID;
-            l_description := 'Juï¿½ po zabiegu';
+            l_description := 'Ju¿ po zabiegu';
         END IF;
 
         -- Aktualizacja opisu w tabeli STATUSES
@@ -735,7 +758,26 @@ BEGIN
     COMMIT;
 END;
 
+BEGIN
+    DBMS_SCHEDULER.create_program (
+        program_name   => 'UPDATE_PROC_STATUSES_PROG',
+        program_type   => 'PLSQL_BLOCK',
+        program_action => 'BEGIN UPDATE_PROCEDURE_STATUSES; END;',
+        number_of_arguments => 0,
+        enabled        => TRUE
+    );
+END;
+/
 
+BEGIN
+    DBMS_SCHEDULER.create_job (
+        job_name        => 'UPDATE_PROC_STATUSES_JOB',
+        program_name    => 'UPDATE_PROC_STATUSES_PROG',
+        repeat_interval => 'FREQ=MINUTELY; INTERVAL=5',  -- co 5 minut
+        enabled         => TRUE
+    );
+END;
+/
 
 -- Utworzenie wyzwalacza
 CREATE OR REPLACE TRIGGER trg_update_procedure_statuses
@@ -910,5 +952,53 @@ CREATE OR REPLACE PACKAGE BODY szpital_stats AS
         SELECT COUNT(*) INTO p_stats.nurse_count FROM nurses;
     END get_stats;
 END szpital_stats;
+/
+
+--triger do statusu sali 
+CREATE OR REPLACE TRIGGER trg_update_room_status
+AFTER INSERT OR DELETE ON patients
+FOR EACH ROW
+DECLARE
+    v_seats NUMBER;
+BEGIN
+    -- Jeœli pacjent jest dodawany
+    IF INSERTING THEN
+        -- Zmniejsz liczbê dostêpnych miejsc
+        UPDATE rooms
+        SET seats = seats - 1
+        WHERE id = :NEW.room_id;
+
+        -- SprawdŸ now¹ liczbê miejsc
+        SELECT seats INTO v_seats
+        FROM rooms
+        WHERE id = :NEW.room_id;
+
+        -- Jeœli liczba miejsc wynosi 0, ustaw status na "zajêta"
+        IF v_seats = 0 THEN
+            UPDATE rooms
+            SET status = 'zajêta'
+            WHERE id = :NEW.room_id;
+        END IF;
+
+    -- Jeœli pacjent jest usuwany
+    ELSIF DELETING THEN
+        -- Zwiêksz liczbê dostêpnych miejsc
+        UPDATE rooms
+        SET seats = seats + 1
+        WHERE id = :OLD.room_id;
+
+        -- SprawdŸ now¹ liczbê miejsc
+        SELECT seats INTO v_seats
+        FROM rooms
+        WHERE id = :OLD.room_id;
+
+        -- Jeœli liczba miejsc jest wiêksza ni¿ 0, ustaw status na "dostêpna"
+        IF v_seats > 0 THEN
+            UPDATE rooms
+            SET status = 'dostêpna'
+            WHERE id = :OLD.room_id;
+        END IF;
+    END IF;
+END;
 /
 
