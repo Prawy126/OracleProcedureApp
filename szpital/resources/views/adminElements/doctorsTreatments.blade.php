@@ -10,7 +10,7 @@
     @include('shared.scripts')
 
     <div class="col-md-12">
-        <form action="" method="POST">
+        <form action="{{ route('treatmentDoctors.store') }}" method="POST">
             @csrf
             <div class="form-row">
                 <div class="form-group col-md-6">
@@ -49,9 +49,9 @@
                             <tr>
                                 <td>{{ $treatmentDoctor->doctor_id }}</td>
                                 <td>{{ $treatmentDoctor->procedure_id }}</td>
-                                <td><a href="" class="btn btn-warning">Edytuj</a></td>
+                                <td><a href="{{route('treatmentDoctors.edit', $treatmentDoctor->id)}}" class="btn btn-warning">Edytuj</a></td>
                                 <td>
-                                <form action="" method="POST">
+                                <form action="{{route('treatmentDoctors.destroy', $treatmentDoctor->id)}}" method="POST">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-danger">Usuń</button>

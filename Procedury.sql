@@ -420,30 +420,42 @@ CREATE OR REPLACE PACKAGE BODY szpital AS
 END szpital;
 /
 
+--sekwencja
 
+CREATE SEQUENCE TREATMENTS_DOCTORS_USERS_ID_SEQ
+START WITH 1
+INCREMENT BY 1
+NOCACHE
+NOCYCLE;
+/
 
 CREATE OR REPLACE PROCEDURE ADD_TREATMENTS_DOCTORS (
     p_PROCEDURE_ID IN NUMBER,
-    p_DOCTOR_ID IN NUMBER,
-    p_CREATED_AT IN TIMESTAMP
+    p_DOCTOR_ID IN NUMBER
+    
 ) AS
 BEGIN
-    INSERT INTO TREATMENTS_DOCTORS (PROCEDURE_ID, DOCTOR_ID, CREATED_AT)
-    VALUES (p_PROCEDURE_ID, p_DOCTOR_ID, p_CREATED_AT);
+    INSERT INTO TREATMENTS_DOCTORS (ID,PROCEDURE_ID, DOCTOR_ID, CREATED_AT)
+    VALUES (TREATMENTS_DOCTORS_ID_SEQ.NEXTVAL,p_PROCEDURE_ID, p_DOCTOR_ID, SYSTIMESTAMP);
 END;
 
 CREATE OR REPLACE PROCEDURE GET_TREATMENTS_DOCTORS (
-    p_PROCEDURE_ID IN NUMBER,
-    p_DOCTOR_ID OUT NUMBER,
-    p_CREATED_AT OUT TIMESTAMP,
-    p_UPDATED_AT OUT TIMESTAMP
+    p_DOCTOR_ID IN NUMBER,
+    p_RESULT OUT SYS_REFCURSOR
 ) AS
 BEGIN
-    SELECT DOCTOR_ID, CREATED_AT, UPDATED_AT
-    INTO p_DOCTOR_ID, p_CREATED_AT, p_UPDATED_AT
+    OPEN p_RESULT FOR
+    SELECT PROCEDURE_ID
     FROM TREATMENTS_DOCTORS
-    WHERE PROCEDURE_ID = p_PROCEDURE_ID;
+    WHERE DOCTOR_ID = p_DOCTOR_ID;
 END;
+/
+
+/
+
+
+
+
 
 CREATE OR REPLACE PROCEDURE UPDATE_TREATMENTS_DOCTORS (
     p_PROCEDURE_ID IN NUMBER,
@@ -458,10 +470,10 @@ BEGIN
 END;
 
 CREATE OR REPLACE PROCEDURE DELETE_TREATMENTS_DOCTORS (
-    p_PROCEDURE_ID IN NUMBER
+    p_ID IN NUMBER
 ) AS
 BEGIN
-    DELETE FROM TREATMENTS_DOCTORS WHERE PROCEDURE_ID = p_PROCEDURE_ID;
+    DELETE FROM TREATMENTS_DOCTORS WHERE ID = p_ID;
 END;
 
 CREATE OR REPLACE PROCEDURE ADD_TREATMENTS_NURSES (
@@ -554,6 +566,78 @@ CREATE OR REPLACE PROCEDURE DELETE_ASSIGNMENT_MEDICINES (
 BEGIN
     DELETE FROM ASSIGNMENT_MEDICINES WHERE PATIENT_ID = p_PATIENT_ID;
 END;
+
+--sekwencje
+CREATE SEQUENCE STATUSES_SEQ
+START WITH 1
+INCREMENT BY 1
+NOCACHE
+NOCYCLE;
+
+CREATE SEQUENCE TREATMENTS_NURSES_ID_SEQ
+START WITH 1
+INCREMENT BY 1
+NOCACHE
+NOCYCLE;
+
+CREATE SEQUENCE PROCEDURES_ID_SEQ
+START WITH 1
+INCREMENT BY 1
+NOCACHE
+NOCYCLE;
+
+
+CREATE OR REPLACE PROCEDURE ADD_STATUS (
+    p_STATUS IN VARCHAR2,
+    p_DESCRIPTION IN CLOB
+) AS
+BEGIN
+    INSERT INTO STATUSES (ID, STATUS, DESCRIPTION, CREATED_AT, UPDATED_AT)
+    VALUES (STATUSES_SEQ.NEXTVAL, p_STATUS, p_DESCRIPTION, SYSTIMESTAMP, SYSTIMESTAMP);
+END ADD_STATUS;
+/
+CREATE OR REPLACE PROCEDURE GET_STATUS (
+    p_ID IN NUMBER,
+    p_STATUS OUT VARCHAR2,
+    p_DESCRIPTION OUT CLOB,
+    p_CREATED_AT OUT TIMESTAMP,
+    p_UPDATED_AT OUT TIMESTAMP
+) AS
+BEGIN
+    SELECT STATUS, DESCRIPTION, CREATED_AT, UPDATED_AT
+    INTO p_STATUS, p_DESCRIPTION, p_CREATED_AT, p_UPDATED_AT
+    FROM STATUSES
+    WHERE ID = p_ID;
+END GET_STATUS;
+/
+CREATE OR REPLACE PROCEDURE UPDATE_STATUS (
+    p_ID IN NUMBER,
+    p_STATUS IN VARCHAR2,
+    p_DESCRIPTION IN CLOB
+) AS
+BEGIN
+    UPDATE STATUSES
+    SET STATUS = p_STATUS,
+        DESCRIPTION = p_DESCRIPTION,
+        UPDATED_AT = SYSTIMESTAMP
+    WHERE ID = p_ID;
+END UPDATE_STATUS;
+/
+CREATE OR REPLACE PROCEDURE DELETE_STATUS (
+    p_ID IN NUMBER
+) AS
+BEGIN
+    DELETE FROM STATUSES
+    WHERE ID = p_ID;
+END DELETE_STATUS;
+/
+
+
+
+
+
+
+
 
 CREATE OR REPLACE FUNCTION GET_END_TIME(
     p_start_time TIMESTAMP,
@@ -786,48 +870,6 @@ BEGIN
     UPDATE_PROCEDURE_STATUSES;
 END;
 
-CREATE OR REPLACE PROCEDURE CHECK_AND_UPDATE_ACCOUNT_TYPES AS
-    CURSOR c_users IS
-        SELECT ID FROM USERS;
-    l_count INTEGER;
-    l_user_id USERS.ID%TYPE;
-BEGIN
-    FOR r IN c_users LOOP
-        l_user_id := r.ID;
-
-        -- Sprawdzenie i aktualizacja dla administratorów
-        SELECT COUNT(*) INTO l_count FROM USERS WHERE ID = l_user_id AND ACCOUNT_TYPE = 'admin';
-        IF l_count > 0 THEN
-            CONTINUE;  -- Jeœli u¿ytkownik jest adminem, nie aktualizujemy jego typu konta
-        END IF;
-
-        -- Sprawdzenie i aktualizacja dla pielêgniarek
-        SELECT COUNT(*) INTO l_count FROM NURSES WHERE USER_ID = l_user_id;
-        IF l_count > 0 THEN
-            UPDATE USERS SET ACCOUNT_TYPE = 'nurse' WHERE ID = l_user_id;
-            CONTINUE;
-        END IF;
-
-        -- Sprawdzenie i aktualizacja dla lekarzy
-        SELECT COUNT(*) INTO l_count FROM DOCTORS WHERE USER_ID = l_user_id;
-        IF l_count > 0 THEN
-            UPDATE USERS SET ACCOUNT_TYPE = 'doctor' WHERE ID = l_user_id;
-            CONTINUE;
-        END IF;
-
-        -- Sprawdzenie i aktualizacja dla pacjentów
-        SELECT COUNT(*) INTO l_count FROM PATIENTS WHERE USER_ID = l_user_id;
-        IF l_count > 0 THEN
-            UPDATE USERS SET ACCOUNT_TYPE = 'patient' WHERE ID = l_user_id;
-            CONTINUE;
-        END IF;
-
-        -- Jeœli nie ma przypisania, ustawienie na 'none'
-        UPDATE USERS SET ACCOUNT_TYPE = 'none' WHERE ID = l_user_id;
-    END LOOP;
-
-    COMMIT;
-END;
 
 BEGIN
     DBMS_SCHEDULER.create_job (
@@ -1001,4 +1043,95 @@ BEGIN
     END IF;
 END;
 /
+
+-- sprawdzanie typ konta 
+CREATE OR REPLACE PROCEDURE CHECK_AND_UPDATE_ACCOUNT_TYPES AS
+    CURSOR c_users IS
+        SELECT ID FROM USERS;
+    l_count INTEGER;
+    l_user_id USERS.ID%TYPE;
+BEGIN
+    FOR r IN c_users LOOP
+        l_user_id := r.ID;
+
+        -- Sprawdzenie i aktualizacja dla administratorów
+        SELECT COUNT(*) INTO l_count FROM USERS WHERE ID = l_user_id AND ACCOUNT_TYPE = 'admin';
+        IF l_count > 0 THEN
+            CONTINUE;  -- Jeœli u¿ytkownik jest adminem, nie aktualizujemy jego typu konta
+        END IF;
+
+        -- Sprawdzenie i aktualizacja dla pielêgniarek
+        SELECT COUNT(*) INTO l_count FROM NURSES WHERE USER_ID = l_user_id;
+        IF l_count > 0 THEN
+            UPDATE USERS SET ACCOUNT_TYPE = 'nurse' WHERE ID = l_user_id;
+            CONTINUE;
+        END IF;
+
+        -- Sprawdzenie i aktualizacja dla lekarzy
+        SELECT COUNT(*) INTO l_count FROM DOCTORS WHERE USER_ID = l_user_id;
+        IF l_count > 0 THEN
+            UPDATE USERS SET ACCOUNT_TYPE = 'doctor' WHERE ID = l_user_id;
+            CONTINUE;
+        END IF;
+
+        -- Sprawdzenie i aktualizacja dla pacjentów
+        SELECT COUNT(*) INTO l_count FROM PATIENTS WHERE USER_ID = l_user_id;
+        IF l_count > 0 THEN
+            UPDATE USERS SET ACCOUNT_TYPE = 'patient' WHERE ID = l_user_id;
+            CONTINUE;
+        END IF;
+
+        -- Jeœli nie ma przypisania, ustawienie na 'none'
+        UPDATE USERS SET ACCOUNT_TYPE = 'none' WHERE ID = l_user_id;
+    END LOOP;
+
+    COMMIT;
+END;
+
+BEGIN
+    DBMS_SCHEDULER.create_job (
+        job_name        => 'JOB_CHECK_AND_UPDATE_ACCOUNT_TYPES',
+        job_type        => 'PLSQL_BLOCK',
+        job_action      => 'BEGIN CHECK_AND_UPDATE_ACCOUNT_TYPES; END;',
+        start_date      => SYSTIMESTAMP,
+        repeat_interval => 'FREQ=MINUTELY; INTERVAL=5', -- Uruchamianie co 5 minut
+        enabled         => TRUE
+    );
+END;
+/
+
+CREATE OR REPLACE PROCEDURE REMOVE_DUPLICATE_TREATMENTS_NURSES IS
+BEGIN
+    DELETE FROM TREATMENTS_NURSES A
+    WHERE A.ROWID > ANY (
+        SELECT B.ROWID
+        FROM TREATMENTS_NURSES B
+        WHERE A.NURSE_ID = B.NURSE_ID
+          AND A.PROCEDURE_ID = B.PROCEDURE_ID
+    );
+END REMOVE_DUPLICATE_TREATMENTS_NURSES;
+/
+
+BEGIN
+    DBMS_SCHEDULER.create_job (
+        job_name        => 'JOB_REMOVE_DUPLICATE_TREATMENTS_NURSES',
+        job_type        => 'PLSQL_BLOCK',
+        job_action      => 'BEGIN REMOVE_DUPLICATE_TREATMENTS_NURSES; END;',
+        start_date      => SYSTIMESTAMP,
+        repeat_interval => 'FREQ=MINUTELY; INTERVAL=1',
+        enabled         => TRUE
+    );
+END;
+/
+BEGIN
+    DBMS_SCHEDULER.drop_job (
+        job_name => 'HOSPITAL.JOB_REMOVE_DUPLICATE_TREATMENTS_NURSES',
+        force => TRUE
+    );
+END;
+/
+
+
+
+
 

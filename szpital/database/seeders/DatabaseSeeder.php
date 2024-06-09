@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Patient;
+use App\Models\Procedure;
 use App\Models\room;
 use App\Models\Status;
 use App\Models\User;
@@ -29,8 +30,8 @@ class DatabaseSeeder extends Seeder
             DoctorSeeder::class,
             PatientSeeder::class,
             StatusSeeder::class,
-            TreatmentTypeSeeder::class
-
+            TreatmentTypeSeeder::class,
+            ProcedureSeeder::class
         ]);
     }
 }

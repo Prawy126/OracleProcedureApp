@@ -14,6 +14,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('treatments_doctors', function (Blueprint $table) {
+            $table->id();
             $table->foreignIdFor(procedure::class)->constrained();
             $table->foreignIdFor(doctor::class)->constrained();
             $table->timestamps();

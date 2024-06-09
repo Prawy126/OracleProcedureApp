@@ -12,6 +12,7 @@ use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\StatusController;
 use App\Http\Controllers\TreatmentDoctorController;
 use App\Http\Controllers\TreatmentNurseController;
 use App\Http\Controllers\TreatmentTypeController;
@@ -93,14 +94,17 @@ Route::delete('/treatment-nurses/{id}', [TreatmentNurseController::class, 'destr
 
 Route::get('/admin/accounts', [UserController::class, 'index'])->name('accounts');
 
-Route::get('/admin/doctor-treatments', [TreatmentDoctorController::class, 'index'])->name('treatmentDoctor.index');
+Route::get('/treatment-doctors', [TreatmentDoctorController::class, 'index'])->name('treatmentDoctor.index');
+Route::post('/treatment-doctors', [TreatmentDoctorController::class, 'store'])->name('treatmentDoctors.store');
+Route::get('/treatment-doctors/{id}/edit', [TreatmentDoctorController::class, 'edit'])->name('treatmentDoctors.edit');
+Route::put('/treatment-doctors/{id}', [TreatmentDoctorController::class, 'update'])->name('treatmentDoctors.update');
+Route::delete('/treatment-doctors/{id}', [TreatmentDoctorController::class, 'destroy'])->name('treatmentDoctors.destroy');
+
+
 
 Route::get('/admin/medicin-assigment', [AssignmentMedicineController::class, 'index'])->name('assigmentMedicin.index');
 
-<?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\StatusController;
 
 Route::get('/statuses', [StatusController::class, 'index'])->name('statusIndex');
 Route::post('/statuses', [StatusController::class, 'store'])->name('statusesStore');

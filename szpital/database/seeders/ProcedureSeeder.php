@@ -15,5 +15,13 @@ class ProcedureSeeder extends Seeder
     {
         //
         Procedure::truncate();
+        Procedure::insert([[
+            'TREATMENT_TYPE_ID'=>1,
+            'room_id' => 1,
+            'date' => '2024-06-12 15:30',
+            'time' => '02:30',
+            'cost' => 213,
+            'status' => 1
+        ]]);
     }
 }
