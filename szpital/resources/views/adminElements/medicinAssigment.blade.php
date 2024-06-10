@@ -10,7 +10,7 @@
     @include('shared.scripts')
 
     <div class="col-md-12">
-        <form action="" method="POST">
+        <form action="{{ route('assignmentMedicineStore') }}" method="POST">
             @csrf
             <div class="form-row">
                 <div class="form-group col-md-6">
@@ -86,15 +86,14 @@
                                 <td>{{ $assignment->date_end }}</td>
                                 <td>{{ $assignment->expiration_date }}</td>
                                 <td>{{ $assignment->availability ? 'Dostępny' : 'Niedostępny' }}</td>
-                                <td><a href="" class="btn btn-warning">Edytuj</a></td>
+                                <td><a href="{{ route('assignmentMedicineEdit', $assignment->patient_id) }}" class="btn btn-warning">Edytuj</a></td>
                                 <td>
-                                <form action="" method="POST">
+                                <form action="{{ route('assignmentMedicineDestroy', $assignment->patient_id) }}" method="POST">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-danger">Usuń</button>
                                 </form>
                                 </td>
-
                             </tr>
                         @endforeach
                     </tbody>

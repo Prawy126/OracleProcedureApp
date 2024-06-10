@@ -72,12 +72,10 @@ class DoctorController extends Controller
             $stmt = $pdo->prepare('BEGIN users_pkg.get_doctor(:id, :cursor); END;');
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
 
-            // Create a cursor reference
             $cursor = null;
             $stmt->bindParam(':cursor', $cursor, PDO::PARAM_STMT);
             $stmt->execute();
 
-            // Use oci functions to handle cursor
             oci_execute($cursor, OCI_DEFAULT);
             oci_fetch_all($cursor, $result, 0, -1, OCI_FETCHSTATEMENT_BY_ROW);
 
@@ -87,16 +85,15 @@ class DoctorController extends Controller
         });
 
         if (empty($doctor)) {
-            return redirect()->route('doctorIndex')->with('error', 'Doctor not found.');
+            abort(404);
         }
 
         return view('edycjaLekarze', compact('doctor'));
     }
+
+
     public function update(Request $request, $id)
     {
-        // Debugowanie danych z requesta
-        Log::info('Request Data:', $request->all());
-
         DB::transaction(function () use ($request, $id) {
             $pdo = DB::getPdo();
             $stmt = $pdo->prepare("
@@ -113,17 +110,12 @@ class DoctorController extends Controller
                 END;
             ");
 
-            // Tworzymy zmienne lokalne dla każdego parametru
             $name = $request->input('name');
             $surname = $request->input('surname');
             $specialization = $request->input('specialization');
             $license_number = $request->input('license_number');
             $user_id = $request->input('user_id');
 
-            // Debugowanie wartości
-            Log::info('Bound Parameters:', compact('id', 'name', 'surname', 'specialization', 'license_number', 'user_id'));
-
-            // Przypisujemy wartości do parametrów
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
             $stmt->bindParam(':name', $name, PDO::PARAM_STR);
             $stmt->bindParam(':surname', $surname, PDO::PARAM_STR);

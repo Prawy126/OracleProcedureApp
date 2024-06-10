@@ -24,9 +24,6 @@ class PatientController extends Controller
 
     public function store(Request $request)
     {
-        // Debugging request data
-        Log::info('Request Data:', $request->all());
-
         DB::transaction(function () use ($request) {
             $pdo = DB::getPdo();
             $stmt = $pdo->prepare("
@@ -43,7 +40,6 @@ class PatientController extends Controller
                 END;
             ");
 
-            // Creating local variables for each parameter
             $name = $request->input('name');
             $surname = $request->input('surname');
             $nurse_id = $request->input('nurse_id');
@@ -51,10 +47,6 @@ class PatientController extends Controller
             $time_visit = $request->input('time_visit');
             $room_id = $request->input('room_id');
 
-            // Debugging bound parameters
-            Log::info('Bound Parameters:', compact('name', 'surname', 'nurse_id', 'user_id', 'time_visit', 'room_id'));
-
-            // Binding values to parameters
             $stmt->bindParam(':name', $name, PDO::PARAM_STR);
             $stmt->bindParam(':surname', $surname, PDO::PARAM_STR);
             $stmt->bindParam(':nurse_id', $nurse_id, PDO::PARAM_INT);
@@ -76,12 +68,10 @@ class PatientController extends Controller
             $stmt = $pdo->prepare('BEGIN users_pkg.get_patient(:id, :cursor); END;');
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
 
-            // Create a cursor reference
             $cursor = null;
             $stmt->bindParam(':cursor', $cursor, PDO::PARAM_STMT);
             $stmt->execute();
 
-            // Use oci functions to handle cursor
             oci_execute($cursor, OCI_DEFAULT);
             oci_fetch_all($cursor, $result, 0, -1, OCI_FETCHSTATEMENT_BY_ROW);
 
@@ -99,8 +89,6 @@ class PatientController extends Controller
 
     public function update(Request $request, $id)
     {
-        // Debugging request data
-        Log::info('Request Data:', $request->all());
 
         DB::transaction(function () use ($request, $id) {
             $pdo = DB::getPdo();
@@ -119,7 +107,6 @@ class PatientController extends Controller
                 END;
             ");
 
-            // Creating local variables for each parameter
             $name = $request->input('name');
             $surname = $request->input('surname');
             $nurse_id = $request->input('nurse_id');
@@ -127,10 +114,6 @@ class PatientController extends Controller
             $time_visit = $request->input('time_visit');
             $room_id = $request->input('room_id');
 
-            // Debugging bound parameters
-            Log::info('Bound Parameters:', compact('id', 'name', 'surname', 'nurse_id', 'user_id', 'time_visit', 'room_id'));
-
-            // Binding values to parameters
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
             $stmt->bindParam(':name', $name, PDO::PARAM_STR);
             $stmt->bindParam(':surname', $surname, PDO::PARAM_STR);

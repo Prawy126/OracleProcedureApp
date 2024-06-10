@@ -19,11 +19,9 @@ class AuthController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            // Pobranie typu konta zalogowanego użytkownika
             $user = Auth::user();
             $accountType = $user->account_type;
 
-            // Przekierowanie na odpowiednią trasę w zależności od typu konta
             switch ($accountType) {
                 case 'admin':
                     return redirect()->intended(route('admin'));

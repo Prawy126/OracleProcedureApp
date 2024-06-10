@@ -101,14 +101,16 @@ Route::put('/treatment-doctors/{id}', [TreatmentDoctorController::class, 'update
 Route::delete('/treatment-doctors/{id}', [TreatmentDoctorController::class, 'destroy'])->name('treatmentDoctors.destroy');
 
 
-
-Route::get('/admin/medicin-assigment', [AssignmentMedicineController::class, 'index'])->name('assigmentMedicin.index');
-
-
-
 Route::get('/statuses', [StatusController::class, 'index'])->name('statusIndex');
 Route::post('/statuses', [StatusController::class, 'store'])->name('statusesStore');
 Route::get('/statuses/{status}/edit', [StatusController::class, 'edit'])->name('statusesShow');
 Route::put('/statuses/{status}', [StatusController::class, 'update'])->name('statusesUpdate');
 Route::delete('/statuses/{status}', [StatusController::class, 'destroy'])->name('statusesDestroy');
+
+
+Route::get('/assignments', [AssignmentMedicineController::class, 'index'])->name('assignmentMedicineIndex');
+Route::post('/assignments', [AssignmentMedicineController::class, 'store'])->name('assignmentMedicineStore');
+Route::get('/assignments/{patient_id}/edit', [AssignmentMedicineController::class, 'edit'])->name('assignmentMedicineEdit');
+Route::put('/assignments/{patient_id}', [AssignmentMedicineController::class, 'update'])->name('assignmentMedicineUpdate');
+Route::delete('/assignments/{patient_id}', [AssignmentMedicineController::class, 'destroy'])->name('assignmentMedicineDestroy');
 

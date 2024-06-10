@@ -28,9 +28,6 @@ class RoomController extends Controller
 
     public function store(Request $request)
     {
-        // Debugowanie danych z requesta
-        Log::info('Request Data:', $request->all());
-
         DB::transaction(function () use ($request) {
             $pdo = DB::getPdo();
 
@@ -57,7 +54,6 @@ class RoomController extends Controller
                 END;
             ");
 
-            // Bind parameters
             $stmt->bindParam(':rnumber', $rnumber, PDO::PARAM_STR);
             $stmt->bindParam(':rlocation', $rlocation, PDO::PARAM_STR);
             $stmt->bindParam(':status', $status, PDO::PARAM_STR);
@@ -78,12 +74,10 @@ class RoomController extends Controller
             $stmt = $pdo->prepare('BEGIN szpital.get_room(:id, :cursor); END;');
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
 
-            // Create a cursor reference
             $cursor = null;
             $stmt->bindParam(':cursor', $cursor, PDO::PARAM_STMT);
             $stmt->execute();
 
-            // Use oci functions to handle cursor
             oci_execute($cursor, OCI_DEFAULT);
             oci_fetch_all($cursor, $result, 0, -1, OCI_FETCHSTATEMENT_BY_ROW);
 
@@ -101,9 +95,6 @@ class RoomController extends Controller
 
     public function update(Request $request, $id)
     {
-        // Debugowanie danych z requesta
-        Log::info('Request Data:', $request->all());
-
         DB::transaction(function () use ($request, $id) {
             $pdo = DB::getPdo();
 

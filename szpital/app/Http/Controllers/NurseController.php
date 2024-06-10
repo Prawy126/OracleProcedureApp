@@ -27,16 +27,11 @@ class NurseController extends Controller
 
     public function dashboard()
     {
-
-
         return view('pielegniarka');
     }
 
     public function store(Request $request)
     {
-        // Debugging
-        Log::info('Request Data:', $request->all());
-
         DB::transaction(function () use ($request) {
             $pdo = DB::getPdo();
             $stmt = $pdo->prepare("
@@ -51,16 +46,11 @@ class NurseController extends Controller
                 END;
             ");
 
-            // Tworzymy zmienne lokalne dla każdego parametru
             $name = $request->input('name');
             $surname = $request->input('surname');
             $number_license = $request->input('number_license');
             $user_id = $request->input('user_id');
 
-            // Debugowanie wartości
-            Log::info('Bound Parameters:', compact('name', 'surname', 'number_license', 'user_id'));
-
-            // Przypisujemy wartości do parametrów
             $stmt->bindParam(':name', $name, PDO::PARAM_STR);
             $stmt->bindParam(':surname', $surname, PDO::PARAM_STR);
             $stmt->bindParam(':number_license', $number_license, PDO::PARAM_STR);

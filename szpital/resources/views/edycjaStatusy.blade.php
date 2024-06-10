@@ -7,17 +7,17 @@
 
     <div class="container">
         <h2 class="mt-4">Edycja Statusu</h2>
-        <form action="{{ route('statusesUpdate', $status->id) }}" method="POST">
+        <form action="{{ route('statusesUpdate', $status['ID']) }}" method="POST">
             @csrf
             @method('PUT')
             <div class="row">
                 <div class="form-group col-md-2">
                     <label for="inputStatus">Status</label>
-                    <input type="text" class="form-control" name="status" id="inputStatus" placeholder="Status" value="{{ $status->status }}" required>
+                    <input type="text" class="form-control" name="status" id="inputStatus" placeholder="Status" value="{{ $status->['STATUS'] }}" required>
                 </div>
                 <div class="form-group col-md-2">
                     <label for="inputDescription">Opis</label>
-                    <input type="text" class="form-control" name="description" id="inputDescription" placeholder="Opis" value="{{ $status->description }}" required>
+                    <input type="text" class="form-control" name="description" id="inputDescription" placeholder="Opis" value="{{ $status-['DESCRIPTION'] }}" required>
                 </div>
                 <div class="form-group col-md-2">
                     <button type="submit" class="btn btn-primary">Aktualizuj</button>

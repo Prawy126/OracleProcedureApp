@@ -51,7 +51,6 @@ class MedicinController extends Controller
                 END;
             ");
 
-            // Bind parameters
             $stmt->bindParam(':name', $name, PDO::PARAM_STR);
             $stmt->bindParam(':instruction', $instruction, PDO::PARAM_STR);
             $stmt->bindParam(':warehouse_quantity', $warehouse_quantity, PDO::PARAM_INT);
@@ -73,12 +72,10 @@ class MedicinController extends Controller
             $stmt = $pdo->prepare('BEGIN szpital.get_medicin(:id, :cursor); END;');
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
 
-            // Create a cursor reference
             $cursor = null;
             $stmt->bindParam(':cursor', $cursor, PDO::PARAM_STMT);
             $stmt->execute();
 
-            // Use oci functions to handle cursor
             oci_execute($cursor, OCI_DEFAULT);
             oci_fetch_all($cursor, $result, 0, -1, OCI_FETCHSTATEMENT_BY_ROW);
 
@@ -96,9 +93,6 @@ class MedicinController extends Controller
 
     public function update(Request $request, $id)
     {
-        // Debugowanie danych z requesta
-        Log::info('Request Data:', $request->all());
-
         DB::transaction(function () use ($request, $id) {
             $pdo = DB::getPdo();
 
@@ -130,7 +124,6 @@ class MedicinController extends Controller
                 END;
             ");
 
-            // Bind parameters
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
             $stmt->bindParam(':name', $name, PDO::PARAM_STR);
             $stmt->bindParam(':instruction', $instruction, PDO::PARAM_STR);

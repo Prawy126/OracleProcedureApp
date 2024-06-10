@@ -42,7 +42,6 @@ class UserController extends Controller
 
     public function update(Request $request, $id)
 {
-    // Validate the input
     $validated = $request->validate([
         'login' => 'required|string|max:255',
         'password' => 'required|string|max:255',
@@ -53,7 +52,7 @@ class UserController extends Controller
         DB::statement('BEGIN UPDATE_USER(:id, :login, :password, :account_type); END;', [
             'id' => $id,
             'login' => $validated['login'],
-            'password' => $validated['password'],
+            'password' => Hash::make($validated['password']),
             'account_type' => $validated['account_type'],
         ]);
     });
