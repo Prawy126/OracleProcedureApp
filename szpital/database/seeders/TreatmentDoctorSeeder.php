@@ -16,5 +16,14 @@ class TreatmentDoctorSeeder extends Seeder
     {
         //
         TreatmentDoctor::truncate();
+        TreatmentDoctor::insert([[
+            'doctor_id'=>1,
+            'procedure_id'=>1
+        ],
+        [
+            'doctor_id'=>2,
+            'procedure_id'=>1
+        ]
+    ]);
     }
 }

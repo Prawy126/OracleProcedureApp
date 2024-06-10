@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="dark">
 @include('shared.head')
@@ -7,15 +6,15 @@
 @include('shared.scripts')
 <div class="container mt-5 mb-4">
     <h2 class="mb-4">Edytuj Przypisanie Pielęgniarki</h2>
-    <form action="{{ route('treatmentNurses.update', $treatmentNurse["ID"]) }}" method="POST">
+    <form action="{{ route('treatmentNurses.update', $treatmentNurse['ID']) }}" method="POST">
         @csrf
         @method('PUT')
         <div class="form-row">
             <div class="form-group col-md-6">
                 <label for="nurseId">Id pielęgniarki</label>
-                <select id="nurseId" class="form-select" name="nurse_id" disabled>
+                <select id="nurseId" class="form-select" name="nurse_id">
                     @foreach($nurses as $nurse)
-                        <option value="{{ $nurse->id }}" {{ $nurse->id == $treatmentNurse["NURSE_ID"]? 'selected' : '' }}>
+                        <option value="{{ $nurse->id }}" {{ $nurse->id == $treatmentNurse['NURSE_ID'] ? 'selected' : '' }}>
                             {{ $nurse->id }} {{ $nurse->name }} {{ $nurse->surname }}
                         </option>
                     @endforeach
@@ -25,7 +24,7 @@
                 <label for="procedureId">Id zabiegu</label>
                 <select id="procedureId" class="form-select" name="procedure_id">
                     @foreach($procedures as $procedure)
-                        <option value="{{ $procedure->id }}" {{ $procedure->id == $treatmentNurse["PROCEDURE_ID"]? 'selected' : '' }}>
+                        <option value="{{ $procedure->id }}" {{ $procedure->id == $treatmentNurse['PROCEDURE_ID'] ? 'selected' : '' }}>
                             {{ $procedure->id }} {{ $procedure->date }}
                         </option>
                     @endforeach

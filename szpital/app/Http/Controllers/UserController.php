@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -23,9 +24,9 @@ class UserController extends Controller
         ]);
 
         DB::transaction(function () use ($request, $validated) {
-            DB::statement('BEGIN CREATE_USER(NULL, :login, :password, :account_type); END;', [
+            DB::statement('BEGIN CREATE_USER( :login, :password, :account_type); END;', [
                 'login' => $validated['login'],
-                'password' => $validated['password'],
+                'password' => Hash::make($validated['password']),
                 'account_type' => $validated['account_type'],
             ]);
         });

@@ -17,7 +17,7 @@
             <div class="form-group row mb-4">
                 <label for="inputID" class="col-md-2 col-form-label">ID:</label>
                 <div class="col-md-4">
-                    <input type="number" class="form-control" id="inputID" name="id" placeholder="ID" value="{{ $treatmentType['ID'] }}">
+                    <input type="number" class="form-control" id="inputID" name="id" placeholder="ID" value="{{ $treatmentType['ID'] }}" readonly>
                 </div>
             </div>
             <div class="form-group row mb-4">

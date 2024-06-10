@@ -79,20 +79,21 @@ class TreatmentNurseController extends Controller
         ]);
     }
 
-
     public function update(Request $request, $id)
     {
         DB::transaction(function () use ($request, $id) {
             $pdo = DB::getPdo();
             $stmt = $pdo->prepare('
                 BEGIN
-                    UPDATE_TREATMENTS_NURSES(:p_ID, :p_NEW_PROCEDURE_ID);
+                    UPDATE_TREATMENTS_NURSES(:p_ID, :p_NEW_NURSE_ID, :p_NEW_PROCEDURE_ID);
                 END;
             ');
 
+            $newNurseId = $request->input('nurse_id');
             $newProcedureId = $request->input('procedure_id');
 
             $stmt->bindParam(':p_ID', $id, PDO::PARAM_INT);
+            $stmt->bindParam(':p_NEW_NURSE_ID', $newNurseId, PDO::PARAM_INT);
             $stmt->bindParam(':p_NEW_PROCEDURE_ID', $newProcedureId, PDO::PARAM_INT);
 
             $stmt->execute();
@@ -103,44 +104,41 @@ class TreatmentNurseController extends Controller
             'procedures' => Procedure::all(),
             'treatmentNurses' => TreatmentNurse::all(),
         ];
-        return view('admin', [
-            'data' => $data,
-        ]);
+        return redirect()->route('treatmentNurses.index', compact('data'));
     }
 
     public function edit($id)
-{
-    $treatmentNurse = null;
+    {
+        $treatmentNurse = null;
 
-    DB::transaction(function () use ($id, &$treatmentNurse) {
-        $pdo = DB::getPdo();
-        $stmt = $pdo->prepare('
-            BEGIN
-                GET_TREATMENTS_NURSES(:p_ID, :p_RESULT);
-            END;
-        ');
+        DB::transaction(function () use ($id, &$treatmentNurse) {
+            $pdo = DB::getPdo();
+            $stmt = $pdo->prepare('
+                BEGIN
+                    GET_TREATMENTS_NURSES(:p_ID, :p_RESULT);
+                END;
+            ');
 
-        $stmt->bindParam(':p_ID', $id, PDO::PARAM_INT);
-        $stmt->bindParam(':p_RESULT', $resultCursor, PDO::PARAM_STMT);
+            $stmt->bindParam(':p_ID', $id, PDO::PARAM_INT);
+            $stmt->bindParam(':p_RESULT', $resultCursor, PDO::PARAM_STMT);
 
-        $stmt->execute();
+            $stmt->execute();
 
-        oci_execute($resultCursor, OCI_DEFAULT);
-        oci_fetch_all($resultCursor, $result, 0, -1, OCI_FETCHSTATEMENT_BY_ROW);
+            oci_execute($resultCursor, OCI_DEFAULT);
+            oci_fetch_all($resultCursor, $result, 0, -1, OCI_FETCHSTATEMENT_BY_ROW);
 
-        if (!empty($result)) {
-            $treatmentNurse =  $result[0];
+            if (!empty($result)) {
+                $treatmentNurse = $result[0];
+            }
+        });
+
+        if ($treatmentNurse === null) {
+            abort(404);
         }
-    });
 
-    if ($treatmentNurse === null) {
-        abort(404);
+        $nurses = Nurse::select('id', 'name', 'surname')->get();
+        $procedures = Procedure::select('id', 'date')->get();
+
+        return view('adminElements.treatmentsNurseEdit', compact('treatmentNurse', 'nurses', 'procedures'));
     }
-
-    $nurses = Nurse::select('id', 'name', 'surname')->get();
-    $procedures = Procedure::select('id', 'date')->get();
-
-    return view('adminElements.treatmentsNurseEdit', compact('treatmentNurse', 'nurses', 'procedures'));
-}
-
 }

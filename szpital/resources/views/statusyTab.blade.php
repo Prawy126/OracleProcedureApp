@@ -27,7 +27,6 @@
                         <th scope="col">#</th>
                         <th scope="col">Status</th>
                         <th scope="col">Opis</th>
-                        <th scope="col">Procedura</th>
                         <th scope="col">Edytuj</th>
                         <th scope="col">Usuń</th>
                     </tr>
@@ -38,7 +37,6 @@
                             <th scope="row">{{ $status->id }}</th>
                             <td>{{ $status->status }}</td>
                             <td>{{ $status->description }}</td>
-                            <td>{{ $status->procedure->name }}</td>
                             <td><a href="{{ route('statusesShow', $status->id) }}" class="btn btn-warning">Edytuj</a></td>
                             <td>
                                 <form action="{{ route('statusesDestroy', $status->id) }}" method="POST">

@@ -24,7 +24,7 @@ CREATE OR REPLACE PACKAGE users_pkg IS
         id              NUMBER,
         name            VARCHAR2(20),
         surname         VARCHAR2(30),
-        "number"        VARCHAR2(30),
+        NUMBER_LICENSE        VARCHAR2(30),
         user_id         NUMBER
     );
 
@@ -116,8 +116,8 @@ CREATE OR REPLACE PACKAGE BODY users_pkg IS
     -- Add a nurse
     PROCEDURE add_nurse(p_nurse IN nurse_rec) IS
     BEGIN
-        INSERT INTO nurses (name, surname, number, user_id)
-        VALUES (p_nurse.name, p_nurse.surname, p_nurse.number, p_nurse.user_id);
+        INSERT INTO nurses (name, surname, NUMBER_LICENSE, user_id)
+        VALUES (p_nurse.name, p_nurse.surname, p_nurse.NUMBER_LICENSE, p_nurse.user_id);
     END add_nurse;
 
     -- Get a nurse
@@ -133,7 +133,7 @@ CREATE OR REPLACE PACKAGE BODY users_pkg IS
         UPDATE nurses
         SET name = p_nurse.name,
             surname = p_nurse.surname,
-            number = p_nurse.number,
+            NUMBER_LICENSE = p_nurse.NUMBER_LICENSE,
             user_id = p_nurse.user_id
         WHERE id = p_nurse.id;
     END update_nurse;

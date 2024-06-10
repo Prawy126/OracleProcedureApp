@@ -30,8 +30,7 @@ class TreatmentTypeController extends Controller
                         :p_NAME,
                         :p_DESCRIPTION,
                         :p_RECOMMENDATIONS_BEFORE_SURGERY,
-                        :p_RECOMMENDATIONS_AFTER_SURGERY,
-                        :p_CREATED_AT
+                        :p_RECOMMENDATIONS_AFTER_SURGERY
                     );
                 END;
             ');
@@ -40,26 +39,81 @@ class TreatmentTypeController extends Controller
             $description = $request->input('description');
             $recommendations_before_surgery = $request->input('recommendations_before_surgery');
             $recommendations_after_surgery = $request->input('recommendations_after_surgery');
-            $created_at = null;
 
             $stmt->bindParam(':p_NAME', $name, PDO::PARAM_STR);
             $stmt->bindParam(':p_DESCRIPTION', $description, PDO::PARAM_STR);
             $stmt->bindParam(':p_RECOMMENDATIONS_BEFORE_SURGERY', $recommendations_before_surgery, PDO::PARAM_STR);
             $stmt->bindParam(':p_RECOMMENDATIONS_AFTER_SURGERY', $recommendations_after_surgery, PDO::PARAM_STR);
-            $stmt->bindParam(':p_CREATED_AT', $created_at, PDO::PARAM_STR);
 
             $stmt->execute();
         });
 
-        return redirect()->route('treatmentTypes.store')->with('success', 'Treatment Type added successfully');
+        return redirect()->route('treatmentTypes.index')->with('success', 'Treatment Type added successfully');
     }
 
     public function edit($id)
     {
-        $treatmentType = DB::selectOne('SELECT * FROM TREATMENT_TYPES WHERE ID = ?', [$id]);
-        return view('treatmentTypes.edit', compact('treatmentType'));
-    }
+        $treatmentType = null;
 
+        DB::transaction(function () use ($id, &$treatmentType) {
+            $pdo = DB::getPdo();
+            $stmt = $pdo->prepare('
+                DECLARE
+                    p_NAME VARCHAR2(100);
+                    p_DESCRIPTION CLOB;
+                    p_RECOMMENDATIONS_BEFORE_SURGERY CLOB;
+                    p_RECOMMENDATIONS_AFTER_SURGERY CLOB;
+                    p_CREATED_AT TIMESTAMP;
+                    p_UPDATED_AT TIMESTAMP;
+                BEGIN
+                    GET_TREATMENT_TYPE(
+                        :p_ID,
+                        p_NAME,
+                        p_DESCRIPTION,
+                        p_RECOMMENDATIONS_BEFORE_SURGERY,
+                        p_RECOMMENDATIONS_AFTER_SURGERY,
+                        p_CREATED_AT,
+                        p_UPDATED_AT
+                    );
+
+                    :p_NAME := p_NAME;
+                    :p_DESCRIPTION := p_DESCRIPTION;
+                    :p_RECOMMENDATIONS_BEFORE_SURGERY := p_RECOMMENDATIONS_BEFORE_SURGERY;
+                    :p_RECOMMENDATIONS_AFTER_SURGERY := p_RECOMMENDATIONS_AFTER_SURGERY;
+                    :p_CREATED_AT := p_CREATED_AT;
+                    :p_UPDATED_AT := p_UPDATED_AT;
+                END;
+            ');
+
+            $stmt->bindParam(':p_ID', $id, PDO::PARAM_INT);
+
+            // Bind output parameters
+            $stmt->bindParam(':p_NAME', $name, PDO::PARAM_STR | PDO::PARAM_INPUT_OUTPUT, 100);
+            $stmt->bindParam(':p_DESCRIPTION', $description, PDO::PARAM_STR | PDO::PARAM_INPUT_OUTPUT, 4000);
+            $stmt->bindParam(':p_RECOMMENDATIONS_BEFORE_SURGERY', $recommendations_before_surgery, PDO::PARAM_STR | PDO::PARAM_INPUT_OUTPUT, 4000);
+            $stmt->bindParam(':p_RECOMMENDATIONS_AFTER_SURGERY', $recommendations_after_surgery, PDO::PARAM_STR | PDO::PARAM_INPUT_OUTPUT, 4000);
+            $stmt->bindParam(':p_CREATED_AT', $created_at, PDO::PARAM_STR | PDO::PARAM_INPUT_OUTPUT);
+            $stmt->bindParam(':p_UPDATED_AT', $updated_at, PDO::PARAM_STR | PDO::PARAM_INPUT_OUTPUT);
+
+            $stmt->execute();
+
+            $treatmentType = [
+                'ID' => $id,
+                'NAME' => $name,
+                'DESCRIPTION' => $description,
+                'RECOMMENDATIONS_BEFORE_SURGERY' => $recommendations_before_surgery,
+                'RECOMMENDATIONS_AFTER_SURGERY' => $recommendations_after_surgery,
+                'CREATED_AT' => $created_at,
+                'UPDATED_AT' => $updated_at
+            ];
+        });
+
+        if ($treatmentType === null) {
+            return redirect()->route('treatmentTypes.index')->with('error', 'Treatment Type not found.');
+        }
+
+        return view('edycjaTypyZabiegow', compact('treatmentType'));
+    }
     public function update(Request $request, $id)
     {
         DB::transaction(function () use ($request, $id) {
@@ -71,8 +125,7 @@ class TreatmentTypeController extends Controller
                         :p_NAME,
                         :p_DESCRIPTION,
                         :p_RECOMMENDATIONS_BEFORE_SURGERY,
-                        :p_RECOMMENDATIONS_AFTER_SURGERY,
-                        :p_UPDATED_AT
+                        :p_RECOMMENDATIONS_AFTER_SURGERY
                     );
                 END;
             ');
@@ -81,14 +134,12 @@ class TreatmentTypeController extends Controller
             $description = $request->input('description');
             $recommendations_before_surgery = $request->input('recommendations_before_surgery');
             $recommendations_after_surgery = $request->input('recommendations_after_surgery');
-            $updated_at = null;
 
             $stmt->bindParam(':p_ID', $id, PDO::PARAM_INT);
             $stmt->bindParam(':p_NAME', $name, PDO::PARAM_STR);
             $stmt->bindParam(':p_DESCRIPTION', $description, PDO::PARAM_STR);
             $stmt->bindParam(':p_RECOMMENDATIONS_BEFORE_SURGERY', $recommendations_before_surgery, PDO::PARAM_STR);
             $stmt->bindParam(':p_RECOMMENDATIONS_AFTER_SURGERY', $recommendations_after_surgery, PDO::PARAM_STR);
-            $stmt->bindParam(':p_UPDATED_AT', $updated_at, PDO::PARAM_STR);
 
             $stmt->execute();
         });

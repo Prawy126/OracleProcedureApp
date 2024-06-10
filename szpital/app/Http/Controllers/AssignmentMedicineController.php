@@ -15,6 +15,6 @@ class AssignmentMedicineController extends Controller
         $patients = Patient::all(['id', 'name', 'surname']);
         $assignments = AssignmentMedicine::all();
 
-        return view('assignment_medicine.index', compact('medicins', 'patients', 'assignments'));
+        return view('adminElements.medicinAssigment', compact('medicins', 'patients', 'assignments'));
     }
 }

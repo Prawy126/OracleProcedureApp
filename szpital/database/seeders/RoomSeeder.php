@@ -19,10 +19,18 @@ class RoomSeeder extends Seeder
 
         Room::insert([[
             'rnumber'=>'2B',
-            'rlocation'=>'Rzeszów',
+            'rlocation'=>'Budynek A1 skrzydło B2',
             'status'=>'wolny',
-            'type_room'=>'czteroosobowy',
+            'type_room'=>'Dla pacjentów',
+            'seats'=>4
+        ],
+        [
+           'rnumber'=>'24B',
+            'rlocation'=>'Budynek A1 skrzydło B2',
+            'status'=>'wolna',
+            'type_room'=>'Sala operacyjna',
             'seats'=>1
-        ]]);
+        ]
+    ]);
     }
 }

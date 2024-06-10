@@ -7,13 +7,10 @@
             <thead>
                 <tr>
                     <th scope="col">#</th>
-                    <th scope="col">ID</th>
                     <th scope="col">Nazwa</th>
                     <th scope="col">Opis</th>
                     <th scope="col">Zalecenia przed operacją</th>
                     <th scope="col">Zalecenia po operacji</th>
-                    <th scope="col">Utworzono</th>
-                    <th scope="col">Zaktualizowano</th>
                     <th scope="col"></th>
                     <th scope="col"></th>
                 </tr>
@@ -21,7 +18,6 @@
             <tbody>
                 @foreach($treatmentTypes as $treatmentType)
                 <tr>
-                    <th scope="row">{{ $loop->iteration }}</th>
                     <td>{{ $treatmentType->id }}</td>
                     <td>{{ $treatmentType->name }}</td>
                     <td>{{ $treatmentType->description }}</td>
@@ -47,9 +43,6 @@
     <form action="{{ route('treatmentTypes.store') }}" method="POST">
         @csrf
         <div class="row">
-            <div class="form-group col-md-1">
-                <input type="number" class="form-control" name="id" placeholder="ID">
-            </div>
             <div class="form-group col-md-2">
                 <input type="text" class="form-control" name="name" placeholder="Nazwa">
             </div>

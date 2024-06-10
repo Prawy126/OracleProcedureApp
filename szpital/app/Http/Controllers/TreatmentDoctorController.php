@@ -15,10 +15,9 @@ class TreatmentDoctorController extends Controller
     {
         $doctors = Doctor::select('id', 'name', 'surname')->get();
         $procedures = Procedure::select('id', 'date')->get();
-        $treatmentDoctors= DB::select('SELECT * FROM TREATMENTS_DOCTORS');
+        $treatmentDoctors = DB::select('SELECT * FROM TREATMENTS_DOCTORS');
 
-
-        return view('adminElements.doctorsTreatments', compact( 'doctors', 'procedures', 'treatmentDoctors'));
+        return view('adminElements.doctorsTreatments', compact('doctors', 'procedures', 'treatmentDoctors'));
     }
 
     public function store(Request $request)
@@ -27,7 +26,7 @@ class TreatmentDoctorController extends Controller
             $pdo = DB::getPdo();
             $stmt = $pdo->prepare('
                 BEGIN
-                    ADD_TREATMENTS_DOCTORS(:p_DOCTOR_ID, :p_PROCEDURE_ID);
+                    ADD_TREATMENTS_DOCTORS(:p_PROCEDURE_ID, :p_DOCTOR_ID);
                 END;
             ');
 
@@ -40,11 +39,10 @@ class TreatmentDoctorController extends Controller
             $stmt->execute();
         });
 
-
-            $doctors = Doctor::all();
-            $procedures = Procedure::all();
-            $treatmentDoctors = TreatmentDoctor::all();
-        return view('adminElements.doctorsTreatments',compact('doctors', 'procedures', 'treatmentDoctors'));
+        $doctors = Doctor::all();
+        $procedures = Procedure::all();
+        $treatmentDoctors = TreatmentDoctor::all();
+        return redirect()->route('treatmentDoctor.index', compact('doctors', 'procedures', 'treatmentDoctors'));
     }
 
     public function destroy($id)
@@ -60,11 +58,11 @@ class TreatmentDoctorController extends Controller
             $stmt->bindParam(':p_ID', $id, PDO::PARAM_INT);
             $stmt->execute();
         });
-        $doctors = Doctor::all();
-            $procedures = Procedure::all();
-            $treatmentDoctors = TreatmentDoctor::all();
 
-        return redirect()->route('treatmentDoctor.index',compact('doctors', 'procedures', 'treatmentDoctors'));
+        $doctors = Doctor::all();
+        $procedures = Procedure::all();
+        $treatmentDoctors = TreatmentDoctor::all();
+        return redirect()->route('treatmentDoctor.index', compact('doctors', 'procedures', 'treatmentDoctors'));
     }
 
     public function update(Request $request, $id)
@@ -73,46 +71,37 @@ class TreatmentDoctorController extends Controller
             $pdo = DB::getPdo();
             $stmt = $pdo->prepare('
                 BEGIN
-                    UPDATE_TREATMENTS_DOCTORS(:p_ID, :p_NEW_DOCTOR_ID, :p_CREATED_AT, :p_UPDATED_AT);
+                    UPDATE_TREATMENTS_DOCTORS(:p_PROCEDURE_ID, :p_NEW_DOCTOR_ID);
                 END;
             ');
 
-            $newDoctorId = $request->input('doctor');
-            $createdAt = $request->input('created_at');
-            $updatedAt = now();
+            $newDoctorId = $request->input('doctor_id');
 
-            $stmt->bindParam(':p_ID', $id, PDO::PARAM_INT);
+            $stmt->bindParam(':p_PROCEDURE_ID', $id, PDO::PARAM_INT);
             $stmt->bindParam(':p_NEW_DOCTOR_ID', $newDoctorId, PDO::PARAM_INT);
-            $stmt->bindParam(':p_CREATED_AT', $createdAt, PDO::PARAM_STR);
-            $stmt->bindParam(':p_UPDATED_AT', $updatedAt, PDO::PARAM_STR);
 
             $stmt->execute();
         });
 
-        $data = [
-            'doctors' => Doctor::all(),
-            'procedures' => Procedure::all(),
-            'treatmentDoctors' => TreatmentDoctor::all(),
-        ];
-        return view('adminElements.doctorsTreatments', [
-            'data' => $data,
-        ]);
+        $doctors = Doctor::all();
+        $procedures = Procedure::all();
+        $treatmentDoctors = TreatmentDoctor::all();
+        return redirect()->route('treatmentDoctor.index', compact('doctors', 'procedures', 'treatmentDoctors'));
     }
 
     public function edit($id)
     {
-
         $treatmentDoctor = null;
 
         DB::transaction(function () use ($id, &$treatmentDoctor) {
             $pdo = DB::getPdo();
             $stmt = $pdo->prepare('
                 BEGIN
-                    GET_TREATMENTS_DOCTORS(:p_DOCTOR_ID, :p_RESULT);
+                    GET_TREATMENTS_DOCTORS(:p_PROCEDURE_ID, :p_RESULT);
                 END;
             ');
 
-            $stmt->bindParam(':p_DOCTOR_ID', $id, PDO::PARAM_INT);
+            $stmt->bindParam(':p_PROCEDURE_ID', $id, PDO::PARAM_INT);
             $stmt->bindParam(':p_RESULT', $resultCursor, PDO::PARAM_STMT);
 
             $stmt->execute();
@@ -121,20 +110,13 @@ class TreatmentDoctorController extends Controller
             oci_fetch_all($resultCursor, $result, 0, -1, OCI_FETCHSTATEMENT_BY_ROW);
 
             if (!empty($result)) {
-                $treatmentDoctor = [
-                    'doctor_id' => $id,
-                    'procedure_id' => $result[0]['PROCEDURE_ID']
-                ];
+                $treatmentDoctor = $result[0];
             }
         });
-
-
 
         $doctors = Doctor::select('id', 'name', 'surname')->get();
         $procedures = Procedure::select('id', 'date')->get();
 
         return view('adminElements.treatmentsDoctorEdit', compact('treatmentDoctor', 'doctors', 'procedures'));
     }
-
-
 }

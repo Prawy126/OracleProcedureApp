@@ -17,7 +17,16 @@ class StatusSeeder extends Seeder
         Status::truncate();
         Status::insert([[
             'status'=>1,
-            'description'=> "Fajny opis"
-        ]]);
+            'description'=> "Oczekuje na ropoczęcie"
+        ],
+        [
+            'status'=>2,
+            'description'=> "Zabieg trwa"
+        ],
+        [
+            'status'=>3,
+            'description'=> "Zabieg zakończony"
+        ]
+    ]);
     }
 }

@@ -19,7 +19,16 @@ class DoctorSeeder extends Seeder
             'surname'=> 'Kowal',
             'specialization'=>'chirurg',
             'license_number' => 'A231B312S',
+            'user_id' => 2
+        ],
+        [
+           'name' => 'Jan',
+            'surname'=> 'Kowalsli',
+            'specialization'=>'chirurg',
+            'license_number' => 'A231B3FDS',
             'user_id' => 3
-        ]]);
+        ]
+
+    ]);
     }
 }

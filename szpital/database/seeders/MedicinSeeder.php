@@ -13,7 +13,6 @@ class MedicinSeeder extends Seeder
      */
     public function run(): void
     {
-        //🧟🧟
         medicin::truncate();
     }
 }
