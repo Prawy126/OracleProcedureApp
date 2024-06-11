@@ -4,12 +4,17 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use PDO;
 
 class AdminController extends Controller
 {
     public function showAdminPanel(Request $request)
     {
+        if (Gate::denies('access-admin')) {
+            abort(403);
+        }
+
         DB::transaction(function () use (&$stats) {
             $pdo = DB::getPdo();
             $stmt = $pdo->prepare("

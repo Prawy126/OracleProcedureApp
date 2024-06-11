@@ -22,14 +22,29 @@
             </div>
             <div class="form-group row mb-4">
                 <label for="inputIDRodzajZabiegu" class="col-md-2 col-form-label">ID Rodzaju zabiegu:</label>
-                <div class="col-md-4">
-                    <input type="number" class="form-control" id="inputIDRodzajZabiegu" name="treatment_type_id" placeholder="ID Rodzaju zabiegu" value="{{ $procedure["TREATMENT_TYPE_ID"] }}">
+                <div class="col-md-10">
+                    <select class="form-select" name="treatment_type_id">
+                        <option value="">Wybierz rodzaj zabiegu</option>
+                        @foreach($treatmentTypes as $treatment)
+                            <option value="{{ $treatment->id }}" {{ $procedure['ID'] == $treatment->id ? 'selected' : '' }}>
+                                {{ $treatment->name }}
+                            </option>
+                        @endforeach
+                    </select>
                 </div>
             </div>
+
             <div class="form-group row mb-4">
                 <label for="inputIDSala" class="col-md-2 col-form-label">ID Sali:</label>
-                <div class="col-md-4">
-                    <input type="number" class="form-control" id="inputIDSala" name="room_id" placeholder="ID Sali" value="{{ $procedure["ROOM_ID"] }}">
+                <div class="col-md-10">
+                    <select class="form-select" name="room_id">
+                        <option value="">Wybierz salę</option>
+                        @foreach($rooms as $room)
+                            <option value="{{ $room->id }}" {{ $procedure['ID'] == $room->id ? 'selected' : '' }}>
+                                {{ $room->rnumber }}
+                            </option>
+                        @endforeach
+                    </select>
                 </div>
             </div>
             <div class="form-group row mb-4">

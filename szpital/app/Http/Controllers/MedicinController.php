@@ -6,11 +6,16 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use PDO;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Gate;
 
 class MedicinController extends Controller
 {
     public function index()
     {
+        if (Gate::denies('access-admin')) {
+            abort(403);
+        }
+
         $medicines = Medicin::all();
         return view('lekiTab', [
             'medicines' => $medicines,
@@ -19,8 +24,9 @@ class MedicinController extends Controller
 
     public function store(Request $request)
     {
-        // Debugowanie danych z requesta
-        Log::info('Request Data:', $request->all());
+        if (Gate::denies('access-admin')) {
+            abort(403);
+        }
 
         DB::transaction(function () use ($request) {
             $pdo = DB::getPdo();
@@ -65,6 +71,10 @@ class MedicinController extends Controller
 
     public function edit($id)
     {
+        if (Gate::denies('access-admin')) {
+            abort(403);
+        }
+
         $medicin = null;
 
         DB::transaction(function () use ($id, &$medicin) {
@@ -93,6 +103,10 @@ class MedicinController extends Controller
 
     public function update(Request $request, $id)
     {
+        if (Gate::denies('access-admin')) {
+            abort(403);
+        }
+
         DB::transaction(function () use ($request, $id) {
             $pdo = DB::getPdo();
 
@@ -139,6 +153,10 @@ class MedicinController extends Controller
 
     public function destroy($id)
     {
+        if (Gate::denies('access-admin')) {
+            abort(403);
+        }
+
         try {
             DB::transaction(function () use ($id) {
                 $pdo = DB::getPdo();

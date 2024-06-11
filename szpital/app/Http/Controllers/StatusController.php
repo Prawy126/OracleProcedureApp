@@ -4,12 +4,17 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 
 class StatusController extends Controller
 {
     // Display a listing of the statuses.
     public function index(Request $request)
     {
+        if (Gate::denies('access-admin')) {
+            abort(403);
+        }
+
         $search = $request->input('search');
         $statuses = DB::select('SELECT * FROM STATUSES WHERE STATUS LIKE ?', ["%$search%"]);
 
@@ -19,6 +24,10 @@ class StatusController extends Controller
     // Store a newly created status in storage.
     public function store(Request $request)
     {
+        if (Gate::denies('access-admin')) {
+            abort(403);
+        }
+
         $request->validate([
             'status' => 'required|string|max:255',
             'description' => 'nullable|string|max:255',
@@ -35,6 +44,10 @@ class StatusController extends Controller
     // Show the form for editing the specified status.
     public function edit($id)
     {
+        if (Gate::denies('access-admin')) {
+            abort(403);
+        }
+
         $result = DB::select('
             DECLARE
                 p_STATUS VARCHAR2(255);
@@ -63,6 +76,10 @@ class StatusController extends Controller
     // Update the specified status in storage.
     public function update(Request $request, $id)
     {
+        if (Gate::denies('access-admin')) {
+            abort(403);
+        }
+
         $request->validate([
             'status' => 'required|string|max:255',
             'description' => 'nullable|string|max:255',
@@ -79,6 +96,10 @@ class StatusController extends Controller
     // Remove the specified status from storage.
     public function destroy($id)
     {
+        if (Gate::denies('access-admin')) {
+            abort(403);
+        }
+
         DB::statement('CALL DELETE_STATUS(?)', [$id]);
 
         return redirect()->route('statusIndex')->with('success', 'Status deleted successfully.');

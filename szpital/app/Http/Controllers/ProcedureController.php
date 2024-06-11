@@ -1,25 +1,40 @@
 <?php
+
 namespace App\Http\Controllers;
 
+use App\Models\Room;
+use App\Models\TreatmentType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use PDO;
+use Illuminate\Support\Facades\Gate;
 
 class ProcedureController extends Controller
 {
     public function index(Request $request)
     {
+        if (Gate::denies('access-admin')) {
+            abort(403);
+        }
+
         $search = $request->input('search', '');
         $procedures = DB::table('PROCEDURES')
             ->where('ID', 'like', "%$search%")
             ->orWhere('TREATMENT_TYPE_ID', 'like', "%$search%")
             ->get();
 
-        return view('zabiegiTab', compact('procedures'));
+
+        $treatmentTypes = TreatmentType::select('id', 'name')->get();
+        $rooms = Room::select('id', 'rnumber')->get();
+        return view('zabiegiTab', compact('procedures','treatmentTypes','rooms'));
     }
 
     public function store(Request $request)
     {
+        if (Gate::denies('access-admin')) {
+            abort(403);
+        }
+
         $treatmentTypeId = $request->input('treatment_type_id');
         $roomId = $request->input('room_id');
         $date = $request->input('date');
@@ -48,6 +63,10 @@ class ProcedureController extends Controller
 
     public function show($id)
     {
+        if (Gate::denies('access-admin')) {
+            abort(403);
+        }
+
         $procedure = null;
 
         DB::transaction(function () use ($id, &$procedure) {
@@ -74,11 +93,18 @@ class ProcedureController extends Controller
             return redirect()->route('proceduresIndex')->with('error', 'Procedure not found.');
         }
 
-        return view('edycjaZabiegi', compact('procedure'));
+        $treatmentTypes = TreatmentType::select('id', 'name')->get();
+        $rooms = Room::select('id', 'rnumber')->get();
+
+        return view('edycjaZabiegi', compact('procedures','treatmentTypes','rooms'));
     }
 
     public function update(Request $request, $id)
     {
+        if (Gate::denies('access-admin')) {
+            abort(403);
+        }
+
         $treatmentTypeId = $request->input('treatment_type_id');
         $roomId = $request->input('room_id');
         $date = $request->input('date');
@@ -108,6 +134,10 @@ class ProcedureController extends Controller
 
     public function destroy($id)
     {
+        if (Gate::denies('access-admin')) {
+            abort(403);
+        }
+
         DB::transaction(function () use ($id) {
             $pdo = DB::getPdo();
             $stmt = $pdo->prepare('CALL DELETE_PROCEDURE(:p0)');

@@ -71,10 +71,20 @@
             @csrf
             <div class="row">
                 <div class="form-group col-md-2">
-                    <input type="number" class="form-control" name="treatment_type_id" placeholder="ID Rodzaju zabiegu">
+                    <select class="form-select" name="treatment_type_id">
+                        <option value="">Wybierz rodzaj zabiegu</option>
+                        @foreach($treatmentTypes as $treatment)
+                            <option value="{{ $treatment->id }}">{{ $treatment->name }}</option>
+                        @endforeach
+                    </select>
                 </div>
                 <div class="form-group col-md-1">
-                    <input type="number" class="form-control" name="room_id" placeholder="ID Sali">
+                    <select class="form-select" name="room_id">
+                        <option value="">Wybierz salę</option>
+                        @foreach($rooms as $room)
+                            <option value="{{ $room->id }}">{{ $room->rnumber }}</option>
+                        @endforeach
+                    </select>
                 </div>
                 <div class="form-group col-md-2">
                     <input type="datetime" class="form-control" name="date" placeholder="Data">

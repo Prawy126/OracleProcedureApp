@@ -8,11 +8,16 @@ use App\Models\Procedure;
 use App\Models\TreatmentDoctor;
 use Illuminate\Support\Facades\DB;
 use PDO;
+use Illuminate\Support\Facades\Gate;
 
 class TreatmentDoctorController extends Controller
 {
     public function index()
     {
+        if (Gate::denies('access-admin')) {
+            abort(403);
+        }
+
         $doctors = Doctor::select('id', 'name', 'surname')->get();
         $procedures = Procedure::select('id', 'date')->get();
         $treatmentDoctors = DB::select('SELECT * FROM TREATMENTS_DOCTORS');
@@ -22,6 +27,10 @@ class TreatmentDoctorController extends Controller
 
     public function store(Request $request)
     {
+        if (Gate::denies('access-admin')) {
+            abort(403);
+        }
+
         DB::transaction(function () use ($request) {
             $pdo = DB::getPdo();
             $stmt = $pdo->prepare('
@@ -47,6 +56,10 @@ class TreatmentDoctorController extends Controller
 
     public function destroy($id)
     {
+        if (Gate::denies('access-admin')) {
+            abort(403);
+        }
+
         DB::transaction(function () use ($id) {
             $pdo = DB::getPdo();
             $stmt = $pdo->prepare('
@@ -67,6 +80,10 @@ class TreatmentDoctorController extends Controller
 
     public function update(Request $request, $id)
     {
+        if (Gate::denies('access-admin')) {
+            abort(403);
+        }
+
         DB::transaction(function () use ($request, $id) {
             $pdo = DB::getPdo();
             $stmt = $pdo->prepare('
@@ -91,6 +108,10 @@ class TreatmentDoctorController extends Controller
 
     public function edit($id)
     {
+        if (Gate::denies('access-admin')) {
+            abort(403);
+        }
+
         $treatmentDoctor = null;
 
         DB::transaction(function () use ($id, &$treatmentDoctor) {

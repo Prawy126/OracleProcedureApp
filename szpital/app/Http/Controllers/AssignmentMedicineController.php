@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use App\Models\Medicin;
 use App\Models\Patient;
 
@@ -10,6 +11,10 @@ class AssignmentMedicineController extends Controller
 {
     public function index()
     {
+        if (Gate::denies('access-admin')) {
+            abort(403);
+        }
+
         $medicins = Medicin::all(['id', 'name']);
         $patients = Patient::all(['id', 'name', 'surname']);
         $assignments = DB::select('SELECT * FROM ASSIGNMENT_MEDICINES');
@@ -19,6 +24,10 @@ class AssignmentMedicineController extends Controller
 
     public function store(Request $request)
     {
+        if (Gate::denies('access-admin')) {
+            abort(403);
+        }
+
         $request->validate([
             'patient_id' => 'required|integer|exists:patients,id',
             'medicin_id' => 'required|integer|exists:medicins,id',
@@ -44,6 +53,10 @@ class AssignmentMedicineController extends Controller
 
     public function edit($patient_id)
     {
+        if (Gate::denies('access-admin')) {
+            abort(403);
+        }
+
         $result = DB::select('
             DECLARE
                 p_MEDICIN_ID NUMBER;
@@ -83,6 +96,10 @@ class AssignmentMedicineController extends Controller
 
     public function update(Request $request, $patient_id)
     {
+        if (Gate::denies('access-admin')) {
+            abort(403);
+        }
+
         $request->validate([
             'medicin_id' => 'required|integer|exists:medicins,id',
             'dose' => 'required|numeric',
@@ -107,6 +124,10 @@ class AssignmentMedicineController extends Controller
 
     public function destroy($patient_id)
     {
+        if (Gate::denies('access-admin')) {
+            abort(403);
+        }
+
         DB::statement('CALL DELETE_ASSIGNMENT_MEDICINES(?)', [$patient_id]);
 
         return redirect()->route('assignmentMedicineIndex')->with('success', 'Assignment deleted successfully.');

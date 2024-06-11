@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 
 class AuthController extends Controller
 {
@@ -14,6 +15,10 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
+        if (Gate::allows('is-logged-in')) {
+            return back();
+        }
+
         $credentials = $request->only('login', 'password');
 
         if (Auth::attempt($credentials)) {

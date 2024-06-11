@@ -5,12 +5,17 @@ use App\Models\Nurse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Gate;
 use PDO;
 
 class NurseController extends Controller
 {
     public function index(Request $request)
     {
+        if (Gate::denies('access-admin')) {
+            abort(403);
+        }
+
         $search = $request->input('search');
         if ($search) {
             $nurses = Nurse::where('name', 'LIKE', "%$search%")
@@ -27,11 +32,19 @@ class NurseController extends Controller
 
     public function dashboard()
     {
+        if (Gate::denies('access-nurse')) {
+            abort(403);
+        }
+
         return view('pielegniarka');
     }
 
     public function store(Request $request)
     {
+        if (Gate::denies('access-admin')) {
+            abort(403);
+        }
+
         DB::transaction(function () use ($request) {
             $pdo = DB::getPdo();
             $stmt = $pdo->prepare("
@@ -64,6 +77,10 @@ class NurseController extends Controller
 
     public function show($id)
     {
+        if (Gate::denies('access-admin')) {
+            abort(403);
+        }
+
         $nurse = null;
 
         DB::transaction(function () use ($id, &$nurse) {
@@ -94,6 +111,10 @@ class NurseController extends Controller
 
     public function update(Request $request, $id)
     {
+        if (Gate::denies('access-admin')) {
+            abort(403);
+        }
+
         // Validate the input
         $validated = $request->validate([
             'name' => 'required|string|max:255',
@@ -134,6 +155,10 @@ class NurseController extends Controller
 
     public function destroy($id)
     {
+        if (Gate::denies('access-admin')) {
+            abort(403);
+        }
+
         DB::transaction(function () use ($id) {
             $pdo = DB::getPdo();
             $stmt = $pdo->prepare("

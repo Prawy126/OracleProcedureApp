@@ -5,25 +5,37 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Patient;
-use Illuminate\Support\Facades\Log;
 use PDO;
+use Illuminate\Support\Facades\Gate;
 
 class PatientController extends Controller
 {
     public function index()
     {
+        if (Gate::denies('access-admin')) {
+            abort(403);
+        }
+
         $patients = Patient::all();
         return view('pacjenciTab', ['patients' => $patients]);
     }
 
     public function dashboard()
     {
+        if (Gate::denies('access-patient')) {
+            abort(403);
+        }
+
         $patients = Patient::all();
         return view('pacjent', ['patients' => $patients]);
     }
 
     public function store(Request $request)
     {
+        if (Gate::denies('access-admin')) {
+            abort(403);
+        }
+
         DB::transaction(function () use ($request) {
             $pdo = DB::getPdo();
             $stmt = $pdo->prepare("
@@ -61,6 +73,10 @@ class PatientController extends Controller
 
     public function show($id)
     {
+        if (Gate::denies('access-admin')) {
+            abort(403);
+        }
+
         $patient = null;
 
         DB::transaction(function () use ($id, &$patient) {
@@ -89,6 +105,9 @@ class PatientController extends Controller
 
     public function update(Request $request, $id)
     {
+        if (Gate::denies('access-admin')) {
+            abort(403);
+        }
 
         DB::transaction(function () use ($request, $id) {
             $pdo = DB::getPdo();
@@ -129,6 +148,10 @@ class PatientController extends Controller
 
     public function destroy($id)
     {
+        if (Gate::denies('access-admin')) {
+            abort(403);
+        }
+
         try {
             DB::transaction(function () use ($id) {
                 $pdo = DB::getPdo();

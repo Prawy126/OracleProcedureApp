@@ -5,25 +5,37 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Doctor;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Gate;
 use PDO;
 
 class DoctorController extends Controller
 {
     public function index()
     {
+        if (Gate::denies('access-admin')) {
+            abort(403);
+        }
+
         $doctors = Doctor::all();
         return view('lekarzeTab', ['doctors' => $doctors]);
     }
+
+
     public function dashboard()
     {
+        if (Gate::denies('access-doctor')) {
+            abort(403);
+        }
+
         $doctors = Doctor::all();
         return view('lekarz', ['doctors' => $doctors]);
     }
 
     public function store(Request $request)
     {
-        // Debugowanie danych z requesta
-        Log::info('Request Data:', $request->all());
+        if (Gate::denies('access-admin')) {
+            abort(403);
+        }
 
         DB::transaction(function () use ($request) {
             $pdo = DB::getPdo();
@@ -65,6 +77,10 @@ class DoctorController extends Controller
 
     public function edit($id)
     {
+        if (Gate::denies('access-admin')) {
+            abort(403);
+        }
+
         $doctor = null;
 
         DB::transaction(function () use ($id, &$doctor) {
@@ -94,6 +110,10 @@ class DoctorController extends Controller
 
     public function update(Request $request, $id)
     {
+        if (Gate::denies('access-admin')) {
+            abort(403);
+        }
+
         DB::transaction(function () use ($request, $id) {
             $pdo = DB::getPdo();
             $stmt = $pdo->prepare("
@@ -133,6 +153,10 @@ class DoctorController extends Controller
 
     public function destroy($id)
     {
+        if (Gate::denies('access-admin')) {
+            abort(403);
+        }
+
         try {
             DB::transaction(function () use ($id) {
                 $pdo = DB::getPdo();

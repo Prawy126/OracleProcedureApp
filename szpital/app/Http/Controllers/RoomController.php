@@ -6,12 +6,16 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use PDO;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Gate;
 
 class RoomController extends Controller
 {
     public function index(Request $request)
     {
+        if (Gate::denies('access-admin')) {
+            abort(403);
+        }
+
         $search = $request->input('search');
         if ($search) {
             $rooms = Room::where('rnumber', 'LIKE', "%$search%")
@@ -28,6 +32,10 @@ class RoomController extends Controller
 
     public function store(Request $request)
     {
+        if (Gate::denies('access-admin')) {
+            abort(403);
+        }
+
         DB::transaction(function () use ($request) {
             $pdo = DB::getPdo();
 
@@ -67,6 +75,10 @@ class RoomController extends Controller
 
     public function edit($id)
     {
+        if (Gate::denies('access-admin')) {
+            abort(403);
+        }
+
         $room = null;
 
         DB::transaction(function () use ($id, &$room) {
@@ -95,6 +107,10 @@ class RoomController extends Controller
 
     public function update(Request $request, $id)
     {
+        if (Gate::denies('access-admin')) {
+            abort(403);
+        }
+
         DB::transaction(function () use ($request, $id) {
             $pdo = DB::getPdo();
 
@@ -120,7 +136,6 @@ class RoomController extends Controller
                 END;
             ");
 
-            // Bind parameters
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
             $stmt->bindParam(':rnumber', $rnumber, PDO::PARAM_STR);
             $stmt->bindParam(':rlocation', $rlocation, PDO::PARAM_STR);
@@ -134,6 +149,10 @@ class RoomController extends Controller
 
     public function destroy($id)
     {
+        if (Gate::denies('access-admin')) {
+            abort(403);
+        }
+
         try {
             DB::transaction(function () use ($id) {
                 $pdo = DB::getPdo();
