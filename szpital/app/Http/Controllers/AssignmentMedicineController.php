@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use App\Models\Medicin;
 use App\Models\Patient;
+use PDO;
 
 class AssignmentMedicineController extends Controller
 {
@@ -19,7 +20,7 @@ class AssignmentMedicineController extends Controller
         $patients = Patient::all(['id', 'name', 'surname']);
         $assignments = DB::select('SELECT * FROM ASSIGNMENT_MEDICINES');
 
-        return view('adminElements.medicinAssignment', compact('medicins', 'patients', 'assignments'));
+        return view('adminElements.medicinAssigment', compact('medicins', 'patients', 'assignments'));
     }
 
     public function store(Request $request)
@@ -48,53 +49,48 @@ class AssignmentMedicineController extends Controller
             $request->input('availability')
         ]);
 
-        return redirect()->route('assignmentMedicineIndex')->with('success', 'Assignment created successfully.');
+        return redirect()->route('assignmentMedicinIndex')->with('success', 'Assignment created successfully.');
     }
-
-    public function edit($patient_id)
+    public function edit($id)
     {
         if (Gate::denies('access-admin')) {
             abort(403);
         }
 
-        $result = DB::select('
-            DECLARE
-                p_MEDICIN_ID NUMBER;
-                p_DOSE NUMBER;
-                p_DATE_START DATE;
-                p_DATE_END DATE;
-                p_EXPIRATION_DATE DATE;
-                p_AVAILABILITY CHAR;
-            BEGIN
-                GET_ASSIGNMENT_MEDICINES(:p_PATIENT_ID, p_MEDICIN_ID, p_DOSE, p_DATE_START, p_DATE_END, p_EXPIRATION_DATE, p_AVAILABILITY);
-                :p_MEDICIN_ID := p_MEDICIN_ID;
-                :p_DOSE := p_DOSE;
-                :p_DATE_START := p_DATE_START;
-                :p_DATE_END := p_DATE_END;
-                :p_EXPIRATION_DATE := p_EXPIRATION_DATE;
-                :p_AVAILABILITY := p_AVAILABILITY;
-            END;
-        ', [
-            'p_PATIENT_ID' => $patient_id,
-        ]);
+        $assignmentMedicine = null;
 
-        $assignment = [
-            'patient_id' => $patient_id,
-            'medicin_id' => $result[0]->p_MEDICIN_ID,
-            'dose' => $result[0]->p_DOSE,
-            'date_start' => $result[0]->p_DATE_START,
-            'date_end' => $result[0]->p_DATE_END,
-            'expiration_date' => $result[0]->p_EXPIRATION_DATE,
-            'availability' => $result[0]->p_AVAILABILITY
-        ];
+        DB::transaction(function () use ($id, &$assignmentMedicine) {
+            $pdo = DB::getPdo();
+            $stmt = $pdo->prepare('
+                BEGIN
+                    GET_ASSIGNMENT_MEDICINES(:p_ID, :p_RESULT);
+                END;
+            ');
 
-        $medicins = Medicin::all(['id', 'name']);
-        $patients = Patient::all(['id', 'name', 'surname']);
+            $stmt->bindParam(':p_ID', $id, PDO::PARAM_INT);
+            $stmt->bindParam(':p_RESULT', $resultCursor, PDO::PARAM_STMT);
 
-        return view('adminElements.editMedicinAssignment', compact('assignment', 'medicins', 'patients'));
+            $stmt->execute();
+
+            oci_execute($resultCursor, OCI_DEFAULT);
+            oci_fetch_all($resultCursor, $result, 0, -1, OCI_FETCHSTATEMENT_BY_ROW);
+
+            if (!empty($result)) {
+                $assignmentMedicine = $result[0];
+            }
+        });
+
+        if ($assignmentMedicine === null) {
+            abort(404);
+        }
+
+        $patients = Patient::select('id', 'name', 'surname')->get();
+        $medicins = Medicin::select('id', 'name')->get();
+
+        return view('adminElements.medicinAssigmentEdit', compact('assignmentMedicine', 'patients', 'medicins'));
     }
 
-    public function update(Request $request, $patient_id)
+    public function update(Request $request, $id)
     {
         if (Gate::denies('access-admin')) {
             abort(403);
@@ -109,8 +105,9 @@ class AssignmentMedicineController extends Controller
             'availability' => 'required|string|max:1',
         ]);
 
-        DB::statement('CALL UPDATE_ASSIGNMENT_MEDICINES(?, ?, ?, ?, ?, ?, ?)', [
-            $patient_id,
+        DB::statement('CALL UPDATE_ASSIGNMENT_MEDICINES(?,?, ?, ?, ?, ?, ?, ?)', [
+            $id,
+            $request->input('patient_id'),
             $request->input('medicin_id'),
             $request->input('dose'),
             $request->input('date_start'),
@@ -119,17 +116,17 @@ class AssignmentMedicineController extends Controller
             $request->input('availability')
         ]);
 
-        return redirect()->route('assignmentMedicineIndex')->with('success', 'Assignment updated successfully.');
+        return redirect()->route('assignmentMedicinIndex')->with('success', 'Assignment updated successfully.');
     }
 
-    public function destroy($patient_id)
+    public function destroy($id)
     {
         if (Gate::denies('access-admin')) {
             abort(403);
         }
 
-        DB::statement('CALL DELETE_ASSIGNMENT_MEDICINES(?)', [$patient_id]);
+        DB::statement('CALL DELETE_ASSIGNMENT_MEDICINES(?)', [$id]);
 
-        return redirect()->route('assignmentMedicineIndex')->with('success', 'Assignment deleted successfully.');
+        return redirect()->route('assignmentMedicinIndex')->with('success', 'Assignment deleted successfully.');
     }
 }
