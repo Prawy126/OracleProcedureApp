@@ -108,7 +108,7 @@ Route::put('/statuses/{status}', [StatusController::class, 'update'])->name('sta
 Route::delete('/statuses/{status}', [StatusController::class, 'destroy'])->name('statusesDestroy');
 
 
-Route::get('/assignments', [AssignmentMedicineController::class, 'index'])->name('assignmentMedicineIndex');
+Route::get('/assignments', [AssignmentMedicineController::class, 'index'])->name('assignmentMedicinIndex');
 Route::post('/assignments', [AssignmentMedicineController::class, 'store'])->name('assignmentMedicineStore');
 Route::get('/assignments/{patient_id}/edit', [AssignmentMedicineController::class, 'edit'])->name('assignmentMedicineEdit');
 Route::put('/assignments/{patient_id}', [AssignmentMedicineController::class, 'update'])->name('assignmentMedicineUpdate');

@@ -14,6 +14,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('assignment_medicines', function (Blueprint $table) {
+            $table->id();
             $table->foreignIdFor(Patient::class)->constrained();
             $table->foreignIdFor(Medicin::class)->constrained();
             $table->integer('dose');

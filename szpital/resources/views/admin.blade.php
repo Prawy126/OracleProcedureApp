@@ -60,7 +60,7 @@
                                 <a href="{{route('treatmentDoctor.index')}}">Zabiegi-Lekarze</a>
                             </li>
                             <li class="list-group-item">
-                                <a href="{{route('assigmentMedicin.index')}}">Przypisania leków</a>
+                                <a href="{{route('assignmentMedicinIndex')}}">Przypisania leków</a>
                             </li>
                             <li class="list-group-item">
                                 <a href="{{route('treatmentNurses.index')}}">Zabiegi-Pielęgniarki</a>
