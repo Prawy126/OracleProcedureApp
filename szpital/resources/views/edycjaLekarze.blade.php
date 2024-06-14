@@ -36,7 +36,16 @@
             <div class="form-group row mb-4">
                 <label for="inputSpecjalizacja" class="col-md-2 col-form-label">Specjalizacja:</label>
                 <div class="col-md-4">
-                    <input type="text" class="form-control" id="inputSpecjalizacja" name="specialization" value="{{ $doctor['SPECIALIZATION'] }}">
+                    <select class="form-control" id="inputSpecjalizacja" name="specialization">
+                        <option value="kardiologia" {{ $doctor['SPECIALIZATION'] == 'kardiologia' ? 'selected' : '' }}>Kardiologia</option>
+                        <option value="neurologia" {{ $doctor['SPECIALIZATION'] == 'neurologia' ? 'selected' : '' }}>Neurologia</option>
+                        <option value="ortopedia" {{ $doctor['SPECIALIZATION'] == 'ortopedia' ? 'selected' : '' }}>Ortopedia</option>
+                        <option value="pediatria" {{ $doctor['SPECIALIZATION'] == 'pediatria' ? 'selected' : '' }}>Pediatria</option>
+                        <option value="dermatologia" {{ $doctor['SPECIALIZATION'] == 'dermatologia' ? 'selected' : '' }}>Dermatologia</option>
+                        <option value="ginekologia" {{ $doctor['SPECIALIZATION'] == 'ginekologia' ? 'selected' : '' }}>Ginekologia</option>
+                        <option value="radiologia" {{ $doctor['SPECIALIZATION'] == 'radiologia' ? 'selected' : '' }}>Radiologia</option>
+                        <option value="urologia" {{ $doctor['SPECIALIZATION'] == 'urologia' ? 'selected' : '' }}>Urologia</option>
+                    </select>
                 </div>
             </div>
             <div class="form-group row mb-4">
@@ -48,7 +57,11 @@
             <div class="form-group row mb-4">
                 <label for="inputIDKonta" class="col-md-2 col-form-label">ID konta:</label>
                 <div class="col-md-4">
-                    <input type="number" class="form-control" id="inputIDKonta" name="user_id" value="{{ $doctor['USER_ID'] }}">
+                    <select class="form-control" id="inputIDKonta" name="user_id">
+                        @foreach($user_ids as $user_id)
+                            <option value="{{ $user_id }}" {{ $doctor['USER_ID'] == $user_id ? 'selected' : '' }}>{{ $user_id }}</option>
+                        @endforeach
+                    </select>
                 </div>
             </div>
             <div class="form-group row mb-4">
@@ -60,6 +73,7 @@
                 </div>
             </div>
         </form>
+
     </div>
 
     @include('shared.footer')

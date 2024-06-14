@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Patient;
+use App\Models\Room;
+use App\Models\User;
 use PDO;
 use Illuminate\Support\Facades\Gate;
 
@@ -16,7 +18,9 @@ class PatientController extends Controller
         }
 
         $patients = Patient::all();
-        return view('pacjenciTab', ['patients' => $patients]);
+        $rooms = Room::where('type', 'dla_pacjenta')->get();
+        $user_ids = User::where('account_type', 'none')->get();
+        return view('pacjenciTab', compact('patients','rooms','user_ids'));
     }
 
     public function dashboard()
@@ -120,7 +124,10 @@ class PatientController extends Controller
             return redirect()->route('patientIndex')->with('error', 'Patient not found.');
         }
 
-        return view('edycjaPacjenci', compact('patient'));
+        $rooms = Room::where('type', 'dla_pacjenta')->get();
+        $user_ids = User::where('account_type', 'none')->get();
+
+        return view('edycjaPacjenci', compact('patient','rooms','user_ids'));
     }
 
     public function update(Request $request, $id)

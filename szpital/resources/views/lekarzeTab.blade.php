@@ -78,19 +78,33 @@
                     <input type="text" class="form-control" id="inputNazwisko" placeholder="Nazwisko" name="surname">
                 </div>
                 <div class="form-group col-md-2">
-                    <input type="text" class="form-control" id="inputSpecjalizacja" placeholder="Specjalizacja" name="specialization">
+                    <select class="form-select" id="inputSpecjalizacja" name="specialization">
+                        <option value="kardiologia">Kardiologia</option>
+                        <option value="neurologia">Neurologia</option>
+                        <option value="ortopedia">Ortopedia</option>
+                        <option value="pediatria">Pediatria</option>
+                        <option value="dermatologia">Dermatologia</option>
+                        <option value="ginekologia">Ginekologia</option>
+                        <option value="radiologia">Radiologia</option>
+                        <option value="urologia">Urologia</option>
+                    </select>
                 </div>
                 <div class="form-group col-md-2">
                     <input type="text" class="form-control" id="inputNumerLicencji" placeholder="Numer licencji" name="license_number">
                 </div>
                 <div class="form-group col-md-2">
-                    <input type="number" class="form-control" id="inputIDKonta" placeholder="ID konta" name="user_id">
+                    <select class="form-select" id="inputIDKonta" name="user_id">
+                        @foreach($user_ids as $user_id)
+                            <option value="{{ $user_id }}">{{ $user_id }}</option>
+                        @endforeach
+                    </select>
                 </div>
                 <div class="form-group col-md-2">
                     <button type="submit" class="btn btn-primary">Dodaj</button>
                 </div>
             </div>
         </form>
+
     </div>
 
     @include('shared.footer')

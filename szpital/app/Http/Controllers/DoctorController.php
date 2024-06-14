@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Doctor;
+use App\Models\User;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Gate;
 use PDO;
@@ -17,7 +18,10 @@ class DoctorController extends Controller
         }
 
         $doctors = Doctor::all();
-        return view('lekarzeTab', ['doctors' => $doctors]);
+        $user_ids = User::where('account_type', 'none')->pluck('id');
+
+
+        return view('lekarzeTab', compact('doctors', 'user_ids'));
     }
 
 
@@ -82,6 +86,7 @@ class DoctorController extends Controller
         }
 
         $doctor = null;
+        $user_ids = User::where('account_type', 'none')->pluck('id');
 
         DB::transaction(function () use ($id, &$doctor) {
             $pdo = DB::getPdo();
@@ -104,7 +109,7 @@ class DoctorController extends Controller
             abort(404);
         }
 
-        return view('edycjaLekarze', compact('doctor'));
+        return view('edycjaLekarze', compact('doctor','user_ids'));
     }
 
 

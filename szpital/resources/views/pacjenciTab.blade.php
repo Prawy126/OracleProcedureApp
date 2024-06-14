@@ -75,32 +75,47 @@
                     </ul>
                 </div>
             @endif
-        <form action="{{ route('patientsStore') }}" method="POST">
-            @csrf
-            <div class="row">
-                <div class="form-group col-md-2">
-                    <input type="text" class="form-control" name="name" placeholder="Imię" required>
+            <form action="{{ route('patientsStore') }}" method="POST">
+                @csrf
+                <div class="row">
+                    <div class="form-group col-md-2">
+                        <input type="text" class="form-control" name="name" placeholder="Imię" required>
+                    </div>
+                    <div class="form-group col-md-1">
+                        <input type="text" class="form-control" name="surname" placeholder="Nazwisko" required>
+                    </div>
+                    <div class="form-group col-md-2">
+                        <select class="form-control" name="nurse_id" required>
+                            <option value="" disabled selected>Wybierz pielęgniarkę</option>
+                            @foreach($nurses as $nurse)
+                                <option value="{{ $nurse->id }}">{{ $nurse->id }} - {{ $nurse->name }} {{ $nurse->surname }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group col-md-2">
+                        <select class="form-control" name="user_id" required>
+                            <option value="" disabled selected>Wybierz konto</option>
+                            @foreach($availableUsers as $user)
+                                <option value="{{ $user->id }}">{{ $user->id }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group col-md-1">
+                        <input type="number" class="form-control" name="time_visit" placeholder="Czas pobytu" required>
+                    </div>
+                    <div class="form-group col-md-2">
+                        <select class="form-control" name="room_id" required>
+                            <option value="" disabled selected>Wybierz salę</option>
+                            @foreach($rooms as $room)
+                                <option value="{{ $room->id }}">{{ $room->id }} - Sala nr: {{ $room->rnumber }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group col-md-1">
+                        <button type="submit" class="btn btn-primary">Dodaj</button>
+                    </div>
                 </div>
-                <div class="form-group col-md-1">
-                    <input type="text" class="form-control" name="surname" placeholder="Nazwisko" required>
-                </div>
-                <div class="form-group col-md-2">
-                    <input type="number" class="form-control" name="nurse_id" placeholder="Id pielęgniarki" required>
-                </div>
-                <div class="form-group col-md-2">
-                    <input type="number" class="form-control" name="user_id" placeholder="Id konta" required>
-                </div>
-                <div class="form-group col-md-1">
-                    <input type="number" class="form-control" name="time_visit" placeholder="Czas pobytu" required>
-                </div>
-                <div class="form-group col-md-1">
-                    <input type="number" class="form-control" name="room_id" placeholder="Id sali" required>
-                </div>
-                <div class="form-group col-md-1">
-                    <button type="submit" class="btn btn-primary">Dodaj</button>
-                </div>
-            </div>
-        </form>
+            </form>
     </div>
 
     @include('shared.footer')

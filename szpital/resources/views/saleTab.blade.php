@@ -88,13 +88,22 @@
                     <input type="text" class="form-control" name="rlocation" id="inputLokalizacja" placeholder="Lokalizacja" required>
                 </div>
                 <div class="form-group col-md-2">
-                    <input type="text" class="form-control" name="status" id="inputStatusSali" placeholder="Status sali" required>
+                    <select class="form-control" name="status" id="inputStatusSali" required>
+                        <option value="" disabled selected>Status sali</option>
+                        <option value="Wolna">Wolna</option>
+                        <option value="Zajęta">Zajęta</option>
+                        <option value="Niedostępna">Niedostępna</option>
+                    </select>
                 </div>
                 <div class="form-group col-md-2">
-                    <input type="text" class="form-control" name="type_room" id="inputTypSali" placeholder="Typ sali" required>
+                    <select class="form-control" name="type_room" id="inputTypSali" required>
+                        <option value="" disabled selected>Typ sali</option>
+                        <option value="dla_pacjenta">dla pacjenta</option>
+                        <option value="operacyjna">operacyjna</option>
+                    </select>
                 </div>
                 <div class="form-group col-md-2">
-                    <input type="text" class="form-control" name="seats" id="inputTypSali" placeholder="Liczba ludzi" required>
+                    <input type="number" class="form-control" name="seats" id="inputLiczbaLudzi" placeholder="Liczba ludzi" required>
                 </div>
                 <div class="form-group col-md-2">
                     <button type="submit" class="btn btn-primary">Dodaj</button>

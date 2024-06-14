@@ -80,48 +80,63 @@
                     </ul>
                 </div>
             @endif
-        <form method="POST" action="{{ route('medicinStore') }}">
-            @csrf
-            <div class="row mb-2">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="inputNazwaLeku">Nazwa leku</label>
-                        <input type="text" class="form-control" id="inputNazwaLeku" name="name" placeholder="Nazwa leku">
+            <form method="POST" action="{{ route('medicinStore') }}">
+                @csrf
+                <div class="row mb-2">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="inputNazwaLeku">Nazwa leku</label>
+                            <input type="text" class="form-control" id="inputNazwaLeku" name="name" placeholder="Nazwa leku">
+                        </div>
+                        <div class="form-group">
+                            <label for="inputInstrukcja">Instrukcja</label>
+                            <textarea class="form-control" id="inputInstrukcja" name="instruction" rows="6" placeholder="Instrukcja"></textarea>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="inputInstrukcja">Instrukcja</label>
-                        <textarea class="form-control" id="inputInstrukcja" name="instruction" rows="6" placeholder="Instrukcja"></textarea>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="inputFormaLeku">Forma leku</label>
+                            <select class="form-control" id="inputFormaLeku" name="drug_form">
+                                <option value="tabletki">Tabletki</option>
+                                <option value="syrop">Syrop</option>
+                                <option value="zastrzyk">Zastrzyk</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputIloscMagazyn">Ilość w magazynie</label>
+                            <input type="number" class="form-control" id="inputIloscMagazyn" name="warehouse_quantity" placeholder="Ilość w magazynie">
+                        </div>
+                        <div class="form-group">
+                            <label for="inputKategoriaLeku">Kategoria Leku</label>
+                            <select class="form-control" id="inputKategoriaLeku" name="drug_category">
+                                <option value="przeciwbólowe">Przeciwbólowe</option>
+                                <option value="antybiotyki">Antybiotyki</option>
+                                <option value="przeciwwirusowe">Przeciwwirusowe</option>
+                                <option value="przeciwzapalne">Przeciwzapalne</option>
+                                <option value="przeciwgorączkowe">Przeciwgorączkowe</option>
+                                <option value="przeciwhistaminowe">Przeciwhistaminowe</option>
+                                <option value="diuretyki">Diuretyki</option>
+                                <option value="leki_na_nadciśnienie">Leki na nadciśnienie</option>
+                                <option value="leki_na_cukrzycę">Leki na cukrzycę</option>
+                                <option value="leki_na_choroby_serca">Leki na choroby serca</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputCena">Cena</label>
+                            <input type="number" class="form-control" id="inputCena" name="price" placeholder="Cena">
+                        </div>
+                        <div class="form-group">
+                            <label for="inputDawkaJednostka">Dawka jednostka</label>
+                            <input type="text" class="form-control" id="inputDawkaJednostka" name="dose_unit" placeholder="Dawka jednostka">
+                        </div>
                     </div>
                 </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="inputFormaLeku">Forma leku</label>
-                        <input type="text" class="form-control" id="inputFormaLeku" name="drug_category" placeholder="Forma leku">
-                    </div>
-                    <div class="form-group">
-                        <label for="inputIloscMagazyn">Ilość w magazynie</label>
-                        <input type="number" class="form-control" id="inputIloscMagazyn" name="warehouse_quantity" placeholder="Ilość w magazynie">
-                    </div>
-                    <div class="form-group">
-                        <label for="inputKategoriaLeku">Kategoria Leku</label>
-                        <input type="text" class="form-control" id="inputKategoriaLeku" name="drug_category" placeholder="Kategoria Leku">
-                    </div>
-                    <div class="form-group">
-                        <label for="inputCena">Cena</label>
-                        <input type="number" class="form-control" id="inputCena" name="price" placeholder="Cena">
-                    </div>
-                    <div class="form-group">
-                        <label for="inputDawkaJednostka">Dawka jednostka</label>
-                        <input type="text" class="form-control" id="inputDawkaJednostka" name="dose_unit" placeholder="Dawka jednostka">
+                <div class="row mb-2">
+                    <div class="form-group col-md-12 text-right">
+                        <button type="submit" class="btn btn-primary">Dodaj</button>
                     </div>
                 </div>
-            </div>
-            <div class="row mb-2">
-                <div class="form-group col-md-12 text-right">
-                    <button type="submit" class="btn btn-primary">Dodaj</button>
-                </div>
-            </div>
-        </form>
+            </form>
     </div>
 
     @include('shared.footer')

@@ -14,7 +14,7 @@
         <form action="{{ route('nursesUpdate', $nurse['ID']) }}" method="POST">
             @csrf
             @method('PUT')
-            <div class="row">
+            <div class="row mb-4">
                 <div class="form-group col-md-2">
                     <label for="inputName">Imię</label>
                     <input type="text" class="form-control" name="name" id="inputName" placeholder="Imię" value="{{ $nurse['NAME'] }}" required>
@@ -24,14 +24,18 @@
                     <input type="text" class="form-control" name="surname" id="inputSurname" placeholder="Nazwisko" value="{{ $nurse['SURNAME'] }}" required>
                 </div>
                 <div class="form-group col-md-2">
-                    <label for="inputNumber">Numer</label>
+                    <label for="inputNumber_license">Numer</label>
                     <input type="text" class="form-control" name="number_license" id="inputNumber_license" placeholder="Numer" value="{{ $nurse['NUMBER_LICENSE'] }}" required>
                 </div>
                 <div class="form-group col-md-2">
                     <label for="inputUserID">ID Użytkownika</label>
-                    <input type="number" class="form-control" name="user_id" id="inputUserID" placeholder="ID Użytkownika" value="{{ $nurse['USER_ID']}}" required>
+                    <select class="form-control" name="user_id" id="inputUserID" required>
+                        @foreach($user_ids as $userId)
+                            <option value="{{ $userId }}" {{ $userId == $nurse['USER_ID'] ? 'selected' : '' }}>{{ $userId }}</option>
+                        @endforeach
+                    </select>
                 </div>
-                <div class="form-group col-md-2">
+                <div class="form-group col-md-2 mt-4">
                     <button type="submit" class="btn btn-primary">Aktualizuj</button>
                 </div>
             </div>

@@ -79,7 +79,11 @@
                     <input type="text" class="form-control" name="number_license" id="inputNumber" placeholder="Numer">
                 </div>
                 <div class="form-group col-md-2">
-                    <input type="number" class="form-control" name="user_id" id="inputUserID" placeholder="ID Użytkownika">
+                    <select class="form-control" name="user_id" id="inputUserID">
+                        @foreach($user_ids as $userId)
+                            <option value="{{ $userId }}">{{ $userId }}</option>
+                        @endforeach
+                    </select>
                 </div>
                 <div class="form-group col-md-2">
                     <button type="submit" class="btn btn-primary">Dodaj</button>

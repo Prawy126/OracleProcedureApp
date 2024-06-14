@@ -48,9 +48,30 @@
                 </div>
             </div>
             <div class="form-group row mb-4">
+                <label for="inputFormaLeku" class="col-md-2 col-form-label">Forma leku:</label>
+                <div class="col-md-4">
+                    <select class="form-control" id="inputFormaLeku" name="drug_form">
+                        <option value="tabletki" {{ $medicin['DRUG_FORM'] == 'tabletki' ? 'selected' : '' }}>Tabletki</option>
+                        <option value="syrop" {{ $medicin['DRUG_FORM'] == 'syrop' ? 'selected' : '' }}>Syrop</option>
+                        <option value="zastrzyk" {{ $medicin['DRUG_FORM'] == 'zastrzyk' ? 'selected' : '' }}>Zastrzyk</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group row mb-4">
                 <label for="inputKategoriaLeku" class="col-md-2 col-form-label">Kategoria Leku:</label>
                 <div class="col-md-4">
-                    <input type="text" class="form-control" id="inputKategoriaLeku" name="drug_category" value="{{ $medicin['DRUG_CATEGORY'] }}">
+                    <select class="form-control" id="inputKategoriaLeku" name="drug_category">
+                        <option value="przeciwbólowe" {{ $medicin['DRUG_CATEGORY'] == 'przeciwbólowe' ? 'selected' : '' }}>Przeciwbólowe</option>
+                        <option value="antybiotyki" {{ $medicin['DRUG_CATEGORY'] == 'antybiotyki' ? 'selected' : '' }}>Antybiotyki</option>
+                        <option value="przeciwwirusowe" {{ $medicin['DRUG_CATEGORY'] == 'przeciwwirusowe' ? 'selected' : '' }}>Przeciwwirusowe</option>
+                        <option value="przeciwzapalne" {{ $medicin['DRUG_CATEGORY'] == 'przeciwzapalne' ? 'selected' : '' }}>Przeciwzapalne</option>
+                        <option value="przeciwgorączkowe" {{ $medicin['DRUG_CATEGORY'] == 'przeciwgorączkowe' ? 'selected' : '' }}>Przeciwgorączkowe</option>
+                        <option value="przeciwhistaminowe" {{ $medicin['DRUG_CATEGORY'] == 'przeciwhistaminowe' ? 'selected' : '' }}>Przeciwhistaminowe</option>
+                        <option value="diuretyki" {{ $medicin['DRUG_CATEGORY'] == 'diuretyki' ? 'selected' : '' }}>Diuretyki</option>
+                        <option value="leki_na_nadciśnienie" {{ $medicin['DRUG_CATEGORY'] == 'leki_na_nadciśnienie' ? 'selected' : '' }}>Leki na nadciśnienie</option>
+                        <option value="leki_na_cukrzycę" {{ $medicin['DRUG_CATEGORY'] == 'leki_na_cukrzycę' ? 'selected' : '' }}>Leki na cukrzycę</option>
+                        <option value="leki_na_choroby_serca" {{ $medicin['DRUG_CATEGORY'] == 'leki_na_choroby_serca' ? 'selected' : '' }}>Leki na choroby serca</option>
+                    </select>
                 </div>
             </div>
             <div class="form-group row mb-4">
@@ -73,4 +94,6 @@
                     <button class="btn btn-primary">Wyjście</button>
                 </div>
             </div>
+        </form>
+    </div>
 

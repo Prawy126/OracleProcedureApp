@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Nurse;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -25,8 +26,11 @@ class NurseController extends Controller
             $nurses = Nurse::all();
         }
 
+        $user_ids = User::where('account_type', 'none')->pluck('id');
+
         return view('pielegniarkiTab', [
             'nurses' => $nurses,
+            'user_ids' => $user_ids
         ]);
     }
 
@@ -106,7 +110,9 @@ class NurseController extends Controller
             return redirect()->route('nurseIndex')->with('error', 'Nurse not found.');
         }
 
-        return view('edycjaPielegniarki', ['nurse' => $nurse]);
+        $user_ids = User::where('account_type', 'none')->pluck('id');
+
+        return view('edycjaPielegniarki', compact('nurse','user_ids'));
     }
 
     public function update(Request $request, $id)
