@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('login', 30)->unique();
             $table->string('password');
-            $table->string('account_type');
+            $table->integer('account_type');
 
         });
 /*

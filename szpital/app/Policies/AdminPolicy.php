@@ -1,41 +1,38 @@
 <?php
 
-// app/Policies/AdminPolicy.php
-
 namespace App\Policies;
 
 use App\Models\User;
-use Illuminate\Auth\Access\HandlesAuthorization;
 
 class AdminPolicy
 {
-    use HandlesAuthorization;
-
     /**
-     * Determine if the user can access the admin panel.
-     *
-     * @param  \App\Models\User  $user
-     * @return mixed
+     * Create a new policy instance.
      */
+    public function __construct()
+    {
+        //
+    }
 
     public function accessAdmin(User $user)
     {
-        return $user->account_type == 'admin';
+        //dd($user);
+        return $user->account_type == 1;
     }
 
     public function accessDoctor(User $user)
     {
-        return $user->account_type == 'doctor';
+        return $user->account_type == 3;
     }
 
     public function accessNurse(User $user)
     {
-        return $user->account_type == 'nurse';
+        return $user->account_type == 2;
     }
 
     public function accessPatient(User $user)
     {
-        return $user->account_type == 'patient';
+        return $user->account_type == 4;
     }
 
     public function isLoggedIn(?User $user)
@@ -43,3 +40,4 @@ class AdminPolicy
         return $user !== null;
     }
 }
+

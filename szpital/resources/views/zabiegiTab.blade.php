@@ -97,9 +97,6 @@
                     <input type="number" class="form-control" name="cost" placeholder="Koszt">
                 </div>
                 <div class="form-group col-md-1">
-                    <input type="number" class="form-control" name="status" placeholder="Status">
-                </div>
-                <div class="form-group col-md-1">
                     <button type="submit" class="btn btn-primary">Dodaj</button>
                 </div>
             </div>

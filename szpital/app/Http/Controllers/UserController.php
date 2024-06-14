@@ -29,7 +29,7 @@ class UserController extends Controller
         $validated = $request->validate([
             'login' => 'required|string|max:255',
             'password' => 'required|string|max:255',
-            'account_type' => 'required|string|max:255',
+            'account_type' => 'required|integer|max:255',
         ]);
 
         DB::transaction(function () use ($request, $validated) {
@@ -45,31 +45,60 @@ class UserController extends Controller
 
     public function edit($id)
     {
-        if(Gate::denies('access-admin')) {
+        if (Gate::denies('access-admin')) {
             abort(403);
         }
 
-        $user = DB::selectOne('SELECT LOGIN, ACCOUNT_TYPE FROM USERS WHERE ID = :id', ['id' => $id]);
+        // Połączenie PDO z bazy danych
+        $pdo = DB::getPdo();
+
+        // Przygotowanie zapytania
+        $stmt = $pdo->prepare('BEGIN GET_USER(:id, :login, :account_type); END;');
+
+        // Definiowanie parametrów IN i OUT
+        $stmt->bindParam(':id', $id, \PDO::PARAM_INT);
+        $stmt->bindParam(':login', $login, \PDO::PARAM_STR| \PDO::PARAM_INPUT_OUTPUT, 50); // dostosuj długość zgodnie z rzeczywistością
+        $stmt->bindParam(':account_type', $account_type, \PDO::PARAM_INT | \PDO::PARAM_INPUT_OUTPUT);
+
+        // Wykonanie procedury
+        $stmt->execute();
+
+        // Tworzenie obiektu użytkownika z wyników procedury
+        $user = (object) [
+            'login' => $login,
+            'account_type' => $account_type,
+        ];
+
+
         return view('adminElements.accountsEdit', compact('user', 'id'));
     }
 
     public function update(Request $request, $id)
     {
-        if(Gate::denies('access-admin')) {
+        if (Gate::denies('access-admin')) {
             abort(403);
         }
 
         $validated = $request->validate([
             'login' => 'required|string|max:255',
-            'password' => 'required|string|max:255',
-            'account_type' => 'required|string|max:255',
+            'password' => 'nullable|string|max:255',
+            'account_type' => 'required|integer',
         ]);
 
-        DB::transaction(function () use ($request, $validated, $id) {
+        // Pobranie aktualnych danych użytkownika
+        $user = DB::table('users')->where('id', $id)->first();
+
+        // Sprawdzenie, czy hasło zostało podane
+        $password = $user->password; // Użyj istniejącego hasła jako domyślnego
+        if (!empty($validated['password'])) {
+            $password = Hash::make($validated['password']); // Zaktualizuj hasło, jeśli podano nowe
+        }
+
+        DB::transaction(function () use ($request, $validated, $id, $password) {
             DB::statement('BEGIN UPDATE_USER(:id, :login, :password, :account_type); END;', [
                 'id' => $id,
                 'login' => $validated['login'],
-                'password' => Hash::make($validated['password']),
+                'password' => $password,
                 'account_type' => $validated['account_type'],
             ]);
         });
@@ -78,6 +107,7 @@ class UserController extends Controller
 
         return view('adminElements.accounts', ['users' => $users]);
     }
+
 
 
     public function destroy($id)

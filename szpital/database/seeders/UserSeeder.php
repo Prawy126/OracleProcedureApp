@@ -21,44 +21,44 @@ class UserSeeder extends Seeder
         User::insert([[
             'login' => 'login',
             'password' => Hash::make('1234'),
-            'account_type' => 'admin'
+            'account_type' => 1
         ],
 
         [
             'login' => 'login2',
             'password' => Hash::make('1234'),
-            'account_type' => 'doctor'
+            'account_type' => 3
         ],
 
         [
             'login' => 'login3',
             'password' => Hash::make('1234'),
-            'account_type' => 'doctor'
+            'account_type' => 3
         ],
         [
             'login' => 'login4',
             'password' => Hash::make('1234'),
-            'account_type' => 'nurse'
+            'account_type' => 2
         ],
         [
             'login' => 'login5',
             'password' => Hash::make('1234'),
-            'account_type' => 'nurse'
+            'account_type' => 2
         ],
         [
             'login' => 'login6',
             'password' => Hash::make('1234'),
-            'account_type' => 'patient'
+            'account_type' => 4
         ],
         [
             'login' => 'login7',
             'password' => Hash::make('1234'),
-            'account_type' => 'patient'
+            'account_type' => 4
         ],
         [
             'login' => 'login8',
             'password' => Hash::make('1234'),
-            'account_type' => 'patient'
+            'account_type' => 4
         ],
     ]);
     }

@@ -40,12 +40,12 @@ class ProcedureController extends Controller
         $date = $request->input('date');
         $time = $request->input('time');
         $cost = $request->input('cost');
-        $status = $request->input('status');
+        //$status = $request->input('status');
 
-        DB::transaction(function () use ($treatmentTypeId, $roomId, $date, $time, $cost, $status) {
+        DB::transaction(function () use ($treatmentTypeId, $roomId, $date, $time, $cost, ) {
             $pdo = DB::getPdo();
             $stmt = $pdo->prepare('
-                CALL ADD_PROCEDURE(:p0, :p1, TO_TIMESTAMP(:p2, \'YYYY-MM-DD HH24:MI:SS\'), :p3, :p4, :p5)
+                CALL ADD_PROCEDURE(:p0, :p1, TO_TIMESTAMP(:p2, \'YYYY-MM-DD HH24:MI:SS\'), :p3, :p4)
             ');
 
             $stmt->bindParam(':p0', $treatmentTypeId, PDO::PARAM_INT);
@@ -53,7 +53,7 @@ class ProcedureController extends Controller
             $stmt->bindParam(':p2', $date, PDO::PARAM_STR);
             $stmt->bindParam(':p3', $time, PDO::PARAM_STR);
             $stmt->bindParam(':p4', $cost, PDO::PARAM_INT);
-            $stmt->bindParam(':p5', $status, PDO::PARAM_INT);
+            //$stmt->bindParam(':p5', , PDO::PARAM_INT);
 
             $stmt->execute();
         });
@@ -96,7 +96,7 @@ class ProcedureController extends Controller
         $treatmentTypes = TreatmentType::select('id', 'name')->get();
         $rooms = Room::select('id', 'rnumber')->get();
 
-        return view('edycjaZabiegi', compact('procedures','treatmentTypes','rooms'));
+        return view('edycjaZabiegi', compact('procedure','treatmentTypes','rooms'));
     }
 
     public function update(Request $request, $id)
@@ -110,12 +110,12 @@ class ProcedureController extends Controller
         $date = $request->input('date');
         $time = $request->input('time');
         $cost = $request->input('cost');
-        $status = $request->input('status');
+        //$status = $request->input('status');
 
-        DB::transaction(function () use ($id, $treatmentTypeId, $roomId, $date, $time, $cost, $status) {
+        DB::transaction(function () use ($id, $treatmentTypeId, $roomId, $date, $time, $cost) {
             $pdo = DB::getPdo();
             $stmt = $pdo->prepare('
-                CALL UPDATE_PROCEDURE(:p0, :p1, :p2, :p3, :p4, :p5, :p6)
+                CALL UPDATE_PROCEDURE(:p0, :p1, :p2, :p3, :p4, :p5)
             ');
 
             $stmt->bindParam(':p0', $id, PDO::PARAM_INT);
@@ -124,7 +124,7 @@ class ProcedureController extends Controller
             $stmt->bindParam(':p3', $date, PDO::PARAM_STR);
             $stmt->bindParam(':p4', $time, PDO::PARAM_STR);
             $stmt->bindParam(':p5', $cost, PDO::PARAM_INT);
-            $stmt->bindParam(':p6', $status, PDO::PARAM_INT);
+           // $stmt->bindParam(':p6', $status, PDO::PARAM_INT);
 
             $stmt->execute();
         });

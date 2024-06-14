@@ -21,10 +21,10 @@
             <div class="form-group col-md-3 mb-2">
                 <label for="roleSelect">Wybierz poziom uprawnień:</label>
                 <select class="form-select" id="roleSelect" name="account_type" required>
-                    <option value="lekarz">Lekarz</option>
-                    <option value="pielegniarka">Pielęgniarka</option>
-                    <option value="pacjent">Pacjent</option>
-                    <option value="admin">Admin</option>
+                    <option value="3">Lekarz</option>
+                    <option value="2">Pielęgniarka</option>
+                    <option value="4">Pacjent</option>
+                    <option value="1">Admin</option>
                 </select>
             </div>
             <div class="form-group col-md-1 mb-2">

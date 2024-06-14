@@ -18,10 +18,25 @@ class AssignmentMedicineController extends Controller
 
         $medicins = Medicin::all(['id', 'name']);
         $patients = Patient::all(['id', 'name', 'surname']);
-        $assignments = DB::select('SELECT * FROM ASSIGNMENT_MEDICINES');
 
+        // Modyfikacja zapytania SQL, aby sformatować daty bez godziny
+        $assignments = DB::select("
+            SELECT
+                ID,
+                PATIENT_ID,
+                MEDICIN_ID,
+                DOSE,
+                TO_CHAR(DATE_START, 'YYYY-MM-DD') AS DATE_START,
+                TO_CHAR(DATE_END, 'YYYY-MM-DD') AS DATE_END,
+                TO_CHAR(EXPIRATION_DATE, 'YYYY-MM-DD') AS EXPIRATION_DATE,
+                AVAILABILITY
+            FROM ASSIGNMENT_MEDICINES
+        ");
+
+        //dd($assignments);
         return view('adminElements.medicinAssigment', compact('medicins', 'patients', 'assignments'));
     }
+
 
     public function store(Request $request)
     {
@@ -61,6 +76,7 @@ class AssignmentMedicineController extends Controller
 
         DB::transaction(function () use ($id, &$assignmentMedicine) {
             $pdo = DB::getPdo();
+
             $stmt = $pdo->prepare('
                 BEGIN
                     GET_ASSIGNMENT_MEDICINES(:p_ID, :p_RESULT);
@@ -77,6 +93,10 @@ class AssignmentMedicineController extends Controller
 
             if (!empty($result)) {
                 $assignmentMedicine = $result[0];
+                // Formatowanie dat
+                $assignmentMedicine['DATE_START'] = date('Y-m-d', strtotime($assignmentMedicine['DATE_START']));
+                $assignmentMedicine['DATE_END'] = date('Y-m-d', strtotime($assignmentMedicine['DATE_END']));
+                $assignmentMedicine['EXPIRATION_DATE'] = date('Y-m-d', strtotime($assignmentMedicine['EXPIRATION_DATE']));
             }
         });
 

@@ -748,7 +748,7 @@ CREATE OR REPLACE PROCEDURE CREATE_USER (
     p_ID IN NUMBER,
     p_LOGIN IN VARCHAR2,
     p_PASSWORD IN VARCHAR2,
-    p_ACCOUNT_TYPE IN VARCHAR2
+    p_ACCOUNT_TYPE IN NUMBER
 ) AS
 BEGIN
     INSERT INTO USERS (ID, LOGIN, PASSWORD, ACCOUNT_TYPE)
@@ -758,7 +758,7 @@ END;
 CREATE OR REPLACE PROCEDURE GET_USER (
     p_ID IN NUMBER,
     p_LOGIN OUT VARCHAR2,
-    p_ACCOUNT_TYPE OUT VARCHAR2
+    p_ACCOUNT_TYPE OUT NUMBER
 ) AS
 BEGIN
     SELECT LOGIN, ACCOUNT_TYPE
@@ -771,7 +771,7 @@ CREATE OR REPLACE PROCEDURE UPDATE_USER (
     p_ID IN NUMBER,
     p_LOGIN IN VARCHAR2,
     p_PASSWORD IN VARCHAR2,
-    p_ACCOUNT_TYPE IN VARCHAR2
+    p_ACCOUNT_TYPE IN NUMBER
 ) AS
 BEGIN
     UPDATE USERS
@@ -802,6 +802,7 @@ BEGIN
     l_end_time := p_start_time + INTERVAL '1' HOUR * l_hours + INTERVAL '1' MINUTE * l_minutes;
     RETURN l_end_time;
 END;
+/
 
 
 CREATE OR REPLACE PROCEDURE UPDATE_PROCEDURE_STATUSES AS
@@ -812,7 +813,7 @@ CREATE OR REPLACE PROCEDURE UPDATE_PROCEDURE_STATUSES AS
 
     l_current_time TIMESTAMP;
     l_end_time TIMESTAMP;
-    l_description CLOB;
+    l_new_status_id NUMBER;
 BEGIN
     l_current_time := SYSTIMESTAMP;
 
@@ -821,24 +822,31 @@ BEGIN
 
         IF l_current_time < r."DATE" THEN
             -- Przed zabiegiem
-            UPDATE PROCEDURES SET STATUS = 1 WHERE ID = r.ID;
-            l_description := 'Przed zabiegiem';
+            SELECT ID INTO l_new_status_id FROM STATUSES WHERE STATUS = 1;
         ELSIF l_current_time BETWEEN r."DATE" AND l_end_time THEN
             -- W trakcie zabiegu
-            UPDATE PROCEDURES SET STATUS = 2 WHERE ID = r.ID;
-            l_description := 'W trakcie zabiegu';
+            SELECT ID INTO l_new_status_id FROM STATUSES WHERE STATUS = 2;
         ELSE
             -- Ju¿ po zabiegu
-            UPDATE PROCEDURES SET STATUS = 3 WHERE ID = r.ID;
-            l_description := 'Ju¿ po zabiegu';
+            SELECT ID INTO l_new_status_id FROM STATUSES WHERE STATUS = 3;
         END IF;
 
-        -- Aktualizacja opisu w tabeli STATUSES
-        UPDATE STATUSES SET DESCRIPTION = l_description WHERE ID = r.ID;
+        -- Aktualizacja statusu w tabeli PROCEDURES
+        IF l_new_status_id IS NOT NULL THEN
+            UPDATE PROCEDURES 
+            SET STATUS = l_new_status_id
+            WHERE ID = r.ID;
+        ELSE
+            -- Mo¿esz dodaæ obs³ugê b³êdów lub logowanie tutaj
+            RAISE_APPLICATION_ERROR(-20001, 'Nie mo¿na ustawiæ statusu na NULL dla ID ' || r.ID);
+        END IF;
     END LOOP;
 
     COMMIT;
 END;
+/
+
+
 
 BEGIN
     DBMS_SCHEDULER.create_program (
@@ -862,11 +870,17 @@ END;
 /
 
 -- Utworzenie wyzwalacza
-CREATE OR REPLACE TRIGGER trg_update_procedure_statuses
-AFTER INSERT OR UPDATE OR DELETE ON PROCEDURES
+CREATE OR REPLACE TRIGGER HOSPITAL.TRG_UPDATE_PROCEDURE_STATUSES
+AFTER INSERT OR UPDATE ON PROCEDURES
+FOR EACH ROW
 BEGIN
-    UPDATE_PROCEDURE_STATUSES;
+    -- Warunek, który zapobiega rekursji
+    IF :NEW.STATUS IS NOT NULL THEN
+        UPDATE_PROCEDURE_STATUSES();
+    END IF;
 END;
+/
+
 
 
 BEGIN
@@ -1052,35 +1066,35 @@ BEGIN
     FOR r IN c_users LOOP
         l_user_id := r.ID;
 
-        -- Sprawdzenie i aktualizacja dla administratorów
-        SELECT COUNT(*) INTO l_count FROM USERS WHERE ID = l_user_id AND ACCOUNT_TYPE = 'admin';
+        -- Sprawdzenie i aktualizacja dla administratorów 1
+        SELECT COUNT(*) INTO l_count FROM USERS WHERE ID = l_user_id AND ACCOUNT_TYPE = 1;
         IF l_count > 0 THEN
             CONTINUE;  -- Jeœli u¿ytkownik jest adminem, nie aktualizujemy jego typu konta
         END IF;
 
-        -- Sprawdzenie i aktualizacja dla pielêgniarek
+        -- Sprawdzenie i aktualizacja dla pielêgniarek 2
         SELECT COUNT(*) INTO l_count FROM NURSES WHERE USER_ID = l_user_id;
         IF l_count > 0 THEN
-            UPDATE USERS SET ACCOUNT_TYPE = 'nurse' WHERE ID = l_user_id;
+            UPDATE USERS SET ACCOUNT_TYPE = 2 WHERE ID = l_user_id;
             CONTINUE;
         END IF;
 
-        -- Sprawdzenie i aktualizacja dla lekarzy
+        -- Sprawdzenie i aktualizacja dla lekarzy 3
         SELECT COUNT(*) INTO l_count FROM DOCTORS WHERE USER_ID = l_user_id;
         IF l_count > 0 THEN
-            UPDATE USERS SET ACCOUNT_TYPE = 'doctor' WHERE ID = l_user_id;
+            UPDATE USERS SET ACCOUNT_TYPE = 3 WHERE ID = l_user_id;
             CONTINUE;
         END IF;
 
-        -- Sprawdzenie i aktualizacja dla pacjentów
+        -- Sprawdzenie i aktualizacja dla pacjentów 4
         SELECT COUNT(*) INTO l_count FROM PATIENTS WHERE USER_ID = l_user_id;
         IF l_count > 0 THEN
-            UPDATE USERS SET ACCOUNT_TYPE = 'patient' WHERE ID = l_user_id;
+            UPDATE USERS SET ACCOUNT_TYPE = 4 WHERE ID = l_user_id;
             CONTINUE;
         END IF;
 
-        -- Jeœli nie ma przypisania, ustawienie na 'none'
-        UPDATE USERS SET ACCOUNT_TYPE = 'none' WHERE ID = l_user_id;
+        -- Jeœli nie ma przypisania, ustawienie na 0
+        UPDATE USERS SET ACCOUNT_TYPE = 0 WHERE ID = l_user_id;
     END LOOP;
 
     COMMIT;
@@ -1092,7 +1106,7 @@ BEGIN
         job_type        => 'PLSQL_BLOCK',
         job_action      => 'BEGIN CHECK_AND_UPDATE_ACCOUNT_TYPES; END;',
         start_date      => SYSTIMESTAMP,
-        repeat_interval => 'FREQ=MINUTELY; INTERVAL=5', -- Uruchamianie co 5 minut
+        repeat_interval => 'FREQ=MINUTELY; INTERVAL=1', -- Uruchamianie co 1 minut
         enabled         => TRUE
     );
 END;

@@ -102,10 +102,7 @@ Route::delete('/treatment-doctors/{id}', [TreatmentDoctorController::class, 'des
 
 
 Route::get('/statuses', [StatusController::class, 'index'])->name('statusIndex');
-Route::post('/statuses', [StatusController::class, 'store'])->name('statusesStore');
-Route::get('/statuses/{status}/edit', [StatusController::class, 'edit'])->name('statusesShow');
-Route::put('/statuses/{status}', [StatusController::class, 'update'])->name('statusesUpdate');
-Route::delete('/statuses/{status}', [StatusController::class, 'destroy'])->name('statusesDestroy');
+
 
 
 Route::get('/assignments', [AssignmentMedicineController::class, 'index'])->name('assignmentMedicinIndex');

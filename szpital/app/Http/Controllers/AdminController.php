@@ -11,6 +11,9 @@ class AdminController extends Controller
 {
     public function showAdminPanel(Request $request)
     {
+        $user = $request->user();
+        //dd($user); // Wyświetl informacje o użytkowniku
+        //dd($user);
         if (Gate::denies('access-admin')) {
             abort(403);
         }

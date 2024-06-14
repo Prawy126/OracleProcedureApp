@@ -15,9 +15,9 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        if (Gate::allows('is-logged-in')) {
+        /*if (Gate::allows('is-logged-in')) {
             return back();
-        }
+        }*/
 
         $credentials = $request->only('login', 'password');
 
@@ -28,13 +28,13 @@ class AuthController extends Controller
             $accountType = $user->account_type;
 
             switch ($accountType) {
-                case 'admin':
+                case 1:
                     return redirect()->intended(route('admin'));
-                case 'doctor':
+                case 3:
                     return redirect()->intended(route('doctor.dashboard'));
-                case 'nurse':
+                case 2:
                     return redirect()->intended(route('nurse.dashboard'));
-                case 'patient':
+                case 4:
                     return redirect()->intended(route('patient.dashboard'));
                 default:
                     Auth::logout();

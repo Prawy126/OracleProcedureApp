@@ -3,6 +3,9 @@
 @include('shared.head')
 @include('shared.navbar')
 <body>
+    @if(Auth::check())
+    <h1>Jesteś zalogowany wyloguj się jeśli chcesz się ponownie zalogować</h1>
+    @else
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-8">
@@ -54,5 +57,6 @@
             </div>
         </div>
     </div>
+    @endif
 </body>
 </html>

@@ -86,9 +86,9 @@
                                 <td>{{ $assignment->date_end }}</td>
                                 <td>{{ $assignment->expiration_date }}</td>
                                 <td>{{ $assignment->availability ? 'Dostępny' : 'Niedostępny' }}</td>
-                                <td><a href="{{ route('assignmentMedicineEdit', $assignment->patient_id) }}" class="btn btn-warning">Edytuj</a></td>
+                                <td><a href="{{ route('assignmentMedicineEdit', $assignment->id) }}" class="btn btn-warning">Edytuj</a></td>
                                 <td>
-                                <form action="{{ route('assignmentMedicineDestroy', $assignment->patient_id) }}" method="POST">
+                                <form action="{{ route('assignmentMedicineDestroy', $assignment->id) }}" method="POST">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-danger">Usuń</button>
