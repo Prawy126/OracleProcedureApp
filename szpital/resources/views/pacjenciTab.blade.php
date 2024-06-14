@@ -66,6 +66,15 @@
 
     <div class="container" style="margin-bottom: 60px;">
         <h2 class="mt-4">Dodawanie pacjenta</h2>
+        @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
         <form action="{{ route('patientsStore') }}" method="POST">
             @csrf
             <div class="row">

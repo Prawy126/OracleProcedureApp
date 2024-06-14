@@ -14,6 +14,15 @@
         <form method="POST" action="{{ route('roomsUpdate', ['id' => $room['ID']]) }}">
             @csrf
             @method('PUT')
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
             <div class="form-group row mb-4">
                 <label for="inputID" class="col-md-2 col-form-label">ID:</label>
                 <div class="col-md-4">

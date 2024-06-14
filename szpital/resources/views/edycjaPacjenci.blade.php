@@ -11,6 +11,15 @@
 
     <div class="container">
         <h2 class="mt-4">Edycja Pacjenta</h2>
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
         <form action="{{ route('patientsUpdate', $patient['ID']) }}" method="POST">
             @csrf
             @method('PUT')

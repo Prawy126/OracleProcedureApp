@@ -36,14 +36,37 @@ class RoomController extends Controller
             abort(403);
         }
 
-        DB::transaction(function () use ($request) {
-            $pdo = DB::getPdo();
+        $validated = $request->validate([
+            'rnumber' => 'required|string|max:200',
+            'rlocation' => 'required|string|max:200',
+            'status' => 'required|string|max:200',
+            'type_room' => 'required|string|max:200',
+            'seats' => 'required|integer|min:0',
+        ], [
+            'rnumber.required' => 'Pole numer sali jest wymagane.',
+            'rnumber.string' => 'Pole numer sali musi być ciągiem znaków.',
+            'rnumber.max' => 'Pole numer sali nie może przekraczać 200 znaków.',
+            'rlocation.required' => 'Pole lokalizacja sali jest wymagane.',
+            'rlocation.string' => 'Pole lokalizacja sali musi być ciągiem znaków.',
+            'rlocation.max' => 'Pole lokalizacja sali nie może przekraczać 200 znaków.',
+            'status.required' => 'Pole status jest wymagane.',
+            'status.string' => 'Pole status musi być ciągiem znaków.',
+            'status.max' => 'Pole status nie może przekraczać 200 znaków.',
+            'type_room.required' => 'Pole typ sali jest wymagane.',
+            'type_room.string' => 'Pole typ sali musi być ciągiem znaków.',
+            'type_room.max' => 'Pole typ sali nie może przekraczać 200 znaków.',
+            'seats.required' => 'Pole liczba miejsc jest wymagane.',
+            'seats.integer' => 'Pole liczba miejsc musi być liczbą całkowitą.',
+            'seats.min' => 'Pole liczba miejsc nie może być ujemne.',
+        ]);
 
-            $rnumber = $request->input('rnumber');
-            $rlocation = $request->input('rlocation');
-            $status = $request->input('status');
-            $type_room = $request->input('type_room');
-            $seats = $request->input('seats');
+        // Specjalna walidacja dla sali operacyjnej
+        if ($request->input('type_room') === 'sala operacyjna' && $request->input('seats') != 1) {
+            return back()->withErrors(['seats' => 'Sala operacyjna musi mieć dokładnie 1 miejsce.']);
+        }
+
+        DB::transaction(function () use ($validated) {
+            $pdo = DB::getPdo();
 
             $stmt = $pdo->prepare("
                 DECLARE
@@ -62,16 +85,17 @@ class RoomController extends Controller
                 END;
             ");
 
-            $stmt->bindParam(':rnumber', $rnumber, PDO::PARAM_STR);
-            $stmt->bindParam(':rlocation', $rlocation, PDO::PARAM_STR);
-            $stmt->bindParam(':status', $status, PDO::PARAM_STR);
-            $stmt->bindParam(':type_room', $type_room, PDO::PARAM_STR);
-            $stmt->bindParam(':seats', $seats, PDO::PARAM_INT);
+            $stmt->bindParam(':rnumber', $validated['rnumber'], PDO::PARAM_STR);
+            $stmt->bindParam(':rlocation', $validated['rlocation'], PDO::PARAM_STR);
+            $stmt->bindParam(':status', $validated['status'], PDO::PARAM_STR);
+            $stmt->bindParam(':type_room', $validated['type_room'], PDO::PARAM_STR);
+            $stmt->bindParam(':seats', $validated['seats'], PDO::PARAM_INT);
             $stmt->execute();
         });
 
         return redirect()->route('roomIndex');
     }
+
 
     public function edit($id)
     {
@@ -111,13 +135,37 @@ class RoomController extends Controller
             abort(403);
         }
 
-        DB::transaction(function () use ($request, $id) {
-            $pdo = DB::getPdo();
+        $validated = $request->validate([
+            'rnumber' => 'required|string|max:200',
+            'rlocation' => 'required|string|max:200',
+            'status' => 'required|string|max:200',
+            'type_room' => 'required|string|max:200',
+            'seats' => 'required|integer|min:0',
+        ], [
+            'rnumber.required' => 'Pole numer sali jest wymagane.',
+            'rnumber.string' => 'Pole numer sali musi być ciągiem znaków.',
+            'rnumber.max' => 'Pole numer sali nie może przekraczać 200 znaków.',
+            'rlocation.required' => 'Pole lokalizacja sali jest wymagane.',
+            'rlocation.string' => 'Pole lokalizacja sali musi być ciągiem znaków.',
+            'rlocation.max' => 'Pole lokalizacja sali nie może przekraczać 200 znaków.',
+            'status.required' => 'Pole status jest wymagane.',
+            'status.string' => 'Pole status musi być ciągiem znaków.',
+            'status.max' => 'Pole status nie może przekraczać 200 znaków.',
+            'type_room.required' => 'Pole typ sali jest wymagane.',
+            'type_room.string' => 'Pole typ sali musi być ciągiem znaków.',
+            'type_room.max' => 'Pole typ sali nie może przekraczać 200 znaków.',
+            'seats.required' => 'Pole liczba miejsc jest wymagane.',
+            'seats.integer' => 'Pole liczba miejsc musi być liczbą całkowitą.',
+            'seats.min' => 'Pole liczba miejsc nie może być ujemne.',
+        ]);
 
-            $rnumber = $request->input('rnumber');
-            $rlocation = $request->input('rlocation');
-            $status = $request->input('status');
-            $type_room = $request->input('type_room');
+        // Specjalna walidacja dla sali operacyjnej
+        if ($request->input('type_room') === 'sala operacyjna' && $request->input('seats') != 1) {
+            return back()->withErrors(['seats' => 'Sala operacyjna musi mieć dokładnie 1 miejsce.']);
+        }
+
+        DB::transaction(function () use ($validated, $id) {
+            $pdo = DB::getPdo();
 
             $stmt = $pdo->prepare("
                 DECLARE
@@ -126,26 +174,32 @@ class RoomController extends Controller
                     v_rlocation VARCHAR2(200);
                     v_status VARCHAR2(200);
                     v_type_room VARCHAR2(200);
+                    v_seats NUMBER;
                 BEGIN
                     v_room_id := :id;
                     v_rnumber := :rnumber;
                     v_rlocation := :rlocation;
                     v_status := :status;
                     v_type_room := :type_room;
-                    szpital.update_room(v_room_id, v_rnumber, v_rlocation, v_status, v_type_room);
+                    v_seats := :seats;
+                    szpital.update_room(v_room_id, v_rnumber, v_rlocation, v_status, v_type_room, v_seats);
                 END;
             ");
 
+
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-            $stmt->bindParam(':rnumber', $rnumber, PDO::PARAM_STR);
-            $stmt->bindParam(':rlocation', $rlocation, PDO::PARAM_STR);
-            $stmt->bindParam(':status', $status, PDO::PARAM_STR);
-            $stmt->bindParam(':type_room', $type_room, PDO::PARAM_STR);
+            $stmt->bindParam(':rnumber', $validated['rnumber'], PDO::PARAM_STR);
+            $stmt->bindParam(':rlocation', $validated['rlocation'], PDO::PARAM_STR);
+            $stmt->bindParam(':status', $validated['status'], PDO::PARAM_STR);
+            $stmt->bindParam(':type_room', $validated['type_room'], PDO::PARAM_STR);
+            $stmt->bindParam(':seats', $validated['seats'], PDO::PARAM_INT);
+            //dd($stmt);
             $stmt->execute();
         });
 
         return redirect()->route('roomIndex');
     }
+
 
     public function destroy($id)
     {

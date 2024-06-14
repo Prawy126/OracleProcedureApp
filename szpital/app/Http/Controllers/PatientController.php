@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -36,7 +35,35 @@ class PatientController extends Controller
             abort(403);
         }
 
-        DB::transaction(function () use ($request) {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'surname' => 'required|string|max:255',
+            'nurse_id' => 'required|integer|exists:nurses,id',
+            'user_id' => 'required|integer|exists:users,id',
+            'time_visit' => 'required|integer|min:1',
+            'room_id' => 'required|integer|exists:rooms,id',
+        ], [
+            'name.required' => 'Pole imię jest wymagane.',
+            'name.string' => 'Pole imię musi być ciągiem znaków.',
+            'name.max' => 'Pole imię nie może przekraczać 255 znaków.',
+            'surname.required' => 'Pole nazwisko jest wymagane.',
+            'surname.string' => 'Pole nazwisko musi być ciągiem znaków.',
+            'surname.max' => 'Pole nazwisko nie może przekraczać 255 znaków.',
+            'nurse_id.required' => 'Pole id pielęgniarki jest wymagane.',
+            'nurse_id.integer' => 'Pole id pielęgniarki musi być liczbą całkowitą.',
+            'nurse_id.exists' => 'Podana pielęgniarka nie istnieje.',
+            'user_id.required' => 'Pole id użytkownika jest wymagane.',
+            'user_id.integer' => 'Pole id użytkownika musi być liczbą całkowitą.',
+            'user_id.exists' => 'Podany użytkownik nie istnieje.',
+            'time_visit.required' => 'Pole czas wizyty jest wymagane.',
+            'time_visit.date' => 'Pole czas wizyty musi być prawidłową datą.',
+            'time_visit.min'=> 'Czas pobytu musi być większy niż zero',
+            'room_id.required' => 'Pole id sali jest wymagane.',
+            'room_id.integer' => 'Pole id sali musi być liczbą całkowitą.',
+            'room_id.exists' => 'Podana sala nie istnieje.',
+        ]);
+
+        DB::transaction(function () use ($validated) {
             $pdo = DB::getPdo();
             $stmt = $pdo->prepare("
                 DECLARE
@@ -52,19 +79,12 @@ class PatientController extends Controller
                 END;
             ");
 
-            $name = $request->input('name');
-            $surname = $request->input('surname');
-            $nurse_id = $request->input('nurse_id');
-            $user_id = $request->input('user_id');
-            $time_visit = $request->input('time_visit');
-            $room_id = $request->input('room_id');
-
-            $stmt->bindParam(':name', $name, PDO::PARAM_STR);
-            $stmt->bindParam(':surname', $surname, PDO::PARAM_STR);
-            $stmt->bindParam(':nurse_id', $nurse_id, PDO::PARAM_INT);
-            $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
-            $stmt->bindParam(':time_visit', $time_visit, PDO::PARAM_INT);
-            $stmt->bindParam(':room_id', $room_id, PDO::PARAM_INT);
+            $stmt->bindParam(':name', $validated['name'], PDO::PARAM_STR);
+            $stmt->bindParam(':surname', $validated['surname'], PDO::PARAM_STR);
+            $stmt->bindParam(':nurse_id', $validated['nurse_id'], PDO::PARAM_INT);
+            $stmt->bindParam(':user_id', $validated['user_id'], PDO::PARAM_INT);
+            $stmt->bindParam(':time_visit', $validated['time_visit'], PDO::PARAM_STR);
+            $stmt->bindParam(':room_id', $validated['room_id'], PDO::PARAM_INT);
             $stmt->execute();
         });
 
@@ -109,7 +129,35 @@ class PatientController extends Controller
             abort(403);
         }
 
-        DB::transaction(function () use ($request, $id) {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'surname' => 'required|string|max:255',
+            'nurse_id' => 'required|integer|exists:nurses,id',
+            'user_id' => 'required|integer|exists:users,id',
+            'time_visit' => 'required|integer|min:1',
+            'room_id' => 'required|integer|exists:rooms,id',
+        ], [
+            'name.required' => 'Pole imię jest wymagane.',
+            'name.string' => 'Pole imię musi być ciągiem znaków.',
+            'name.max' => 'Pole imię nie może przekraczać 255 znaków.',
+            'surname.required' => 'Pole nazwisko jest wymagane.',
+            'surname.string' => 'Pole nazwisko musi być ciągiem znaków.',
+            'surname.max' => 'Pole nazwisko nie może przekraczać 255 znaków.',
+            'nurse_id.required' => 'Pole id pielęgniarki jest wymagane.',
+            'nurse_id.integer' => 'Pole id pielęgniarki musi być liczbą całkowitą.',
+            'nurse_id.exists' => 'Podana pielęgniarka nie istnieje.',
+            'user_id.required' => 'Pole id użytkownika jest wymagane.',
+            'user_id.integer' => 'Pole id użytkownika musi być liczbą całkowitą.',
+            'user_id.exists' => 'Podany użytkownik nie istnieje.',
+            'time_visit.required' => 'Pole czas wizyty jest wymagane.',
+            'time_visit.date' => 'Pole czas wizyty musi być prawidłową datą.',
+            'time_visit.min' => 'Czas pobytu musi być większy niż zero',
+            'room_id.required' => 'Pole id sali jest wymagane.',
+            'room_id.integer' => 'Pole id sali musi być liczbą całkowitą.',
+            'room_id.exists' => 'Podana sala nie istnieje.',
+        ]);
+
+        DB::transaction(function () use ($validated, $id) {
             $pdo = DB::getPdo();
             $stmt = $pdo->prepare("
                 DECLARE
@@ -126,20 +174,13 @@ class PatientController extends Controller
                 END;
             ");
 
-            $name = $request->input('name');
-            $surname = $request->input('surname');
-            $nurse_id = $request->input('nurse_id');
-            $user_id = $request->input('user_id');
-            $time_visit = $request->input('time_visit');
-            $room_id = $request->input('room_id');
-
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-            $stmt->bindParam(':name', $name, PDO::PARAM_STR);
-            $stmt->bindParam(':surname', $surname, PDO::PARAM_STR);
-            $stmt->bindParam(':nurse_id', $nurse_id, PDO::PARAM_INT);
-            $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
-            $stmt->bindParam(':time_visit', $time_visit, PDO::PARAM_INT);
-            $stmt->bindParam(':room_id', $room_id, PDO::PARAM_INT);
+            $stmt->bindParam(':name', $validated['name'], PDO::PARAM_STR);
+            $stmt->bindParam(':surname', $validated['surname'], PDO::PARAM_STR);
+            $stmt->bindParam(':nurse_id', $validated['nurse_id'], PDO::PARAM_INT);
+            $stmt->bindParam(':user_id', $validated['user_id'], PDO::PARAM_INT);
+            $stmt->bindParam(':time_visit', $validated['time_visit'], PDO::PARAM_STR);
+            $stmt->bindParam(':room_id', $validated['room_id'], PDO::PARAM_INT);
             $stmt->execute();
         });
 

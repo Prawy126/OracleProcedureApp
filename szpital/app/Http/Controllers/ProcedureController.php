@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Room;
 use App\Models\TreatmentType;
+use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use PDO;
@@ -35,14 +36,41 @@ class ProcedureController extends Controller
             abort(403);
         }
 
-        $treatmentTypeId = $request->input('treatment_type_id');
-        $roomId = $request->input('room_id');
-        $date = $request->input('date');
-        $time = $request->input('time');
-        $cost = $request->input('cost');
-        //$status = $request->input('status');
+        $validated = $request->validate([
+            'treatment_type_id' => 'required|integer',
+            'room_id' => 'required|integer',
+            'date' => 'required|date',
+            'time' => 'required|string|max:255',
+            'cost' => 'required|numeric|min:0',
+        ], [
+            'treatment_type_id.required' => 'Pole typ leczenia jest wymagane.',
+            'treatment_type_id.integer' => 'Pole typ leczenia musi być liczbą całkowitą.',
+            'room_id.required' => 'Pole pokój jest wymagane.',
+            'room_id.integer' => 'Pole pokój musi być liczbą całkowitą.',
+            'date.required' => 'Pole data jest wymagane.',
+            'date.date' => 'Pole data musi być prawidłową datą.',
+            'time.required' => 'Pole czas jest wymagane.',
+            'time.string' => 'Pole czas musi być ciągiem znaków.',
+            'time.max' => 'Pole czas nie może przekraczać 255 znaków.',
+            'cost.required' => 'Pole koszt jest wymagane.',
+            'cost.numeric' => 'Pole koszt musi być liczbą.',
+            'cost.min' => 'Pole koszt nie może być ujemne.',
+        ]);
 
-        DB::transaction(function () use ($treatmentTypeId, $roomId, $date, $time, $cost, ) {
+
+        $treatmentTypeId = $validated['treatment_type_id'];
+        $roomId = $validated['room_id'];
+        $date = $validated['date'];
+        $time = $validated['time'];
+        $cost = $validated['cost'];
+
+        // Walidacja, że data początkowa jest wcześniejsza niż końcowa
+        $endTime = (new DateTime($date))->modify('+' . $time . ' minutes');
+        if (new DateTime() > $endTime) {
+            return back()->withErrors(['date' => 'Data początkowa musi być wcześniejsza niż końcowa.']);
+        }
+
+        DB::transaction(function () use ($treatmentTypeId, $roomId, $date, $time, $cost) {
             $pdo = DB::getPdo();
             $stmt = $pdo->prepare('
                 CALL ADD_PROCEDURE(:p0, :p1, TO_TIMESTAMP(:p2, \'YYYY-MM-DD HH24:MI:SS\'), :p3, :p4)
@@ -53,13 +81,13 @@ class ProcedureController extends Controller
             $stmt->bindParam(':p2', $date, PDO::PARAM_STR);
             $stmt->bindParam(':p3', $time, PDO::PARAM_STR);
             $stmt->bindParam(':p4', $cost, PDO::PARAM_INT);
-            //$stmt->bindParam(':p5', , PDO::PARAM_INT);
 
             $stmt->execute();
         });
 
         return redirect()->route('proceduresIndex');
     }
+
 
     public function show($id)
     {
@@ -105,12 +133,39 @@ class ProcedureController extends Controller
             abort(403);
         }
 
-        $treatmentTypeId = $request->input('treatment_type_id');
-        $roomId = $request->input('room_id');
-        $date = $request->input('date');
-        $time = $request->input('time');
-        $cost = $request->input('cost');
-        //$status = $request->input('status');
+        $validated = $request->validate([
+            'treatment_type_id' => 'required|integer',
+            'room_id' => 'required|integer',
+            'date' => 'required|date',
+            'time' => 'required|string|max:255',
+            'cost' => 'required|numeric|min:0',
+        ], [
+            'treatment_type_id.required' => 'Pole typ leczenia jest wymagane.',
+            'treatment_type_id.integer' => 'Pole typ leczenia musi być liczbą całkowitą.',
+            'room_id.required' => 'Pole pokój jest wymagane.',
+            'room_id.integer' => 'Pole pokój musi być liczbą całkowitą.',
+            'date.required' => 'Pole data jest wymagane.',
+            'date.date' => 'Pole data musi być prawidłową datą.',
+            'time.required' => 'Pole czas jest wymagane.',
+            'time.string' => 'Pole czas musi być ciągiem znaków.',
+            'time.max' => 'Pole czas nie może przekraczać 255 znaków.',
+            'cost.required' => 'Pole koszt jest wymagane.',
+            'cost.numeric' => 'Pole koszt musi być liczbą.',
+            'cost.min' => 'Pole koszt nie może być ujemne.',
+        ]);
+
+
+        $treatmentTypeId = $validated['treatment_type_id'];
+        $roomId = $validated['room_id'];
+        $date = $validated['date'];
+        $time = $validated['time'];
+        $cost = $validated['cost'];
+
+        // Walidacja, że data początkowa jest wcześniejsza niż końcowa
+        $endTime = (new DateTime($date))->modify('+' . $time . ' minutes');
+        if (new DateTime() > $endTime) {
+            return back()->withErrors(['date' => 'Data początkowa musi być wcześniejsza niż końcowa.']);
+        }
 
         DB::transaction(function () use ($id, $treatmentTypeId, $roomId, $date, $time, $cost) {
             $pdo = DB::getPdo();
@@ -124,7 +179,6 @@ class ProcedureController extends Controller
             $stmt->bindParam(':p3', $date, PDO::PARAM_STR);
             $stmt->bindParam(':p4', $time, PDO::PARAM_STR);
             $stmt->bindParam(':p5', $cost, PDO::PARAM_INT);
-           // $stmt->bindParam(':p6', $status, PDO::PARAM_INT);
 
             $stmt->execute();
         });

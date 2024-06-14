@@ -11,6 +11,7 @@
 
     <div class="container">
         <h2 class="mt-4">Sale</h2>
+
         <form method="GET" action="{{ route('roomIndex') }}">
             <div class="row">
                 <div class="form-group col-md-2">
@@ -67,6 +68,15 @@
     </div>
 
     <div class="container">
+        @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
         <h2 class="mt-4">Dodawanie sal</h2>
         <form action="{{ route('roomsStore') }}" method="POST">
             @csrf

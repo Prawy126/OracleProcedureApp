@@ -12,6 +12,15 @@
     <div class="col-md-12">
         <form action="{{ route('assignmentMedicineStore') }}" method="POST">
             @csrf
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
             <div class="form-row">
                 <div class="form-group col-md-6">
                     <label for="medicinId">Id leku</label>

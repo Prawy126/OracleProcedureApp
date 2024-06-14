@@ -12,6 +12,15 @@
     <div class="container mb-12" style="padding-bottom: 50px;">
         <h2 class="mt-4">Edytuj dane: Leki</h2>
         <form method="POST" action="{{ route('medicinUpdate', $medicin['ID']) }}">
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
             @csrf
             @method('PUT')
             <div class="form-group row mb-4">

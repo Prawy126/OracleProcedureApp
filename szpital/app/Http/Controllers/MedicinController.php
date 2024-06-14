@@ -5,7 +5,6 @@ use App\Models\Medicin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use PDO;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Gate;
 
 class MedicinController extends Controller
@@ -28,15 +27,35 @@ class MedicinController extends Controller
             abort(403);
         }
 
-        DB::transaction(function () use ($request) {
-            $pdo = DB::getPdo();
+        $validated = $request->validate([
+            'name' => 'required|string|max:200',
+            'instruction' => 'required|string',
+            'warehouse_quantity' => 'required|integer|min:0',
+            'drug_category' => 'required|string|max:200',
+            'price' => 'required|numeric|min:0',
+            'dose_unit' => 'required|string|max:200',
+        ], [
+            'name.required' => 'Pole nazwa jest wymagane.',
+            'name.string' => 'Pole nazwa musi być ciągiem znaków.',
+            'name.max' => 'Pole nazwa nie może przekraczać 200 znaków.',
+            'instruction.required' => 'Pole instrukcja jest wymagane.',
+            'instruction.string' => 'Pole instrukcja musi być ciągiem znaków.',
+            'warehouse_quantity.required' => 'Pole ilość w magazynie jest wymagane.',
+            'warehouse_quantity.integer' => 'Pole ilość w magazynie musi być liczbą całkowitą.',
+            'warehouse_quantity.min' => 'Pole ilość w magazynie nie może być ujemne.',
+            'drug_category.required' => 'Pole kategoria leku jest wymagane.',
+            'drug_category.string' => 'Pole kategoria leku musi być ciągiem znaków.',
+            'drug_category.max' => 'Pole kategoria leku nie może przekraczać 200 znaków.',
+            'price.required' => 'Pole cena jest wymagane.',
+            'price.numeric' => 'Pole cena musi być liczbą.',
+            'price.min' => 'Pole cena nie może być ujemne.',
+            'dose_unit.required' => 'Pole jednostka dawkowania jest wymagane.',
+            'dose_unit.string' => 'Pole jednostka dawkowania musi być ciągiem znaków.',
+            'dose_unit.max' => 'Pole jednostka dawkowania nie może przekraczać 200 znaków.',
+        ]);
 
-            $name = $request->input('name');
-            $instruction = $request->input('instruction');
-            $warehouse_quantity = $request->input('warehouse_quantity');
-            $drug_category = $request->input('drug_category');
-            $price = $request->input('price');
-            $dose_unit = $request->input('dose_unit');
+        DB::transaction(function () use ($validated) {
+            $pdo = DB::getPdo();
 
             $stmt = $pdo->prepare("
                 DECLARE
@@ -57,16 +76,16 @@ class MedicinController extends Controller
                 END;
             ");
 
-            $stmt->bindParam(':name', $name, PDO::PARAM_STR);
-            $stmt->bindParam(':instruction', $instruction, PDO::PARAM_STR);
-            $stmt->bindParam(':warehouse_quantity', $warehouse_quantity, PDO::PARAM_INT);
-            $stmt->bindParam(':drug_category', $drug_category, PDO::PARAM_STR);
-            $stmt->bindParam(':price', $price, PDO::PARAM_INT);
-            $stmt->bindParam(':dose_unit', $dose_unit, PDO::PARAM_STR);
+            $stmt->bindParam(':name', $validated['name'], PDO::PARAM_STR);
+            $stmt->bindParam(':instruction', $validated['instruction'], PDO::PARAM_STR);
+            $stmt->bindParam(':warehouse_quantity', $validated['warehouse_quantity'], PDO::PARAM_INT);
+            $stmt->bindParam(':drug_category', $validated['drug_category'], PDO::PARAM_STR);
+            $stmt->bindParam(':price', $validated['price'], PDO::PARAM_INT);
+            $stmt->bindParam(':dose_unit', $validated['dose_unit'], PDO::PARAM_STR);
             $stmt->execute();
         });
 
-        return redirect()->route('medicinIndex');
+        return redirect()->route('medicinIndex')->with('success', 'Lek dodany pomyślnie.');
     }
 
     public function edit($id)
@@ -95,7 +114,7 @@ class MedicinController extends Controller
         });
 
         if (empty($medicin)) {
-            return redirect()->route('medicinIndex')->with('error', 'Medicin not found.');
+            return redirect()->route('medicinIndex')->with('error', 'Nie znaleziono leku.');
         }
 
         return view('edycjaLeki', compact('medicin'));
@@ -107,15 +126,35 @@ class MedicinController extends Controller
             abort(403);
         }
 
-        DB::transaction(function () use ($request, $id) {
-            $pdo = DB::getPdo();
+        $validated = $request->validate([
+            'name' => 'required|string|max:200',
+            'instruction' => 'required|string',
+            'warehouse_quantity' => 'required|integer|min:0',
+            'drug_category' => 'required|string|max:200',
+            'price' => 'required|numeric|min:0',
+            'dose_unit' => 'required|string|max:200',
+        ], [
+            'name.required' => 'Pole nazwa jest wymagane.',
+            'name.string' => 'Pole nazwa musi być ciągiem znaków.',
+            'name.max' => 'Pole nazwa nie może przekraczać 200 znaków.',
+            'instruction.required' => 'Pole instrukcja jest wymagane.',
+            'instruction.string' => 'Pole instrukcja musi być ciągiem znaków.',
+            'warehouse_quantity.required' => 'Pole ilość w magazynie jest wymagane.',
+            'warehouse_quantity.integer' => 'Pole ilość w magazynie musi być liczbą całkowitą.',
+            'warehouse_quantity.min' => 'Pole ilość w magazynie nie może być ujemne.',
+            'drug_category.required' => 'Pole kategoria leku jest wymagane.',
+            'drug_category.string' => 'Pole kategoria leku musi być ciągiem znaków.',
+            'drug_category.max' => 'Pole kategoria leku nie może przekraczać 200 znaków.',
+            'price.required' => 'Pole cena jest wymagane.',
+            'price.numeric' => 'Pole cena musi być liczbą.',
+            'price.min' => 'Pole cena nie może być ujemne.',
+            'dose_unit.required' => 'Pole jednostka dawkowania jest wymagane.',
+            'dose_unit.string' => 'Pole jednostka dawkowania musi być ciągiem znaków.',
+            'dose_unit.max' => 'Pole jednostka dawkowania nie może przekraczać 200 znaków.',
+        ]);
 
-            $name = $request->input('name');
-            $instruction = $request->input('instruction');
-            $warehouse_quantity = $request->input('warehouse_quantity');
-            $drug_category = $request->input('drug_category');
-            $price = $request->input('price');
-            $dose_unit = $request->input('dose_unit');
+        DB::transaction(function () use ($validated, $id) {
+            $pdo = DB::getPdo();
 
             $stmt = $pdo->prepare("
                 DECLARE
@@ -139,16 +178,16 @@ class MedicinController extends Controller
             ");
 
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-            $stmt->bindParam(':name', $name, PDO::PARAM_STR);
-            $stmt->bindParam(':instruction', $instruction, PDO::PARAM_STR);
-            $stmt->bindParam(':warehouse_quantity', $warehouse_quantity, PDO::PARAM_INT);
-            $stmt->bindParam(':drug_category', $drug_category, PDO::PARAM_STR);
-            $stmt->bindParam(':price', $price, PDO::PARAM_INT);
-            $stmt->bindParam(':dose_unit', $dose_unit, PDO::PARAM_STR);
+            $stmt->bindParam(':name', $validated['name'], PDO::PARAM_STR);
+            $stmt->bindParam(':instruction', $validated['instruction'], PDO::PARAM_STR);
+            $stmt->bindParam(':warehouse_quantity', $validated['warehouse_quantity'], PDO::PARAM_INT);
+            $stmt->bindParam(':drug_category', $validated['drug_category'], PDO::PARAM_STR);
+            $stmt->bindParam(':price', $validated['price'], PDO::PARAM_INT);
+            $stmt->bindParam(':dose_unit', $validated['dose_unit'], PDO::PARAM_STR);
             $stmt->execute();
         });
 
-        return redirect()->route('medicinIndex');
+        return redirect()->route('medicinIndex')->with('success', 'Lek zaktualizowany pomyślnie.');
     }
 
     public function destroy($id)
@@ -165,9 +204,9 @@ class MedicinController extends Controller
                 $stmt->execute();
             });
 
-            return redirect()->route('medicinIndex')->with('success', 'Medicin deleted successfully.');
+            return redirect()->route('medicinIndex')->with('success', 'Lek usunięty pomyślnie.');
         } catch (\Exception $e) {
-            return redirect()->route('medicinIndex')->with('error', 'Error deleting medicin: ' . $e->getMessage());
+            return redirect()->route('medicinIndex')->with('error', 'Błąd przy usuwaniu leku: ' . $e->getMessage());
         }
     }
 }

@@ -71,6 +71,15 @@
 
     <div class="container mb-12" style="padding-bottom: 50px;"> <!--naprawa problemu nie bootstrapowym podejściem-->
         <h2 class="mt-4">Dodawanie leku</h2>
+        @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
         <form method="POST" action="{{ route('medicinStore') }}">
             @csrf
             <div class="row mb-2">
