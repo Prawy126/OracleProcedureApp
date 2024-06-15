@@ -30,6 +30,7 @@
                 <div class="form-group col-md-2">
                     <label for="inputUserID">ID Użytkownika</label>
                     <select class="form-control" name="user_id" id="inputUserID" required>
+                        <option value="{{$nurse['USER_ID']}}">{{ true ? 'nie zmieniaj' : '' }}</option>
                         @foreach($user_ids as $userId)
                             <option value="{{ $userId }}" {{ $userId == $nurse['USER_ID'] ? 'selected' : '' }}>{{ $userId }}</option>
                         @endforeach

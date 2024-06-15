@@ -38,71 +38,43 @@
     </div>
 
 
-    <div class="container mt-4">
+    <div class="container-fluid mt-4">
         <h2>Przypisania leki:</h2>
         <div class="table-responsive">
-          <table class="table table-bordered table-hover">
-            <thead>
-              <tr>
-                <th scope="col">#</th>
-                <th scope="col">Kolumna 0</th>
-                <th scope="col">Kolumna 1</th>
-                <th scope="col">Kolumna 2</th>
-                <th scope="col">Kolumna 3</th>
-                <th scope="col">Kolumna 4</th>
-                <th scope="col">Kolumna 5</th>
-                <th scope="col">Kolumna 6</th>
-                <th scope="col">Kolumna 7</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <th scope="row">1</th>
-                <td>Akcje</td>
-                <td>Dane 1</td>
-                <td>Dane 2</td>
-                <td>Dane 3</td>
-                <td>Dane 4</td>
-                <td>Dane 5</td>
-                <td>Dane 6</td>
-                <td>Dane 7</td>
-              </tr>
-              <tr>
-                <th scope="row">1</th>
-                <td>Akcje</td>
-                <td>Dane 1</td>
-                <td>Dane 2</td>
-                <td>Dane 3</td>
-                <td>Dane 4</td>
-                <td>Dane 5</td>
-                <td>Dane 6</td>
-                <td>Dane 7</td>
-              </tr>
-              <tr>
-                <th scope="row">1</th>
-                <td>Akcje</td>
-                <td>Dane 1</td>
-                <td>Dane 2</td>
-                <td>Dane 3</td>
-                <td>Dane 4</td>
-                <td>Dane 5</td>
-                <td>Dane 6</td>
-                <td>Dane 7</td>
-              </tr>
-              <tr>
-                <th scope="row">1</th>
-                <td>Akcje</td>
-                <td>Dane 1</td>
-                <td>Dane 2</td>
-                <td>Dane 3</td>
-                <td>Dane 4</td>
-                <td>Dane 5</td>
-                <td>Dane 6</td>
-                <td>Dane 7</td>
-              </tr>
-
-            </tbody>
-          </table>
+            <table class="table-bordered">
+                <thead>
+                    <tr>
+                        <th>Nazwa</th>
+                        <th>Instrukcja</th>
+                        <th>Ilość w magazynie</th>
+                        <th>Kategoria</th>
+                        <th>Forma</th>
+                        <th>Cena</th>
+                        <th>Dawka</th>
+                        <th>Data rozpoczęcia</th>
+                        <th>Data zakończenia</th>
+                        <th>Data ważności</th>
+                        <th>Dostępność</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($medicines as $medicine)
+                        <tr>
+                            <td>{{ $medicine->name }}</td>
+                            <td>{{ $medicine->instruction }}</td>
+                            <td>{{ $medicine->warehouse_quantity }}</td>
+                            <td>{{ $medicine->drug_category }}</td>
+                            <td>{{ $medicine->drug_form }}</td>
+                            <td>{{ $medicine->price }}</td>
+                            <td>{{ $medicine->dose }}</td>
+                            <td>{{ $medicine->date_start }}</td>
+                            <td>{{ $medicine->date_end }}</td>
+                            <td>{{ $medicine->expiration_date }}</td>
+                            <td>{{ $medicine->availability }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
         </div>
       </div>
 

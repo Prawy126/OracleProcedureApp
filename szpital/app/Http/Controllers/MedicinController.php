@@ -236,7 +236,9 @@ class MedicinController extends Controller
 
             return redirect()->route('medicinIndex')->with('success', 'Lek usunięty pomyślnie.');
         } catch (\Exception $e) {
-            return redirect()->route('medicinIndex')->with('error', 'Błąd przy usuwaniu leku: ' . $e->getMessage());
+            return redirect()->route('medicinIndex')->withErrors([
+                'Błąd' => 'Nie można usunąć leku, który jest przypisany do pacejnta',
+            ]);
         }
     }
 }

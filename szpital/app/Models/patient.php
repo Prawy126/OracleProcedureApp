@@ -24,4 +24,8 @@ class Patient extends Model
     {
         return $this->belongsTo(Medicin::class);
     }
+    public function procedure(): HasMany
+    {
+        return $this->hasMany(Procedure::class);
+    }
 }

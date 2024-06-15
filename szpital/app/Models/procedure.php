@@ -12,7 +12,7 @@ class Procedure extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['treatment_type_id','room_id','date','time','cost','status'];
+    protected $fillable = ['treatment_type_id','room_id','date','time','cost','status','patient_id'];
 
     public $timestamps = false;
 
@@ -39,4 +39,10 @@ class Procedure extends Model
     {
         return $this->belongsTo(TreatmentType::class);
     }
+
+    public function patient(): BelongsTo
+    {
+        return $this->belongsTo(Patient::class);
+    }
+
 }

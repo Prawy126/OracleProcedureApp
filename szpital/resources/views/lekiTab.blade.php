@@ -96,7 +96,7 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="inputFormaLeku">Forma leku</label>
-                        <select class="form-control" id="inputFormaLeku" name="drug_form" required>
+                        <select class="form-select" id="inputFormaLeku" name="drug_form" required>
                             <option value="tabletki">Tabletki</option>
                             <option value="syrop">Syrop</option>
                             <option value="zastrzyk">Zastrzyk</option>
@@ -108,7 +108,7 @@
                     </div>
                     <div class="form-group">
                         <label for="inputKategoriaLeku">Kategoria Leku</label>
-                        <select class="form-control" id="inputKategoriaLeku" name="drug_category" required>
+                        <select class="form-select" id="inputKategoriaLeku" name="drug_category" required>
                             <option value="przeciwbólowe">Przeciwbólowe</option>
                             <option value="antybiotyki">Antybiotyki</option>
                             <option value="przeciwwirusowe">Przeciwwirusowe</option>

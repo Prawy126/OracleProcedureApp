@@ -44,7 +44,7 @@
             <div class="form-group row mb-4">
                 <label for="inputStatusSali" class="col-md-2 col-form-label">Status sali:</label>
                 <div class="col-md-4">
-                    <select class="form-control" id="inputStatusSali" name="status">
+                    <select class="form-select" id="inputStatusSali" name="status">
                         <option value="Wolna" {{ $room['STATUS'] == 'Wolna' ? 'selected' : '' }}>Wolna</option>
                         <option value="Zajęta" {{ $room['STATUS'] == 'Zajęta' ? 'selected' : '' }}>Zajęta</option>
                         <option value="Niedostępna" {{ $room['STATUS'] == 'Niedostępna' ? 'selected' : '' }}>Niedostępna</option>
@@ -54,8 +54,8 @@
             <div class="form-group row mb-4">
                 <label for="inputTypSali" class="col-md-2 col-form-label">Typ sali:</label>
                 <div class="col-md-4">
-                    <select class="form-control" id="inputTypSali" name="type_room">
-                        <option value="dla_pacjenta" {{ $room['TYPE_ROOM'] == 'dla_pacjenta' ? 'selected' : '' }}>dla_pacjenta</option>
+                    <select class="form-select" id="inputTypSali" name="type_room">
+                        <option value="Dla pacjentów" {{ $room['TYPE_ROOM'] == 'Dla pacjentów' ? 'selected' : '' }}>dla_pacjenta</option>
                         <option value="operacyjna" {{ $room['TYPE_ROOM'] == 'operacyjna' ? 'selected' : '' }}>operacyjna</option>
                     </select>
                 </div>

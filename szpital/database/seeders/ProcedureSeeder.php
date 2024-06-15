@@ -21,7 +21,8 @@ class ProcedureSeeder extends Seeder
             'date' => '2024-06-12 15:30',
             'time' => '01:30',
             'cost' => 560,
-            'status' => 1
+            'status' => 1,
+            'patient_id' => 1
         ]]);
     }
 }

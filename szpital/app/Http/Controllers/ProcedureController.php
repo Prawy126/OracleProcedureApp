@@ -192,13 +192,33 @@ class ProcedureController extends Controller
             abort(403);
         }
 
-        DB::transaction(function () use ($id) {
-            $pdo = DB::getPdo();
-            $stmt = $pdo->prepare('CALL DELETE_PROCEDURE(:p0)');
-            $stmt->bindParam(':p0', $id, PDO::PARAM_INT);
-            $stmt->execute();
-        });
+        try {
+            DB::transaction(function () use ($id) {
+                $pdo = DB::getPdo();
+                $stmt = $pdo->prepare('CALL DELETE_PROCEDURE(:p0)');
+                $stmt->bindParam(':p0', $id, PDO::PARAM_INT);
+                $stmt->execute();
+            });
 
-        return redirect()->route('proceduresIndex');
+            return redirect()->route('proceduresIndex')->with('success', 'Procedure deleted successfully.');
+        } catch (\PDOException $e) {
+            // Check if errorInfo is set and contains the error code
+            $errorCode = isset($e->errorInfo[1]) ? $e->errorInfo[1] : null;
+            if ($errorCode == -20001) {
+                // Custom error handling for procedure assignment
+                return redirect()->route('proceduresIndex')->withErrors([
+                    'Błąd' => 'Nie można usunąć procedury, która jest już przypisana.',
+                ]);
+            } else {
+                // General error handling
+                return redirect()->route('proceduresIndex')->withErrors([
+                    'Błąd' => 'Nie można usunąć zabiegu, zanim nie usunie się przypisań'
+                ]);
+            }
+        } catch (\Exception $e) {
+            return redirect()->route('proceduresIndex')->withErrors([
+                'Błąd' => 'Error deleting procedure: ' . $e->getMessage(),
+            ]);
+        }
     }
 }

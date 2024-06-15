@@ -22,7 +22,15 @@
             </div>
         </form>
     </div>
-
+    @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
     <div class="container mt-4">
         <div class="table-responsive">
             <table class="table table-bordered table-hover">
@@ -80,7 +88,7 @@
                 </div>
                 <div class="form-group col-md-2">
                     <select class="form-select" name="user_id" id="inputUserID" required>
-                        <option value="{{ $nurses["USER_ID"] }}" disabled selected>Wybierz konto</option>
+                        <option value="" disabled selected>Wybierz konto</option>
                         @foreach($user_ids as $userId)
                             <option value="{{ $userId->id }}">{{ $userId->id }}</option>
                         @endforeach

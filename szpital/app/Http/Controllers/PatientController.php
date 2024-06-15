@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Patient;
 use App\Models\Room;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use PDO;
 use Illuminate\Support\Facades\Gate;
 
@@ -32,9 +33,40 @@ class PatientController extends Controller
             abort(403);
         }
 
-        $patients = Patient::all();
-        return view('pacjent', ['patients' => $patients]);
+        // Pobranie id zalogowanego użytkownika
+        $kontoId = Auth::user()->id;
+
+        // Pobranie id pacjenta na podstawie user_id
+        $patientId = DB::table('PATIENTS')
+            ->where('user_id', $kontoId)
+            ->value('id');
+
+        if (!$patientId) {
+            // Obsługa przypadku, gdy pacjent nie został znaleziony
+            return redirect()->route('home')->withErrors(['Błąd' => 'Nie znaleziono przypisanego pacjenta.']);
+        }
+
+        // Pobranie wszystkich leków przypisanych do zalogowanego pacjenta
+        $medicines = DB::select('
+            SELECT
+                m.*,
+                am.dose,
+                TO_CHAR(am.date_start, \'YYYY-MM-DD\') AS date_start,
+                TO_CHAR(am.date_end, \'YYYY-MM-DD\') AS date_end,
+                TO_CHAR(am.expiration_date, \'YYYY-MM-DD\') AS expiration_date,
+                am.availability
+            FROM ASSIGNMENT_MEDICINES am
+            JOIN MEDICINS m ON am.medicin_id = m.id
+            WHERE am.patient_id = :patientId
+        ', ['patientId' => $patientId]);
+
+        return view('pacjent', [
+            'medicines' => $medicines,
+        ]);
     }
+
+
+
 
     public function store(Request $request)
     {
@@ -127,7 +159,7 @@ class PatientController extends Controller
             return redirect()->route('patientIndex')->with('error', 'Patient not found.');
         }
         //dd($patient);
-        $rooms = Room::where('type_room', 'Dla_pacjentów')->get();
+        $rooms = Room::where('type_room', 'Dla pacjentów')->get();
         $user_ids = User::where('account_type', 0)->get();
         $nurses = Nurse::all();
         return view('edycjaPacjenci', compact('patient','rooms','user_ids', 'nurses'));

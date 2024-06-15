@@ -88,7 +88,7 @@
                     <input type="text" class="form-control" name="rlocation" id="inputLokalizacja" placeholder="Lokalizacja" required>
                 </div>
                 <div class="form-group col-md-2">
-                    <select class="form-control" name="status" id="inputStatusSali" required>
+                    <select class="form-select" name="status" id="inputStatusSali" required>
                         <option value="" disabled selected>Status sali</option>
                         <option value="Wolna">Wolna</option>
                         <option value="Zajęta">Zajęta</option>
@@ -96,9 +96,9 @@
                     </select>
                 </div>
                 <div class="form-group col-md-2">
-                    <select class="form-control" name="type_room" id="inputTypSali" required>
+                    <select class="form-select" name="type_room" id="inputTypSali" required>
                         <option value="" disabled selected>Typ sali</option>
-                        <option value="dla_pacjenta">dla pacjenta</option>
+                        <option value="Dla pacjentów">dla pacjenta</option>
                         <option value="operacyjna">operacyjna</option>
                     </select>
                 </div>

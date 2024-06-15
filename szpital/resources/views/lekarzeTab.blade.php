@@ -25,6 +25,15 @@
 
     <div class="container mt-4">
         <div class="table-responsive">
+            @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
             <table class="table table-bordered table-hover">
                 <thead>
                     <tr>
@@ -52,7 +61,7 @@
                                 <form action="{{ route('doctorDelete', $doc->id) }}" method="POST">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                    <button type="submit" class="btn btn-danger">Usuń</button>
                                 </form>
                             </td>
                         </tr>

@@ -1,7 +1,7 @@
 <?php
 
-use App\Models\room;
-use App\Models\treatment_type;
+use App\Models\Patient;
+use App\Models\Room;
 use App\Models\TreatmentType;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -17,11 +17,12 @@ return new class extends Migration
         Schema::create('procedures', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(TreatmentType::class)->constrained();
-            $table->foreignIdFor(room::class)->constrained();
+            $table->foreignIdFor(Room::class)->constrained();
             $table->timestamp('date');
             $table->string('time');
             $table->decimal('cost',10,2);
             $table->integer('status');
+            $table->foreignIdFor(Patient::class)->constrained();
         });
     }
 

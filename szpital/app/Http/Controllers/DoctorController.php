@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Doctor;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Gate;
 use PDO;
@@ -18,7 +19,7 @@ class DoctorController extends Controller
         }
 
         $doctors = Doctor::all();
-        $user_ids = User::where('account_type', 0)->pluck('id');
+        $user_ids = DB::select('SELECT * FROM USERS WHERE ACCOUNT_TYPE = ?', [0]);
 
         return view('lekarzeTab', compact('doctors', 'user_ids'));
     }
@@ -30,9 +31,36 @@ class DoctorController extends Controller
             abort(403);
         }
 
-        $doctors = Doctor::all();
-        return view('lekarz', ['doctors' => $doctors]);
+        // Pobranie id zalogowanego użytkownika
+        $kontoId = Auth::user()->id;
+
+        // Pobranie id pacjenta na podstawie user_id
+        $doctorId = DB::table('DOCTORS')
+            ->where('user_id', $kontoId)
+            ->value('id');
+        // Pobranie liczby zabiegów na dziś
+        $today = date('Y-m-d');
+        $proceduresCount = DB::table('PROCEDURES')
+            ->join('TREATMENTS_DOCTORS', 'PROCEDURES.ID', '=', 'TREATMENTS_DOCTORS.PROCEDURE_ID')
+            ->where('TREATMENTS_DOCTORS.DOCTOR_ID', $doctorId)
+            ->whereDate('PROCEDURES.DATE', $today)
+            ->count();
+
+        // Pobranie zaplanowanych zabiegów na dziś
+        $procedures = DB::table('PROCEDURES')
+            ->join('TREATMENTS_DOCTORS', 'PROCEDURES.ID', '=', 'TREATMENTS_DOCTORS.PROCEDURE_ID')
+            ->join('TREATMENT_TYPES', 'PROCEDURES.TREATMENT_TYPE_ID', '=', 'TREATMENT_TYPES.ID')
+            ->join('ROOMS', 'PROCEDURES.ROOM_ID', '=', 'ROOMS.ID')
+            ->select('PROCEDURES.ID', 'TREATMENT_TYPES.NAME as TREATMENT_NAME', 'ROOMS.RNUMBER as ROOM_NUMBER', 'PROCEDURES.DATE', 'PROCEDURES.TIME', 'PROCEDURES.COST', 'PROCEDURES.STATUS')
+            ->where('TREATMENTS_DOCTORS.DOCTOR_ID', $doctorId)
+            ->get();
+        //dd($procedures);
+        return view('lekarz', [
+            'proceduresCount' => $proceduresCount,
+            'procedures' => $procedures,
+        ]);
     }
+
 
     public function store(Request $request)
     {
@@ -170,8 +198,25 @@ class DoctorController extends Controller
             });
 
             return redirect()->route('doctorIndex')->with('success', 'Doctor deleted successfully.');
+        } catch (\PDOException $e) {
+            // Check if errorInfo is set and contains the error code
+            $errorCode = isset($e->errorInfo[1]) ? $e->errorInfo[1] : null;
+            if ($errorCode == 20001) {
+                // Custom error handling for doctor assignment
+                return redirect()->route('doctorIndex')->withErrors([
+                    'Błąd' => 'Nie można usunąć lekarza który jest już przypisany.',
+                ]);
+            } else {
+                // General error handling
+                return redirect()->route('doctorIndex')->withErrors([
+                    'Błąd' => 'Nie można usunąć lekarza który jest już przypisany.',
+                ]);
+            }
         } catch (\Exception $e) {
-            return redirect()->route('doctorIndex')->with('error', 'Error deleting doctor: ' . $e->getMessage());
+            return redirect()->route('doctorIndex')->withErrors([
+                'Błąd' => 'Wystąpił błąd',
+            ]);
         }
     }
+
 }

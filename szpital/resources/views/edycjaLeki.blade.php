@@ -50,7 +50,7 @@
             <div class="form-group row mb-4">
                 <label for="inputFormaLeku" class="col-md-2 col-form-label">Forma leku:</label>
                 <div class="col-md-4">
-                    <select class="form-control" id="inputFormaLeku" name="drug_form" required>
+                    <select class="form-select" id="inputFormaLeku" name="drug_form" required>
                         <option value="tabletki" {{ $medicin['DRUG_FORM'] == 'tabletki' ? 'selected' : '' }}>Tabletki</option>
                         <option value="syrop" {{ $medicin['DRUG_FORM'] == 'syrop' ? 'selected' : '' }}>Syrop</option>
                         <option value="zastrzyk" {{ $medicin['DRUG_FORM'] == 'zastrzyk' ? 'selected' : '' }}>Zastrzyk</option>
@@ -60,7 +60,7 @@
             <div class="form-group row mb-4">
                 <label for="inputKategoriaLeku" class="col-md-2 col-form-label">Kategoria Leku:</label>
                 <div class="col-md-4">
-                    <select class="form-control" id="inputKategoriaLeku" name="drug_category" required>
+                    <select class="form-select" id="inputKategoriaLeku" name="drug_category" required>
                         <option value="przeciwbólowe" {{ $medicin['DRUG_CATEGORY'] == 'przeciwbólowe' ? 'selected' : '' }}>Przeciwbólowe</option>
                         <option value="antybiotyki" {{ $medicin['DRUG_CATEGORY'] == 'antybiotyki' ? 'selected' : '' }}>Antybiotyki</option>
                         <option value="przeciwwirusowe" {{ $medicin['DRUG_CATEGORY'] == 'przeciwwirusowe' ? 'selected' : '' }}>Przeciwwirusowe</option>

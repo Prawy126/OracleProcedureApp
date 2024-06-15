@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="dark">
 
@@ -24,14 +23,14 @@
         </form>
     </div>
     @if ($errors->any())
-                <div class="alert alert-danger">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
     <div class="container mt-4">
         <div class="table-responsive">
             <table class="table table-bordered table-hover">
@@ -57,7 +56,21 @@
                         <td>{{ $procedure->date }}</td>
                         <td>{{ $procedure->time }}</td>
                         <td>{{ $procedure->cost }}</td>
-                        <td>{{ $procedure->status }}</td>
+                        <td>
+                            @switch($procedure->status)
+                                @case(1)
+                                    <span class="badge bg-warning">Przed zabiegiem</span>
+                                    @break
+                                @case(2)
+                                    <span class="badge bg-danger">W trakcie zabiegu</span>
+                                    @break
+                                @case(3)
+                                    <span class="badge bg-success">Po zabiegu</span>
+                                    @break
+                                @default
+                                    <span class="badge bg-secondary">Nieznany</span>
+                            @endswitch
+                        </td>
                         <td><a href="{{ route('proceduresShow', $procedure->id) }}">Edytuj</a></td>
                         <td>
                             <form action="{{ route('proceduresDestroy', $procedure->id) }}" method="POST">
@@ -95,7 +108,7 @@
                     </select>
                 </div>
                 <div class="form-group col-md-2">
-                    <input type="datetime" class="form-control" name="date" placeholder="Data">
+                    <input type="datetime-local" class="form-control" name="date" placeholder="Data">
                 </div>
                 <div class="form-group col-md-2">
                     <input type="text" class="form-control" name="time" placeholder="Czas trwania">

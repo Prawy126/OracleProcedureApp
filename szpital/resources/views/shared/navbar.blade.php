@@ -7,9 +7,13 @@
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item active">
-                <a class="nav-link" href="{{ route('admin') }}">Dashboard</a>
-            </li>
+            @if (Auth::check())
+                @if (Auth::user()->account_type == 1)
+                    <li class="nav-item active">
+                        <a class="nav-link" href="{{ route('admin') }}">Dashboard</a>
+                    </li>
+                @endif
+            @endif
             @can('access-admin')
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown1" role="button"
@@ -21,18 +25,26 @@
                 </li>
             @endcan
             @can('access-admin')
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown2" role="button"
-                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Zarządzaj szpitalem
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown2">
-                    <a class="dropdown-item" href="{{ route('patientIndex') }}">Pacjenci</a>
-                    <a class="dropdown-item" href="{{ route('medicinIndex') }}">leki</a>
-                    <a class="dropdown-item" href="{{ route('roomIndex') }}">Sale</a>
-                </div>
-            </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown2" role="button"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Zarządzaj szpitalem
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown2">
+                        <a class="dropdown-item" href="{{ route('patientIndex') }}">Pacjenci</a>
+                        <a class="dropdown-item" href="{{ route('medicinIndex') }}">leki</a>
+                        <a class="dropdown-item" href="{{ route('roomIndex') }}">Sale</a>
+                    </div>
+                </li>
             @endcan
+            @can('access-doctor')
+            <li class="nav-item active">
+                <a class="nav-link" href="{{ route('doctor.dashboard') }}">Dashboard</a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="{{ route('assignmentMedicinIndex') }}">Przypisz lek</a>
+            </li>
+        @endcan
         </ul>
 
         @if (Auth::check())

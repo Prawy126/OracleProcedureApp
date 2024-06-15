@@ -12,9 +12,10 @@ class AssignmentMedicineController extends Controller
 {
     public function index()
     {
-        if (Gate::denies('access-admin')) {
+        if (Gate::denies('access-admin') && Gate::denies('access-doctor')) {
             abort(403);
         }
+
 
         $medicins = Medicin::all(['id', 'name']);
         $patients = Patient::all(['id', 'name', 'surname']);
@@ -38,9 +39,10 @@ class AssignmentMedicineController extends Controller
 
     public function store(Request $request)
     {
-        if (Gate::denies('access-admin')) {
+        if (Gate::denies('access-admin') && Gate::denies('access-doctor')) {
             abort(403);
         }
+
 
         $validated = $request->validate([
             'patient_id' => 'required|integer|exists:patients,id',
@@ -88,9 +90,10 @@ class AssignmentMedicineController extends Controller
 
     public function edit($id)
     {
-        if (Gate::denies('access-admin')) {
+        if (Gate::denies('access-admin') && Gate::denies('access-doctor')) {
             abort(403);
         }
+
 
         $assignmentMedicine = null;
 
@@ -132,11 +135,13 @@ class AssignmentMedicineController extends Controller
 
     public function update(Request $request, $id)
     {
-        if (Gate::denies('access-admin')) {
+        if (Gate::denies('access-admin') && Gate::denies('access-doctor')) {
             abort(403);
         }
 
+
         $validated = $request->validate([
+            'patient_id' => 'required|integer|exists:patients,id',
             'medicin_id' => 'required|integer|exists:medicins,id',
             'dose' => 'required|numeric|min:0',
             'date_start' => 'required|date',
@@ -162,7 +167,7 @@ class AssignmentMedicineController extends Controller
             'availability.string' => 'Pole dostępność musi być ciągiem znaków.',
             'availability.max' => 'Pole dostępność nie może przekraczać 1 znaku.',
         ]);
-
+       // dd($request);
         DB::statement('CALL UPDATE_ASSIGNMENT_MEDICINES(?, ?, ?, ?, ?, ?, ?, ?)', [
             $id,
             $validated['patient_id'],
@@ -179,9 +184,10 @@ class AssignmentMedicineController extends Controller
 
     public function destroy($id)
     {
-        if (Gate::denies('access-admin')) {
+        if (Gate::denies('access-admin') && Gate::denies('access-doctor')) {
             abort(403);
         }
+
 
         DB::statement('CALL DELETE_ASSIGNMENT_MEDICINES(?)', [$id]);
 

@@ -35,7 +35,7 @@
                 </div>
                 <div class="form-group col-md-6">
                     <label for="patientId">Id pacjenta</label>
-                    <select id="patientId" class="form-select" name="patient_id" disabled>
+                    <select id="patientId" class="form-select" name="patient_id">
                         @foreach($patients as $patient)
                             <option value="{{ $patient->id }}" {{ $patient->id == $assignmentMedicine['PATIENT_ID'] ? 'selected' : '' }}>
                                 {{ $patient->id }} {{ $patient->name }} {{ $patient->surname }}

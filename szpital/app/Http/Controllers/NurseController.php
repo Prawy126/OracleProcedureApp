@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\Nurse;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Gate;
@@ -27,8 +28,8 @@ class NurseController extends Controller
         }
         $nurses = Nurse::all();
         //dd($nurses);
-        $user_ids = User::where('account_type', 0);
-        //dd(User::where('account_type', 0));
+        $user_ids = DB::select('SELECT * FROM USERS WHERE ACCOUNT_TYPE = ?', [0]);
+        //dd($user_ids);
         return view('pielegniarkiTab', [
             'nurses' => $nurses,
             'user_ids' => $user_ids
@@ -41,8 +42,41 @@ class NurseController extends Controller
             abort(403);
         }
 
-        return view('pielegniarka');
+        // Pobranie id zalogowanego użytkownika
+        $kontoId = Auth::user()->id;
+
+        // Pobranie id pacjenta na podstawie user_id
+        $nurseId = DB::table('NURSES')
+            ->where('user_id', $kontoId)
+            ->value('id');
+        // Liczba zabiegów na dziś
+        $proceduresToday = DB::table('PROCEDURES')
+            ->whereDate('DATE', '=', today())
+            ->count();
+
+        // Liczba pacjentów pod nadzorem pielęgniarki
+        $patientsUnderCare = DB::table('PATIENTS')
+            ->where('NURSE_ID', '=', $nurseId)
+            ->count();
+
+        // Zaplanowane zabiegi na dziś
+        $todayProcedures = DB::table('PROCEDURES')
+            ->join('TREATMENT_NURSES', 'PROCEDURES.ID', '=', 'TREATMENT_NURSES.PROCEDURE_ID')
+            ->where('TREATMENT_NURSES.NURSE_ID', '=', $nurseId)
+            ->whereDate('PROCEDURES.DATE', '=', today())
+            ->select('PROCEDURES.ID', 'PROCEDURES.TREATMENT_TYPE_ID', 'PROCEDURES.ROOM_ID', 'PROCEDURES.DATE', 'PROCEDURES.TIME', 'PROCEDURES.STATUS')
+            ->get();
+
+        // Pacjenci pod nadzorem pielęgniarki
+        $patients = DB::table('PATIENTS')
+            ->join('ROOMS', 'PATIENTS.ROOM_ID', '=', 'ROOMS.ID')
+            ->where('PATIENTS.NURSE_ID', '=', $nurseId)
+            ->select('PATIENTS.ID', 'PATIENTS.NAME', 'PATIENTS.SURNAME', 'ROOMS.RNUMBER', 'PATIENTS.TIME_VISIT')
+            ->get();
+
+        return view('pielegniarka', compact('proceduresToday', 'patientsUnderCare', 'todayProcedures', 'patients'));
     }
+
 
     public function store(Request $request)
     {
@@ -166,17 +200,36 @@ class NurseController extends Controller
             abort(403);
         }
 
-        DB::transaction(function () use ($id) {
-            $pdo = DB::getPdo();
-            $stmt = $pdo->prepare("
-                BEGIN
-                    USERS_PKG.delete_nurse(:id);
-                END;
-            ");
-            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-            $stmt->execute();
-        });
+        try {
+            DB::transaction(function () use ($id) {
+                $pdo = DB::getPdo();
+                $stmt = $pdo->prepare("
+                    BEGIN
+                        USERS_PKG.delete_nurse(:id);
+                    END;
+                ");
+                $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+                $stmt->execute();
+            });
 
-        return redirect()->route('nurseIndex')->with('success', 'Nurse deleted successfully.');
+            return redirect()->route('nurseIndex')->with('success', 'Nurse deleted successfully.');
+        } catch (\PDOException $e) {
+            // Check if errorInfo is set and contains the error code
+            $errorCode = isset($e->errorInfo[1]) ? $e->errorInfo[1] : null;
+            //dd($errorCode); jest nullem
+            if ($errorCode == 20001) {
+                // Custom error handling for nurse assignment
+                return redirect()->route('nurseIndex')->withErrors([
+                    'Błąd' => 'Nie można usunąć pielęgniarki która jest już przypisana',
+                ]);
+            } else {
+                // General error handling
+                return redirect()->route('nurseIndex')->withErrors([
+                    'Błąd' => 'Nie można usunąć pielęgniarki która jest już przypisana',
+                ]);
+            }
+        }
     }
+
+
 }

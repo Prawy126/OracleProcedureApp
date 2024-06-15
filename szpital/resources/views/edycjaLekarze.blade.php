@@ -36,7 +36,7 @@
             <div class="form-group row mb-4">
                 <label for="inputSpecjalizacja" class="col-md-2 col-form-label">Specjalizacja:</label>
                 <div class="col-md-4">
-                    <select class="form-control" id="inputSpecjalizacja" name="specialization" required>
+                    <select class="form-select" id="inputSpecjalizacja" name="specialization" required>
                         <option value="kardiologia" {{ $doctor['SPECIALIZATION'] == 'kardiologia' ? 'selected' : '' }}>Kardiologia</option>
                         <option value="neurologia" {{ $doctor['SPECIALIZATION'] == 'neurologia' ? 'selected' : '' }}>Neurologia</option>
                         <option value="ortopedia" {{ $doctor['SPECIALIZATION'] == 'ortopedia' ? 'selected' : '' }}>Ortopedia</option>
@@ -57,7 +57,8 @@
             <div class="form-group row mb-4">
                 <label for="inputIDKonta" class="col-md-2 col-form-label">ID konta:</label>
                 <div class="col-md-4">
-                    <select class="form-control" id="inputIDKonta" name="user_id" required>
+                    <select class="form-select" id="inputIDKonta" name="user_id" required>
+                        <option value="{{$doctor['USER_ID']}}">{{ true ? 'nie zmieniaj' : '' }}</option>
                         @foreach($user_ids as $user_id)
                             <option value="{{ $user_id }}" {{ $doctor['USER_ID'] == $user_id ? 'selected' : '' }}>{{ $user_id }}</option>
                         @endforeach
