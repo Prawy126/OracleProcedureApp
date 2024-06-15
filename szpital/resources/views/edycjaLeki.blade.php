@@ -32,25 +32,25 @@
             <div class="form-group row mb-4">
                 <label for="inputNazwaLeku" class="col-md-2 col-form-label">Nazwa leku:</label>
                 <div class="col-md-4">
-                    <input type="text" class="form-control" id="inputNazwaLeku" name="name" value="{{ $medicin['NAME'] }}">
+                    <input type="text" class="form-control" id="inputNazwaLeku" name="name" value="{{ $medicin['NAME'] }}" required maxlength="200">
                 </div>
             </div>
             <div class="form-group row mb-4">
                 <label for="inputInstrukcja" class="col-md-2 col-form-label">Instrukcja:</label>
                 <div class="col-md-4">
-                    <textarea class="form-control" id="inputInstrukcja" rows="6" name="instruction">{{ $medicin['INSTRUCTION'] }}</textarea>
+                    <textarea class="form-control" id="inputInstrukcja" rows="6" name="instruction" required>{{ $medicin['INSTRUCTION'] }}</textarea>
                 </div>
             </div>
             <div class="form-group row mb-4">
                 <label for="inputIloscMagazyn" class="col-md-2 col-form-label">Ilość w magazynie:</label>
                 <div class="col-md-4">
-                    <input type="number" class="form-control" id="inputIloscMagazyn" name="warehouse_quantity" value="{{ $medicin['WAREHOUSE_QUANTITY'] }}">
+                    <input type="number" class="form-control" id="inputIloscMagazyn" name="warehouse_quantity" value="{{ $medicin['WAREHOUSE_QUANTITY'] }}" required min="0">
                 </div>
             </div>
             <div class="form-group row mb-4">
                 <label for="inputFormaLeku" class="col-md-2 col-form-label">Forma leku:</label>
                 <div class="col-md-4">
-                    <select class="form-control" id="inputFormaLeku" name="drug_form">
+                    <select class="form-control" id="inputFormaLeku" name="drug_form" required>
                         <option value="tabletki" {{ $medicin['DRUG_FORM'] == 'tabletki' ? 'selected' : '' }}>Tabletki</option>
                         <option value="syrop" {{ $medicin['DRUG_FORM'] == 'syrop' ? 'selected' : '' }}>Syrop</option>
                         <option value="zastrzyk" {{ $medicin['DRUG_FORM'] == 'zastrzyk' ? 'selected' : '' }}>Zastrzyk</option>
@@ -60,7 +60,7 @@
             <div class="form-group row mb-4">
                 <label for="inputKategoriaLeku" class="col-md-2 col-form-label">Kategoria Leku:</label>
                 <div class="col-md-4">
-                    <select class="form-control" id="inputKategoriaLeku" name="drug_category">
+                    <select class="form-control" id="inputKategoriaLeku" name="drug_category" required>
                         <option value="przeciwbólowe" {{ $medicin['DRUG_CATEGORY'] == 'przeciwbólowe' ? 'selected' : '' }}>Przeciwbólowe</option>
                         <option value="antybiotyki" {{ $medicin['DRUG_CATEGORY'] == 'antybiotyki' ? 'selected' : '' }}>Antybiotyki</option>
                         <option value="przeciwwirusowe" {{ $medicin['DRUG_CATEGORY'] == 'przeciwwirusowe' ? 'selected' : '' }}>Przeciwwirusowe</option>
@@ -77,13 +77,13 @@
             <div class="form-group row mb-4">
                 <label for="inputCena" class="col-md-2 col-form-label">Cena:</label>
                 <div class="col-md-4">
-                    <input type="number" class="form-control" id="inputCena" name="price" value="{{ $medicin['PRICE'] }}">
+                    <input type="number" class="form-control" id="inputCena" name="price" value="{{ $medicin['PRICE'] }}" required min="0" step="0.01">
                 </div>
             </div>
             <div class="form-group row mb-4">
                 <label for="inputDawkaJednostka" class="col-md-2 col-form-label">Dawka jednostka:</label>
                 <div class="col-md-4">
-                    <input type="text" class="form-control" id="inputDawkaJednostka" name="dose_unit" value="{{ $medicin['DOSE_UNIT'] }}">
+                    <input type="text" class="form-control" id="inputDawkaJednostka" name="dose_unit" value="{{ $medicin['DOSE_UNIT'] }}" required maxlength="50">
                 </div>
             </div>
             <div class="form-group row mb-4">
@@ -97,3 +97,7 @@
         </form>
     </div>
 
+    @include('shared.footer')
+
+</body>
+</html>

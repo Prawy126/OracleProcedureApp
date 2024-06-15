@@ -60,7 +60,7 @@
                     <select class="form-control" id="inputUserID" name="user_id" required>
                         <option value="" disabled selected>Wybierz konto</option>
                         @foreach($user_ids as $user)
-                            <option value="{{ $user->id }}" {{ $patient['USER_ID'] == $user->id ? 'selected' : '' }}>
+                            <option value="{{ $patient->user_id }}" {{ $patient['USER_ID'] == $user->id ? 'selected' : '' }}>
                                 {{ $user->id }}
                             </option>
                         @endforeach
@@ -79,7 +79,7 @@
                     <select class="form-control" id="inputRoomID" name="room_id" required>
                         <option value="" disabled selected>Wybierz salę</option>
                         @foreach($rooms as $room)
-                            <option value="{{ $room->id }}" {{ $patient['ROOM_ID'] == $room->id ? 'selected' : '' }}>
+                            <option value="{{ $patient["ROOM_ID"]}}" {{ $patient['ROOM_ID'] == $room->id ? 'selected' : '' }}>
                                 {{ $room->id }} - Sala nr: {{ $room->number }}
                             </option>
                         @endforeach

@@ -1,7 +1,5 @@
---pakiet u¿ytkowników
+-- Pakiet users_pkg
 CREATE OR REPLACE PACKAGE users_pkg IS
-
-    -- Composite record types
     TYPE doctor_rec IS RECORD (
         id              NUMBER,
         name            VARCHAR2(20),
@@ -25,11 +23,10 @@ CREATE OR REPLACE PACKAGE users_pkg IS
         id              NUMBER,
         name            VARCHAR2(20),
         surname         VARCHAR2(30),
-        NUMBER_LICENSE        VARCHAR2(30),
+        NUMBER_LICENSE  VARCHAR2(30),
         user_id         NUMBER
     );
 
-    -- Procedure declarations
     PROCEDURE add_doctor(p_doctor IN doctor_rec);
     PROCEDURE get_doctor(p_doctor_id IN NUMBER, p_doctor OUT SYS_REFCURSOR);
     PROCEDURE update_doctor(p_doctor IN doctor_rec);
@@ -46,24 +43,22 @@ CREATE OR REPLACE PACKAGE users_pkg IS
     PROCEDURE delete_nurse(p_nurse_id IN NUMBER);
 
 END users_pkg;
+/
 
 CREATE OR REPLACE PACKAGE BODY users_pkg IS
 
-    -- Add a doctor
     PROCEDURE add_doctor(p_doctor IN doctor_rec) IS
     BEGIN
         INSERT INTO doctors (name, surname, specialization, license_number, user_id)
         VALUES (p_doctor.name, p_doctor.surname, p_doctor.specialization, p_doctor.license_number, p_doctor.user_id);
     END add_doctor;
 
-    -- Get a doctor
     PROCEDURE get_doctor(p_doctor_id IN NUMBER, p_doctor OUT SYS_REFCURSOR) IS
     BEGIN
         OPEN p_doctor FOR
         SELECT * FROM doctors WHERE id = p_doctor_id;
     END get_doctor;
 
-    -- Update a doctor
     PROCEDURE update_doctor(p_doctor IN doctor_rec) IS
     BEGIN
         UPDATE doctors
@@ -75,27 +70,23 @@ CREATE OR REPLACE PACKAGE BODY users_pkg IS
         WHERE id = p_doctor.id;
     END update_doctor;
 
-    -- Delete a doctor
     PROCEDURE delete_doctor(p_doctor_id IN NUMBER) IS
     BEGIN
         DELETE FROM doctors WHERE id = p_doctor_id;
     END delete_doctor;
 
-    -- Add a patient
     PROCEDURE add_patient(p_patient IN patient_rec) IS
     BEGIN
         INSERT INTO patients (name, surname, nurse_id, user_id, time_visit, room_id)
         VALUES (p_patient.name, p_patient.surname, p_patient.nurse_id, p_patient.user_id, p_patient.time_visit, p_patient.room_id);
     END add_patient;
 
-    -- Get a patient
     PROCEDURE get_patient(p_patient_id IN NUMBER, p_patient OUT SYS_REFCURSOR) IS
     BEGIN
         OPEN p_patient FOR
         SELECT * FROM patients WHERE id = p_patient_id;
     END get_patient;
 
-    -- Update a patient
     PROCEDURE update_patient(p_patient IN patient_rec) IS
     BEGIN
         UPDATE patients
@@ -108,27 +99,23 @@ CREATE OR REPLACE PACKAGE BODY users_pkg IS
         WHERE id = p_patient.id;
     END update_patient;
 
-    -- Delete a patient
     PROCEDURE delete_patient(p_patient_id IN NUMBER) IS
     BEGIN
         DELETE FROM patients WHERE id = p_patient_id;
     END delete_patient;
 
-    -- Add a nurse
     PROCEDURE add_nurse(p_nurse IN nurse_rec) IS
     BEGIN
         INSERT INTO nurses (name, surname, NUMBER_LICENSE, user_id)
         VALUES (p_nurse.name, p_nurse.surname, p_nurse.NUMBER_LICENSE, p_nurse.user_id);
     END add_nurse;
 
-    -- Get a nurse
     PROCEDURE get_nurse(p_nurse_id IN NUMBER, p_nurse OUT SYS_REFCURSOR) IS
     BEGIN
         OPEN p_nurse FOR
         SELECT * FROM nurses WHERE id = p_nurse_id;
     END get_nurse;
 
-    -- Update a nurse
     PROCEDURE update_nurse(p_nurse IN nurse_rec) IS
     BEGIN
         UPDATE nurses
@@ -139,23 +126,23 @@ CREATE OR REPLACE PACKAGE BODY users_pkg IS
         WHERE id = p_nurse.id;
     END update_nurse;
 
-    -- Delete a nurse
     PROCEDURE delete_nurse(p_nurse_id IN NUMBER) IS
     BEGIN
         DELETE FROM nurses WHERE id = p_nurse_id;
     END delete_nurse;
 
 END users_pkg;
+/
 
--- pakiet elementy szpitalu
+-- Pakiet szpital
 CREATE OR REPLACE PACKAGE szpital AS
-    -- Typy rekordów
     TYPE medicin_rec IS RECORD (
         id NUMBER,
         name VARCHAR2(200),
         instruction CLOB,
         warehouse_quantity NUMBER,
         drug_category VARCHAR2(200),
+        drug_form VARCHAR2(200),
         price NUMBER,
         dose_unit VARCHAR2(200)
     );
@@ -166,7 +153,7 @@ CREATE OR REPLACE PACKAGE szpital AS
         rlocation VARCHAR2(200),
         status VARCHAR2(200),
         type_room VARCHAR2(200),
-        seats INTEGER
+        seats NUMBER
     );
 
     TYPE treatment_type_rec IS RECORD (
@@ -179,12 +166,12 @@ CREATE OR REPLACE PACKAGE szpital AS
         updated_at TIMESTAMP
     );
 
-    -- Procedury dla medicins
     PROCEDURE add_medicine(
         p_name IN VARCHAR2,
         p_instruction IN CLOB,
         p_warehouse_quantity IN NUMBER,
         p_drug_category IN VARCHAR2,
+        p_drug_form IN VARCHAR2,
         p_price IN NUMBER,
         p_dose_unit IN VARCHAR2
     );
@@ -200,6 +187,7 @@ CREATE OR REPLACE PACKAGE szpital AS
         p_instruction IN CLOB,
         p_warehouse_quantity IN NUMBER,
         p_drug_category IN VARCHAR2,
+        p_drug_form IN VARCHAR2,
         p_price IN NUMBER,
         p_dose_unit IN VARCHAR2
     );
@@ -208,7 +196,6 @@ CREATE OR REPLACE PACKAGE szpital AS
         p_medicin_id IN NUMBER
     );
 
-    -- Procedury dla rooms
     PROCEDURE add_room(
         p_rnumber IN VARCHAR2,
         p_rlocation IN VARCHAR2,
@@ -227,14 +214,14 @@ CREATE OR REPLACE PACKAGE szpital AS
         p_rnumber IN VARCHAR2,
         p_rlocation IN VARCHAR2,
         p_status IN VARCHAR2,
-        p_type_room IN VARCHAR2
+        p_type_room IN VARCHAR2,
+        p_seats IN NUMBER
     );
 
     PROCEDURE delete_room(
         p_room_id IN NUMBER
     );
 
-    -- Procedury dla treatment_types
     PROCEDURE add_treatment_type(
         p_ID IN NUMBER,
         p_NAME IN VARCHAR2,
@@ -267,22 +254,22 @@ CREATE OR REPLACE PACKAGE szpital AS
         p_ID IN NUMBER
     );
 END szpital;
-
+/
 
 CREATE OR REPLACE PACKAGE BODY szpital AS
 
-    -- Procedury dla medicins
     PROCEDURE add_medicine(
         p_name IN VARCHAR2,
         p_instruction IN CLOB,
         p_warehouse_quantity IN NUMBER,
         p_drug_category IN VARCHAR2,
+        p_drug_form IN VARCHAR2,
         p_price IN NUMBER,
         p_dose_unit IN VARCHAR2
     ) IS
     BEGIN
-        INSERT INTO MEDICINS ("NAME", "INSTRUCTION", "WAREHOUSE_QUANTITY", "DRUG_CATEGORY", "PRICE", "DOSE_UNIT")
-        VALUES (p_name, p_instruction, p_warehouse_quantity, p_drug_category, p_price, p_dose_unit);
+        INSERT INTO MEDICINS ("NAME", "INSTRUCTION", "WAREHOUSE_QUANTITY", "DRUG_CATEGORY", "DRUG_FORM", "PRICE", "DOSE_UNIT")
+        VALUES (p_name, p_instruction, p_warehouse_quantity, p_drug_category, p_price, p_drug_form, p_dose_unit);
     END add_medicine;
 
     PROCEDURE get_medicin(
@@ -300,6 +287,7 @@ CREATE OR REPLACE PACKAGE BODY szpital AS
         p_instruction IN CLOB,
         p_warehouse_quantity IN NUMBER,
         p_drug_category IN VARCHAR2,
+        p_drug_form IN VARCHAR2,
         p_price IN NUMBER,
         p_dose_unit IN VARCHAR2
     ) IS
@@ -309,6 +297,7 @@ CREATE OR REPLACE PACKAGE BODY szpital AS
             instruction = p_instruction,
             warehouse_quantity = p_warehouse_quantity,
             drug_category = p_drug_category,
+            drug_form = p_drug_form,
             price = p_price,
             dose_unit = p_dose_unit
         WHERE id = p_medicin_id;
@@ -321,7 +310,6 @@ CREATE OR REPLACE PACKAGE BODY szpital AS
         DELETE FROM medicins WHERE id = p_medicin_id;
     END delete_medicin;
 
-    -- Procedury dla rooms
     PROCEDURE add_room(
         p_rnumber IN VARCHAR2,
         p_rlocation IN VARCHAR2,
@@ -348,14 +336,16 @@ CREATE OR REPLACE PACKAGE BODY szpital AS
         p_rnumber IN VARCHAR2,
         p_rlocation IN VARCHAR2,
         p_status IN VARCHAR2,
-        p_type_room IN VARCHAR2
+        p_type_room IN VARCHAR2,
+        p_seats IN NUMBER
     ) IS
     BEGIN
         UPDATE rooms
         SET rnumber = p_rnumber,
             rlocation = p_rlocation,
             status = p_status,
-            type_room = p_type_room
+            type_room = p_type_room,
+            seats = p_seats
         WHERE id = p_room_id;
     END update_room;
 
@@ -366,7 +356,6 @@ CREATE OR REPLACE PACKAGE BODY szpital AS
         DELETE FROM rooms WHERE id = p_room_id;
     END delete_room;
 
-    -- Procedury dla treatment_types
     PROCEDURE add_treatment_type(
         p_ID IN NUMBER,
         p_NAME IN VARCHAR2,
@@ -406,7 +395,7 @@ CREATE OR REPLACE PACKAGE BODY szpital AS
     ) IS
     BEGIN
         UPDATE TREATMENT_TYPES
-        SET NAME = p_NAME, DESCRIPTION = p_DESCRIPTION, RECOMMENDATIONS_BEFORE_SURGERY = p_RECOMMENDATIONS_AFTER_SURGERY,
+        SET NAME = p_NAME, DESCRIPTION = p_DESCRIPTION, RECOMMENDATIONS_BEFORE_SURGERY = p_RECOMMENDATIONS_BEFORE_SURGERY,
             RECOMMENDATIONS_AFTER_SURGERY = p_RECOMMENDATIONS_AFTER_SURGERY, UPDATED_AT = p_UPDATED_AT
         WHERE ID = p_ID;
     END update_treatment_type;
@@ -419,52 +408,66 @@ CREATE OR REPLACE PACKAGE BODY szpital AS
     END delete_treatment_type;
 
 END szpital;
+/
 
-
---sekwencja
-
+-- Sekwencje
 CREATE SEQUENCE TREATMENTS_DOCTORS_USERS_ID_SEQ
 START WITH 1
 INCREMENT BY 1
 NOCACHE
 NOCYCLE;
 
+CREATE SEQUENCE STATUSES_SEQ
+START WITH 1
+INCREMENT BY 1
+NOCACHE
+NOCYCLE;
 
+CREATE SEQUENCE ASSIGNMENT_MEDICINES_ID_SEQ
+START WITH 1
+INCREMENT BY 1
+NOCACHE
+NOCYCLE;
+
+CREATE SEQUENCE TREATMENTS_NURSES_ID_SEQ
+START WITH 1
+INCREMENT BY 1
+NOCACHE
+NOCYCLE;
+
+CREATE SEQUENCE PROCEDURES_ID_SEQ
+START WITH 1
+INCREMENT BY 1
+NOCACHE
+NOCYCLE;
+
+-- Procedury CRUD dla innych tabel
 CREATE OR REPLACE PROCEDURE ADD_TREATMENTS_DOCTORS (
     p_PROCEDURE_ID IN NUMBER,
     p_DOCTOR_ID IN NUMBER
-    
 ) AS
 BEGIN
-    INSERT INTO TREATMENTS_DOCTORS (ID,PROCEDURE_ID, DOCTOR_ID, CREATED_AT)
-    VALUES (TREATMENTS_DOCTORS_ID_SEQ.NEXTVAL,p_PROCEDURE_ID, p_DOCTOR_ID, SYSTIMESTAMP);
+    INSERT INTO TREATMENTS_DOCTORS (ID, PROCEDURE_ID, DOCTOR_ID, CREATED_AT)
+    VALUES (TREATMENTS_DOCTORS_USERS_ID_SEQ.NEXTVAL, p_PROCEDURE_ID, p_DOCTOR_ID, SYSTIMESTAMP);
 END;
 
 CREATE OR REPLACE PROCEDURE GET_TREATMENTS_DOCTORS (
-    p_DOCTOR_ID IN NUMBER,
+    p_ID IN NUMBER,
     p_RESULT OUT SYS_REFCURSOR
 ) AS
 BEGIN
     OPEN p_RESULT FOR
-    SELECT PROCEDURE_ID
-    FROM TREATMENTS_DOCTORS
-    WHERE DOCTOR_ID = p_DOCTOR_ID;
+    SELECT * FROM TREATMENTS_DOCTORS
+    WHERE ID = p_ID;
 END;
 
-
-
-
-
--- procedury crudowe
 CREATE OR REPLACE PROCEDURE UPDATE_TREATMENTS_DOCTORS (
     p_PROCEDURE_ID IN NUMBER,
-    p_DOCTOR_ID IN NUMBER,
-    p_CREATED_AT IN TIMESTAMP,
-    p_UPDATED_AT IN TIMESTAMP
+    p_DOCTOR_ID IN NUMBER
 ) AS
 BEGIN
     UPDATE TREATMENTS_DOCTORS
-    SET DOCTOR_ID = p_DOCTOR_ID, CREATED_AT = p_CREATED_AT, UPDATED_AT = p_UPDATED_AT
+    SET DOCTOR_ID = p_DOCTOR_ID
     WHERE PROCEDURE_ID = p_PROCEDURE_ID;
 END;
 
@@ -494,7 +497,6 @@ BEGIN
     FROM TREATMENTS_NURSES
     WHERE NURSE_ID = p_NURSE_ID;
 END;
-
 
 CREATE OR REPLACE PROCEDURE UPDATE_TREATMENTS_NURSES (
     p_NURSE_ID IN NUMBER,
@@ -566,32 +568,7 @@ BEGIN
     DELETE FROM ASSIGNMENT_MEDICINES WHERE PATIENT_ID = p_PATIENT_ID;
 END;
 
---sekwencje
-CREATE SEQUENCE STATUSES_SEQ
-START WITH 1
-INCREMENT BY 1
-NOCACHE
-NOCYCLE;
-
-CREATE SEQUENCE ASSIGNMENT_MEDICINES_ID_SEQ
-START WITH 1
-INCREMENT BY 1
-NOCACHE
-NOCYCLE;
-
-CREATE SEQUENCE TREATMENTS_NURSES_ID_SEQ
-START WITH 1
-INCREMENT BY 1
-NOCACHE
-NOCYCLE;
-
-CREATE SEQUENCE PROCEDURES_ID_SEQ
-START WITH 1
-INCREMENT BY 1
-NOCACHE
-NOCYCLE;
-
---kolejne procedury crudowe
+-- Procedury CRUD dla tabeli Statuses
 CREATE OR REPLACE PROCEDURE ADD_STATUS (
     p_STATUS IN VARCHAR2,
     p_DESCRIPTION IN CLOB
@@ -636,17 +613,22 @@ BEGIN
     WHERE ID = p_ID;
 END DELETE_STATUS;
 
--- funckja do obliczania czasu
+-- Funckja do obliczania czasu
 CREATE OR REPLACE FUNCTION GET_END_TIME(
     p_start_time TIMESTAMP,
-    p_duration INTERVAL DAY TO SECOND
-) RETURN VARCHAR2 IS
+    p_duration VARCHAR2
+) RETURN TIMESTAMP IS
     l_end_time TIMESTAMP;
+    l_hours NUMBER;
+    l_minutes NUMBER;
 BEGIN
-    l_end_time := p_start_time + p_duration;
-    RETURN TO_CHAR(l_end_time, 'HH24:MI');
-END;
+    l_hours := TO_NUMBER(SUBSTR(p_duration, 1, INSTR(p_duration, ':') - 1));
+    l_minutes := TO_NUMBER(SUBSTR(p_duration, INSTR(p_duration, ':') + 1));
 
+    l_end_time := p_start_time + INTERVAL '1' HOUR * l_hours + INTERVAL '1' MINUTE * l_minutes;
+    RETURN l_end_time;
+END;
+/
 
 CREATE OR REPLACE PROCEDURE ADD_PROCEDURE (
     p_ID IN NUMBER,
@@ -709,7 +691,7 @@ BEGIN
     DELETE FROM PROCEDURES WHERE ID = p_ID;
 END;
 
---Hashowanie has?a
+-- Hashowanie has³a
 CREATE OR REPLACE FUNCTION HASH_PASSWORD(p_password IN VARCHAR2) RETURN VARCHAR2 IS
     l_hashed_password VARCHAR2(200);
 BEGIN
@@ -717,20 +699,17 @@ BEGIN
     RETURN l_hashed_password;
 END;
 
--- Sorawdzanie has³a
+-- Sprawdzanie has³a
 CREATE OR REPLACE FUNCTION CHECK_PASSWORD(p_username IN VARCHAR2, p_password IN VARCHAR2) RETURN BOOLEAN IS
     l_hashed_password VARCHAR2(200);
     l_stored_password VARCHAR2(200);
 BEGIN
-    -- Hashujemy podane has³o
     l_hashed_password := HASH_PASSWORD(p_password);
 
-    -- Pobieramy zapisane has³o z bazy
     SELECT PASSWORD INTO l_stored_password
     FROM USERS
     WHERE LOGIN = p_username;
 
-    -- Sprawdzamy, czy hashe s¹ zgodne
     IF l_hashed_password = l_stored_password THEN
         RETURN TRUE;
     ELSE
@@ -738,11 +717,9 @@ BEGIN
     END IF;
 EXCEPTION
     WHEN NO_DATA_FOUND THEN
-        -- Gdy u¿ytkownik nie istnieje
         RETURN FALSE;
 END;
 /
-
 
 CREATE OR REPLACE PROCEDURE CREATE_USER (
     p_ID IN NUMBER,
@@ -786,6 +763,7 @@ BEGIN
     DELETE FROM USERS WHERE ID = p_ID;
 END;
 
+-- Funkcja GET_END_TIME (powtórzenie z procedurami)
 CREATE OR REPLACE FUNCTION GET_END_TIME(
     p_start_time TIMESTAMP,
     p_duration VARCHAR2
@@ -794,22 +772,19 @@ CREATE OR REPLACE FUNCTION GET_END_TIME(
     l_hours NUMBER;
     l_minutes NUMBER;
 BEGIN
-    -- Parse the duration string into hours and minutes
     l_hours := TO_NUMBER(SUBSTR(p_duration, 1, INSTR(p_duration, ':') - 1));
     l_minutes := TO_NUMBER(SUBSTR(p_duration, INSTR(p_duration, ':') + 1));
 
-    -- Calculate the end time
     l_end_time := p_start_time + INTERVAL '1' HOUR * l_hours + INTERVAL '1' MINUTE * l_minutes;
     RETURN l_end_time;
 END;
 /
 
-
 CREATE OR REPLACE PROCEDURE UPDATE_PROCEDURE_STATUSES AS
     CURSOR c_procedures IS
         SELECT ID, "DATE", TIME, STATUS
         FROM PROCEDURES
-        WHERE STATUS IN (1, 2, 3); -- 1: przed zabiegiem, 2: w trakcie, 3: ju¿ po
+        WHERE STATUS IN (1, 2, 3);
 
     l_current_time TIMESTAMP;
     l_end_time TIMESTAMP;
@@ -821,32 +796,24 @@ BEGIN
         l_end_time := GET_END_TIME(r."DATE", r.TIME);
 
         IF l_current_time < r."DATE" THEN
-            -- Przed zabiegiem
             SELECT ID INTO l_new_status_id FROM STATUSES WHERE STATUS = 1;
         ELSIF l_current_time BETWEEN r."DATE" AND l_end_time THEN
-            -- W trakcie zabiegu
             SELECT ID INTO l_new_status_id FROM STATUSES WHERE STATUS = 2;
         ELSE
-            -- Ju¿ po zabiegu
             SELECT ID INTO l_new_status_id FROM STATUSES WHERE STATUS = 3;
         END IF;
 
-        -- Aktualizacja statusu w tabeli PROCEDURES
         IF l_new_status_id IS NOT NULL THEN
             UPDATE PROCEDURES 
             SET STATUS = l_new_status_id
             WHERE ID = r.ID;
         ELSE
-            -- Mo¿esz dodaæ obs³ugê b³êdów lub logowanie tutaj
             RAISE_APPLICATION_ERROR(-20001, 'Nie mo¿na ustawiæ statusu na NULL dla ID ' || r.ID);
         END IF;
     END LOOP;
 
     COMMIT;
 END;
-/
-
-
 
 BEGIN
     DBMS_SCHEDULER.create_program (
@@ -863,25 +830,11 @@ BEGIN
     DBMS_SCHEDULER.create_job (
         job_name        => 'UPDATE_PROC_STATUSES_JOB',
         program_name    => 'UPDATE_PROC_STATUSES_PROG',
-        repeat_interval => 'FREQ=MINUTELY; INTERVAL=5',  -- co 5 minut
+        repeat_interval => 'FREQ=MINUTELY; INTERVAL=5',
         enabled         => TRUE
     );
 END;
 /
-
--- Utworzenie wyzwalacza
-CREATE OR REPLACE TRIGGER HOSPITAL.TRG_UPDATE_PROCEDURE_STATUSES
-AFTER INSERT OR UPDATE ON PROCEDURES
-FOR EACH ROW
-BEGIN
-    -- Warunek, który zapobiega rekursji
-    IF :NEW.STATUS IS NOT NULL THEN
-        UPDATE_PROCEDURE_STATUSES();
-    END IF;
-END;
-/
-
-
 
 BEGIN
     DBMS_SCHEDULER.create_job (
@@ -889,7 +842,7 @@ BEGIN
         job_type        => 'PLSQL_BLOCK',
         job_action      => 'BEGIN CHECK_AND_UPDATE_ACCOUNT_TYPES; END;',
         start_date      => SYSTIMESTAMP,
-        repeat_interval => 'FREQ=MINUTELY; INTERVAL=1', -- Wykonywanie co minutê
+        repeat_interval => 'FREQ=MINUTELY; INTERVAL=1',
         enabled         => TRUE
     );
 END;
@@ -901,7 +854,6 @@ CREATE TABLE doctors_audit (
     action_time TIMESTAMP
 );
 
--- Triger do logowania doktora
 CREATE OR REPLACE TRIGGER trg_doctors_audit
 AFTER INSERT OR UPDATE OR DELETE ON doctors
 FOR EACH ROW
@@ -919,15 +871,13 @@ BEGIN
 END;
 /
 
---Pacjent
--- Logowanie Patienta
+-- Pacjent
 CREATE TABLE patients_audit (
     patient_id NUMBER,
     action VARCHAR2(10),
     action_time TIMESTAMP
 );
 
--- Triger do logowania patienta
 CREATE OR REPLACE TRIGGER trg_patients_audit
 AFTER INSERT OR UPDATE OR DELETE ON patients
 FOR EACH ROW
@@ -945,14 +895,13 @@ BEGIN
 END;
 /
 
---Pielêgniarki
--- Logowanie Pielêgniarki
+-- Pielêgniarki
 CREATE TABLE nurses_audit (
     nurse_id NUMBER,
     action VARCHAR2(10),
     action_time TIMESTAMP
 );
--- Triger do logowania pielêgniarki
+
 CREATE OR REPLACE TRIGGER trg_nurses_audit
 AFTER INSERT OR UPDATE OR DELETE ON nurses
 FOR EACH ROW
@@ -976,11 +925,10 @@ CREATE OR REPLACE PROCEDURE login (
     p_result OUT NUMBER
 ) IS
 BEGIN
-    -- Use the CHECK_PASSWORD function to validate the password
     IF CHECK_PASSWORD(p_login, p_password) THEN
-        p_result := 1; -- TRUE
+        p_result := 1;
     ELSE
-        p_result := 0; -- FALSE
+        p_result := 0;
     END IF;
 END;
 /
@@ -1008,45 +956,36 @@ CREATE OR REPLACE PACKAGE BODY szpital_stats AS
 END szpital_stats;
 /
 
---triger do statusu sali 
+-- Triger do statusu sali 
 CREATE OR REPLACE TRIGGER trg_update_room_status
 AFTER INSERT OR DELETE ON patients
 FOR EACH ROW
 DECLARE
     v_seats NUMBER;
 BEGIN
-    -- Jeœli pacjent jest dodawany
     IF INSERTING THEN
-        -- Zmniejsz liczbê dostêpnych miejsc
         UPDATE rooms
         SET seats = seats - 1
         WHERE id = :NEW.room_id;
 
-        -- SprawdŸ now¹ liczbê miejsc
         SELECT seats INTO v_seats
         FROM rooms
         WHERE id = :NEW.room_id;
 
-        -- Jeœli liczba miejsc wynosi 0, ustaw status na "zajêta"
         IF v_seats = 0 THEN
             UPDATE rooms
             SET status = 'zajêta'
             WHERE id = :NEW.room_id;
         END IF;
-
-    -- Jeœli pacjent jest usuwany
     ELSIF DELETING THEN
-        -- Zwiêksz liczbê dostêpnych miejsc
         UPDATE rooms
         SET seats = seats + 1
         WHERE id = :OLD.room_id;
 
-        -- SprawdŸ now¹ liczbê miejsc
         SELECT seats INTO v_seats
         FROM rooms
         WHERE id = :OLD.room_id;
 
-        -- Jeœli liczba miejsc jest wiêksza ni¿ 0, ustaw status na "dostêpna"
         IF v_seats > 0 THEN
             UPDATE rooms
             SET status = 'dostêpna'
@@ -1056,7 +995,7 @@ BEGIN
 END;
 /
 
--- sprawdzanie typ konta 
+-- Procedura sprawdzania typ konta 
 CREATE OR REPLACE PROCEDURE CHECK_AND_UPDATE_ACCOUNT_TYPES AS
     CURSOR c_users IS
         SELECT ID FROM USERS;
@@ -1066,34 +1005,29 @@ BEGIN
     FOR r IN c_users LOOP
         l_user_id := r.ID;
 
-        -- Sprawdzenie i aktualizacja dla administratorów 1
         SELECT COUNT(*) INTO l_count FROM USERS WHERE ID = l_user_id AND ACCOUNT_TYPE = 1;
         IF l_count > 0 THEN
-            CONTINUE;  -- Jeœli u¿ytkownik jest adminem, nie aktualizujemy jego typu konta
+            CONTINUE;
         END IF;
 
-        -- Sprawdzenie i aktualizacja dla pielêgniarek 2
         SELECT COUNT(*) INTO l_count FROM NURSES WHERE USER_ID = l_user_id;
         IF l_count > 0 THEN
             UPDATE USERS SET ACCOUNT_TYPE = 2 WHERE ID = l_user_id;
             CONTINUE;
         END IF;
 
-        -- Sprawdzenie i aktualizacja dla lekarzy 3
         SELECT COUNT(*) INTO l_count FROM DOCTORS WHERE USER_ID = l_user_id;
         IF l_count > 0 THEN
             UPDATE USERS SET ACCOUNT_TYPE = 3 WHERE ID = l_user_id;
             CONTINUE;
         END IF;
 
-        -- Sprawdzenie i aktualizacja dla pacjentów 4
         SELECT COUNT(*) INTO l_count FROM PATIENTS WHERE USER_ID = l_user_id;
         IF l_count > 0 THEN
             UPDATE USERS SET ACCOUNT_TYPE = 4 WHERE ID = l_user_id;
             CONTINUE;
         END IF;
 
-        -- Jeœli nie ma przypisania, ustawienie na 0
         UPDATE USERS SET ACCOUNT_TYPE = 0 WHERE ID = l_user_id;
     END LOOP;
 
@@ -1106,7 +1040,7 @@ BEGIN
         job_type        => 'PLSQL_BLOCK',
         job_action      => 'BEGIN CHECK_AND_UPDATE_ACCOUNT_TYPES; END;',
         start_date      => SYSTIMESTAMP,
-        repeat_interval => 'FREQ=MINUTELY; INTERVAL=1', -- Uruchamianie co 1 minut
+        repeat_interval => 'FREQ=MINUTELY; INTERVAL=1',
         enabled         => TRUE
     );
 END;
@@ -1135,6 +1069,7 @@ BEGIN
     );
 END;
 /
+
 BEGIN
     DBMS_SCHEDULER.drop_job (
         job_name => 'HOSPITAL.JOB_REMOVE_DUPLICATE_TREATMENTS_NURSES',
@@ -1142,8 +1077,3 @@ BEGIN
     );
 END;
 /
-
-
-
-
-

@@ -18,8 +18,7 @@ class DoctorController extends Controller
         }
 
         $doctors = Doctor::all();
-        $user_ids = User::where('account_type', 'none')->pluck('id');
-
+        $user_ids = User::where('account_type', 0)->pluck('id');
 
         return view('lekarzeTab', compact('doctors', 'user_ids'));
     }
@@ -86,7 +85,7 @@ class DoctorController extends Controller
         }
 
         $doctor = null;
-        $user_ids = User::where('account_type', 'none')->pluck('id');
+        $user_ids = User::where('account_type', 0)->pluck('id');
 
         DB::transaction(function () use ($id, &$doctor) {
             $pdo = DB::getPdo();

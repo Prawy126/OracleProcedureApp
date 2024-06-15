@@ -17,7 +17,8 @@ return new class extends Migration
             $table->text('instruction');
             $table->integer('warehouse_quantity');
             $table->string('drug_category',40);
-            $table->decimal('price')->nullable();
+            $table->string('drug_form');
+            $table->integer('price')->nullable();
             $table->string('dose_unit');
         });
     }

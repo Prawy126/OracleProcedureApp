@@ -70,18 +70,19 @@
             @csrf
             <div class="row">
                 <div class="form-group col-md-2">
-                    <input type="text" class="form-control" name="name" id="inputName" placeholder="Imię">
+                    <input type="text" class="form-control" name="name" id="inputName" placeholder="Imię" required maxlength="255">
                 </div>
                 <div class="form-group col-md-2">
-                    <input type="text" class="form-control" name="surname" id="inputSurname" placeholder="Nazwisko">
+                    <input type="text" class="form-control" name="surname" id="inputSurname" placeholder="Nazwisko" required maxlength="255">
                 </div>
                 <div class="form-group col-md-2">
-                    <input type="text" class="form-control" name="number_license" id="inputNumber" placeholder="Numer">
+                    <input type="text" class="form-control" name="number_license" id="inputNumber" placeholder="Numer" required >
                 </div>
                 <div class="form-group col-md-2">
-                    <select class="form-control" name="user_id" id="inputUserID">
+                    <select class="form-select" name="user_id" id="inputUserID" required>
+                        <option value="{{ $nurses["USER_ID"] }}" disabled selected>Wybierz konto</option>
                         @foreach($user_ids as $userId)
-                            <option value="{{ $userId }}">{{ $userId }}</option>
+                            <option value="{{ $userId->id }}">{{ $userId->id }}</option>
                         @endforeach
                     </select>
                 </div>

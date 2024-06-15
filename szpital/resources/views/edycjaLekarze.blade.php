@@ -24,19 +24,19 @@
             <div class="form-group row mb-4">
                 <label for="inputImie" class="col-md-2 col-form-label">Imię:</label>
                 <div class="col-md-4">
-                    <input type="text" class="form-control" id="inputImie" name="name" value="{{ $doctor['NAME'] }}">
+                    <input type="text" class="form-control" id="inputImie" name="name" value="{{ $doctor['NAME'] }}" required maxlength="30">
                 </div>
             </div>
             <div class="form-group row mb-4">
                 <label for="inputNazwisko" class="col-md-2 col-form-label">Nazwisko:</label>
                 <div class="col-md-4">
-                    <input type="text" class="form-control" id="inputNazwisko" name="surname" value="{{ $doctor['SURNAME'] }}">
+                    <input type="text" class="form-control" id="inputNazwisko" name="surname" value="{{ $doctor['SURNAME'] }}" required maxlength="30">
                 </div>
             </div>
             <div class="form-group row mb-4">
                 <label for="inputSpecjalizacja" class="col-md-2 col-form-label">Specjalizacja:</label>
                 <div class="col-md-4">
-                    <select class="form-control" id="inputSpecjalizacja" name="specialization">
+                    <select class="form-control" id="inputSpecjalizacja" name="specialization" required>
                         <option value="kardiologia" {{ $doctor['SPECIALIZATION'] == 'kardiologia' ? 'selected' : '' }}>Kardiologia</option>
                         <option value="neurologia" {{ $doctor['SPECIALIZATION'] == 'neurologia' ? 'selected' : '' }}>Neurologia</option>
                         <option value="ortopedia" {{ $doctor['SPECIALIZATION'] == 'ortopedia' ? 'selected' : '' }}>Ortopedia</option>
@@ -51,13 +51,13 @@
             <div class="form-group row mb-4">
                 <label for="inputNumerLicencji" class="col-md-2 col-form-label">Numer licencji:</label>
                 <div class="col-md-4">
-                    <input type="text" class="form-control" id="inputNumerLicencji" name="license_number" value="{{ $doctor['LICENSE_NUMBER'] }}">
+                    <input type="text" class="form-control" id="inputNumerLicencji" name="license_number" value="{{ $doctor['LICENSE_NUMBER'] }}" required maxlength="20">
                 </div>
             </div>
             <div class="form-group row mb-4">
                 <label for="inputIDKonta" class="col-md-2 col-form-label">ID konta:</label>
                 <div class="col-md-4">
-                    <select class="form-control" id="inputIDKonta" name="user_id">
+                    <select class="form-control" id="inputIDKonta" name="user_id" required>
                         @foreach($user_ids as $user_id)
                             <option value="{{ $user_id }}" {{ $doctor['USER_ID'] == $user_id ? 'selected' : '' }}>{{ $user_id }}</option>
                         @endforeach
@@ -69,11 +69,10 @@
                     <button type="submit" class="btn btn-primary mb-2">Zatwierdź</button>
                 </div>
                 <div class="offset-md-1 col-md-1">
-                    <button type="button" class="btn btn-primary">Wyjście</button>
+                    <button type="button" class="btn btn-secondary" onclick="window.location.href='{{ route('doctorIndex') }}'">Wyjście</button>
                 </div>
             </div>
         </form>
-
     </div>
 
     @include('shared.footer')

@@ -1,11 +1,12 @@
 <?php
 namespace App\Http\Controllers;
 
-use App\Models\Medicin;
+use Hamcrest\Type\IsNumeric;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use PDO;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
+use PDO;
 
 class MedicinController extends Controller
 {
@@ -15,7 +16,7 @@ class MedicinController extends Controller
             abort(403);
         }
 
-        $medicines = Medicin::all();
+        $medicines = DB::select('SELECT * FROM medicins');
         return view('lekiTab', [
             'medicines' => $medicines,
         ]);
@@ -32,7 +33,8 @@ class MedicinController extends Controller
             'instruction' => 'required|string',
             'warehouse_quantity' => 'required|integer|min:0',
             'drug_category' => 'required|string|max:200',
-            'price' => 'required|numeric|min:0',
+            'drug_form' => 'required|string|max:200',
+            'price' => 'required|integer|min:0',
             'dose_unit' => 'required|string|max:200',
         ], [
             'name.required' => 'Pole nazwa jest wymagane.',
@@ -46,6 +48,9 @@ class MedicinController extends Controller
             'drug_category.required' => 'Pole kategoria leku jest wymagane.',
             'drug_category.string' => 'Pole kategoria leku musi być ciągiem znaków.',
             'drug_category.max' => 'Pole kategoria leku nie może przekraczać 200 znaków.',
+            'drug_form.required' => 'Pole forma leku jest wymagane.',
+            'drug_form.string' => 'Pole forma leku musi być ciągiem znaków.',
+            'drug_form.max' => 'Pole forma leku nie może przekraczać 200 znaków.',
             'price.required' => 'Pole cena jest wymagane.',
             'price.numeric' => 'Pole cena musi być liczbą.',
             'price.min' => 'Pole cena nie może być ujemne.',
@@ -54,39 +59,50 @@ class MedicinController extends Controller
             'dose_unit.max' => 'Pole jednostka dawkowania nie może przekraczać 200 znaków.',
         ]);
 
+
+
+        // Logowanie wartości przed wywołaniem procedury
+        Log::info('Validated data: ', $validated);
+
         DB::transaction(function () use ($validated) {
             $pdo = DB::getPdo();
 
             $stmt = $pdo->prepare("
-                DECLARE
-                    v_name VARCHAR2(200);
-                    v_instruction CLOB;
-                    v_warehouse_quantity NUMBER;
-                    v_drug_category VARCHAR2(200);
-                    v_price NUMBER;
-                    v_dose_unit VARCHAR2(200);
-                BEGIN
-                    v_name := :name;
-                    v_instruction := :instruction;
-                    v_warehouse_quantity := :warehouse_quantity;
-                    v_drug_category := :drug_category;
-                    v_price := :price;
-                    v_dose_unit := :dose_unit;
-                    szpital.add_medicine(v_name, v_instruction, v_warehouse_quantity, v_drug_category, v_price, v_dose_unit);
-                END;
+            DECLARE
+                v_name VARCHAR2(200);
+                v_instruction CLOB;
+                v_warehouse_quantity NUMBER;
+                v_drug_category VARCHAR2(200);
+                v_drug_form VARCHAR2(200);
+                v_price NUMBER;
+                v_dose_unit VARCHAR2(200);
+            BEGIN
+                v_name := :name;
+                v_instruction := :instruction;
+                v_warehouse_quantity := :warehouse_quantity;
+                v_drug_category := :drug_category;
+                v_drug_form := :drug_form;
+                v_price := :price;
+                v_dose_unit := :dose_unit;
+                szpital.add_medicin(v_name, v_instruction, v_warehouse_quantity, v_drug_category, v_drug_form, v_price, v_dose_unit);
+            END;
             ");
 
             $stmt->bindParam(':name', $validated['name'], PDO::PARAM_STR);
             $stmt->bindParam(':instruction', $validated['instruction'], PDO::PARAM_STR);
             $stmt->bindParam(':warehouse_quantity', $validated['warehouse_quantity'], PDO::PARAM_INT);
             $stmt->bindParam(':drug_category', $validated['drug_category'], PDO::PARAM_STR);
+
             $stmt->bindParam(':price', $validated['price'], PDO::PARAM_INT);
             $stmt->bindParam(':dose_unit', $validated['dose_unit'], PDO::PARAM_STR);
+            $stmt->bindParam(':drug_form', $validated['drug_form'], PDO::PARAM_STR);
+            //dd(var_dump($validated['warehouse_quantity']));
             $stmt->execute();
         });
 
         return redirect()->route('medicinIndex')->with('success', 'Lek dodany pomyślnie.');
     }
+
 
     public function edit($id)
     {
@@ -131,6 +147,7 @@ class MedicinController extends Controller
             'instruction' => 'required|string',
             'warehouse_quantity' => 'required|integer|min:0',
             'drug_category' => 'required|string|max:200',
+            'drug_form' => 'required|string|max:200',
             'price' => 'required|numeric|min:0',
             'dose_unit' => 'required|string|max:200',
         ], [
@@ -145,6 +162,9 @@ class MedicinController extends Controller
             'drug_category.required' => 'Pole kategoria leku jest wymagane.',
             'drug_category.string' => 'Pole kategoria leku musi być ciągiem znaków.',
             'drug_category.max' => 'Pole kategoria leku nie może przekraczać 200 znaków.',
+            'drug_form.required' => 'Pole forma leku jest wymagane.',
+            'drug_form.string' => 'Pole forma leku musi być ciągiem znaków.',
+            'drug_form.max' => 'Pole forma leku nie może przekraczać 200 znaków.',
             'price.required' => 'Pole cena jest wymagane.',
             'price.numeric' => 'Pole cena musi być liczbą.',
             'price.min' => 'Pole cena nie może być ujemne.',
@@ -152,6 +172,13 @@ class MedicinController extends Controller
             'dose_unit.string' => 'Pole jednostka dawkowania musi być ciągiem znaków.',
             'dose_unit.max' => 'Pole jednostka dawkowania nie może przekraczać 200 znaków.',
         ]);
+
+            // Konwersja wartości do odpowiednich typów
+    $validated['warehouse_quantity'] = (int) $validated['warehouse_quantity'];
+    $validated['price'] = (float) $validated['price'];
+
+    // Logowanie wartości przed wywołaniem procedury
+    Log::info('Validated data: ', $validated);
 
         DB::transaction(function () use ($validated, $id) {
             $pdo = DB::getPdo();
@@ -163,6 +190,7 @@ class MedicinController extends Controller
                     v_instruction CLOB;
                     v_warehouse_quantity NUMBER;
                     v_drug_category VARCHAR2(200);
+                    v_drug_form VARCHAR2(200);
                     v_price NUMBER;
                     v_dose_unit VARCHAR2(200);
                 BEGIN
@@ -171,9 +199,10 @@ class MedicinController extends Controller
                     v_instruction := :instruction;
                     v_warehouse_quantity := :warehouse_quantity;
                     v_drug_category := :drug_category;
+                    v_drug_form := :drug_form;
                     v_price := :price;
                     v_dose_unit := :dose_unit;
-                    szpital.update_medicin(v_medicin_id, v_name, v_instruction, v_warehouse_quantity, v_drug_category, v_price, v_dose_unit);
+                    szpital.update_medicin(v_medicin_id, v_name, v_instruction, v_warehouse_quantity, v_drug_category, v_drug_form, v_price, v_dose_unit);
                 END;
             ");
 
@@ -182,6 +211,7 @@ class MedicinController extends Controller
             $stmt->bindParam(':instruction', $validated['instruction'], PDO::PARAM_STR);
             $stmt->bindParam(':warehouse_quantity', $validated['warehouse_quantity'], PDO::PARAM_INT);
             $stmt->bindParam(':drug_category', $validated['drug_category'], PDO::PARAM_STR);
+            $stmt->bindParam(':drug_form', $validated['drug_form'], PDO::PARAM_STR);
             $stmt->bindParam(':price', $validated['price'], PDO::PARAM_INT);
             $stmt->bindParam(':dose_unit', $validated['dose_unit'], PDO::PARAM_STR);
             $stmt->execute();

@@ -31,7 +31,8 @@ class DatabaseSeeder extends Seeder
             PatientSeeder::class,
             StatusSeeder::class,
             TreatmentTypeSeeder::class,
-            ProcedureSeeder::class
+            ProcedureSeeder::class,
+            MedicinSeeder::class
         ]);
     }
 }

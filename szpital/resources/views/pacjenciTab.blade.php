@@ -85,7 +85,7 @@
                         <input type="text" class="form-control" name="surname" placeholder="Nazwisko" required>
                     </div>
                     <div class="form-group col-md-2">
-                        <select class="form-control" name="nurse_id" required>
+                        <select class="form-select" name="nurse_id" required>
                             <option value="" disabled selected>Wybierz pielęgniarkę</option>
                             @foreach($nurses as $nurse)
                                 <option value="{{ $nurse->id }}">{{ $nurse->id }} - {{ $nurse->name }} {{ $nurse->surname }}</option>
@@ -93,9 +93,9 @@
                         </select>
                     </div>
                     <div class="form-group col-md-2">
-                        <select class="form-control" name="user_id" required>
+                        <select class="form-select" name="user_id" required>
                             <option value="" disabled selected>Wybierz konto</option>
-                            @foreach($availableUsers as $user)
+                            @foreach($user_ids as $user)
                                 <option value="{{ $user->id }}">{{ $user->id }}</option>
                             @endforeach
                         </select>
@@ -104,7 +104,7 @@
                         <input type="number" class="form-control" name="time_visit" placeholder="Czas pobytu" required>
                     </div>
                     <div class="form-group col-md-2">
-                        <select class="form-control" name="room_id" required>
+                        <select class="form-select" name="room_id" required>
                             <option value="" disabled selected>Wybierz salę</option>
                             @foreach($rooms as $room)
                                 <option value="{{ $room->id }}">{{ $room->id }} - Sala nr: {{ $room->rnumber }}</option>

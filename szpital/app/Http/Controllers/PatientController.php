@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Models\Nurse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Patient;
@@ -18,9 +19,11 @@ class PatientController extends Controller
         }
 
         $patients = Patient::all();
-        $rooms = Room::where('type', 'dla_pacjenta')->get();
-        $user_ids = User::where('account_type', 'none')->get();
-        return view('pacjenciTab', compact('patients','rooms','user_ids'));
+        $rooms = Room::where('type_room', 'Dla pacjentów')->get();
+        $user_ids = DB::select('SELECT * FROM USERS WHERE ACCOUNT_TYPE = ?', [0]);
+        $nurses = Nurse::all();
+        //dd($rooms);
+        return view('pacjenciTab', compact('patients','rooms','user_ids', 'nurses'));
     }
 
     public function dashboard()
@@ -123,11 +126,11 @@ class PatientController extends Controller
         if (empty($patient)) {
             return redirect()->route('patientIndex')->with('error', 'Patient not found.');
         }
-
-        $rooms = Room::where('type', 'dla_pacjenta')->get();
-        $user_ids = User::where('account_type', 'none')->get();
-
-        return view('edycjaPacjenci', compact('patient','rooms','user_ids'));
+        //dd($patient);
+        $rooms = Room::where('type_room', 'Dla_pacjentów')->get();
+        $user_ids = User::where('account_type', 0)->get();
+        $nurses = Nurse::all();
+        return view('edycjaPacjenci', compact('patient','rooms','user_ids', 'nurses'));
     }
 
     public function update(Request $request, $id)

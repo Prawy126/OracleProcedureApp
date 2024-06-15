@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Medicin extends Model
 {
     use HasFactory;
-    protected $fillable = ['name','instruction','warehouse_quantity','drug_category','price','dose_unit'];
+    protected $fillable = ['name','instruction','warehouse_quantity','drug_category', 'drug_form','price','dose_unit'];
 
     public $timestamps = false;
 

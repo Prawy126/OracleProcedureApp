@@ -25,9 +25,10 @@ class NurseController extends Controller
         } else {
             $nurses = Nurse::all();
         }
-
-        $user_ids = User::where('account_type', 'none')->pluck('id');
-
+        $nurses = Nurse::all();
+        //dd($nurses);
+        $user_ids = User::where('account_type', 0);
+        //dd(User::where('account_type', 0));
         return view('pielegniarkiTab', [
             'nurses' => $nurses,
             'user_ids' => $user_ids
@@ -110,7 +111,7 @@ class NurseController extends Controller
             return redirect()->route('nurseIndex')->with('error', 'Nurse not found.');
         }
 
-        $user_ids = User::where('account_type', 'none')->pluck('id');
+        $user_ids = User::where('account_type', 0)->pluck('id');
 
         return view('edycjaPielegniarki', compact('nurse','user_ids'));
     }
