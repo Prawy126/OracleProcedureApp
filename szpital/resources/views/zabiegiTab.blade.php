@@ -111,7 +111,7 @@
                     </select>
                 </div>
                 <div class="form-group col-md-2">
-                    <input type="datetime" class="form-control" name="date" placeholder="Data">
+                    <input type="datetime" class="form-control" name="date" placeholder="RRRR-MM-DD HH-MM">
                 </div>
                 <div class="form-group col-md-2">
                     <input type="text" class="form-control" name="time" placeholder="Czas trwania">

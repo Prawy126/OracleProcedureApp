@@ -16,7 +16,6 @@ return new class extends Migration
         Schema::create('treatment_doctors', function (Blueprint $table) {
             $table->foreignIdFor(Procedure::class)->constrained();
             $table->foreignIdFor(Doctor::class)->constrained();
-            $table->timestamps();
         });
     }
 
