@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="dark">
 @include('shared.head')
+
 <body>
     @include('shared.navbar')
     @include('shared.scripts')
@@ -39,4 +40,5 @@
 
     @include('shared.footer')
 </body>
+
 </html>

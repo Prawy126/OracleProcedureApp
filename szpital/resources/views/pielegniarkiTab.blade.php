@@ -23,14 +23,14 @@
         </form>
     </div>
     @if ($errors->any())
-                <div class="alert alert-danger">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
     <div class="container mt-4">
         <div class="table-responsive">
             <table class="table table-bordered table-hover">
@@ -78,18 +78,21 @@
             @csrf
             <div class="row">
                 <div class="form-group col-md-2">
-                    <input type="text" class="form-control" name="name" id="inputName" placeholder="Imię" required maxlength="255">
+                    <input type="text" class="form-control" name="name" id="inputName" placeholder="Imię" required
+                        maxlength="255">
                 </div>
                 <div class="form-group col-md-2">
-                    <input type="text" class="form-control" name="surname" id="inputSurname" placeholder="Nazwisko" required maxlength="255">
+                    <input type="text" class="form-control" name="surname" id="inputSurname" placeholder="Nazwisko"
+                        required maxlength="255">
                 </div>
                 <div class="form-group col-md-2">
-                    <input type="text" class="form-control" name="number_license" id="inputNumber" placeholder="Numer" required >
+                    <input type="text" class="form-control" name="number_license" id="inputNumber"
+                        placeholder="Numer" required>
                 </div>
                 <div class="form-group col-md-2">
                     <select class="form-select" name="user_id" id="inputUserID" required>
                         <option value="" disabled selected>Wybierz konto</option>
-                        @foreach($user_ids as $userId)
+                        @foreach ($user_ids as $userId)
                             <option value="{{ $userId->id }}">{{ $userId->id }}</option>
                         @endforeach
                     </select>
@@ -104,4 +107,5 @@
     @include('shared.footer')
 
 </body>
+
 </html>

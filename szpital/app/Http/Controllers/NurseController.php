@@ -27,9 +27,9 @@ class NurseController extends Controller
             $nurses = Nurse::all();
         }
         $nurses = Nurse::all();
-        //dd($nurses);
+
         $user_ids = DB::select('SELECT * FROM USERS WHERE ACCOUNT_TYPE = ?', [0]);
-        //dd($user_ids);
+
         return view('pielegniarkiTab', [
             'nurses' => $nurses,
             'user_ids' => $user_ids
@@ -108,7 +108,7 @@ class NurseController extends Controller
             $stmt->execute();
         });
 
-        return redirect()->route('nurseIndex')->with('success', 'Nurse created successfully.');
+        return redirect()->route('nurseIndex');
     }
 
 
@@ -189,7 +189,7 @@ class NurseController extends Controller
             $stmt->execute();
         });
 
-        return redirect()->route('nurseIndex')->with('success', 'Nurse updated successfully.');
+        return redirect()->route('nurseIndex');
     }
 
     public function destroy($id)
@@ -210,18 +210,16 @@ class NurseController extends Controller
                 $stmt->execute();
             });
 
-            return redirect()->route('nurseIndex')->with('success', 'Nurse deleted successfully.');
+            return redirect()->route('nurseIndex');
         } catch (\PDOException $e) {
-            // Check if errorInfo is set and contains the error code
+
             $errorCode = isset($e->errorInfo[1]) ? $e->errorInfo[1] : null;
-            //dd($errorCode); jest nullem
+
             if ($errorCode == 20001) {
-                // Custom error handling for nurse assignment
                 return redirect()->route('nurseIndex')->withErrors([
                     'Błąd' => 'Nie można usunąć pielęgniarki która jest już przypisana',
                 ]);
             } else {
-                // General error handling
                 return redirect()->route('nurseIndex')->withErrors([
                     'Błąd' => 'Nie można usunąć pielęgniarki która jest już przypisana',
                 ]);

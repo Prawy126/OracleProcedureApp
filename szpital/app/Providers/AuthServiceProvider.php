@@ -23,7 +23,6 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('access-doctor', [AdminPolicy::class, 'accessDoctor']);
         Gate::define('access-nurse', [AdminPolicy::class, 'accessNurse']);
         Gate::define('access-patient', [AdminPolicy::class, 'accessPatient']);
-        Log::info('YourCustomProvider booted.');
     }
 
 }

@@ -31,27 +31,22 @@ class DoctorController extends Controller
             abort(403);
         }
 
-        // Pobranie id zalogowanego użytkownika
         $kontoId = Auth::user()->id;
 
-        // Pobranie id lekarza na podstawie user_id
         $doctorId = DB::table('DOCTORS')
             ->where('user_id', $kontoId)
             ->value('id');
 
         if (!$doctorId) {
-            // Obsługa przypadku, gdy lekarz nie został znaleziony
             return redirect()->route('home')->withErrors(['Błąd' => 'Nie znaleziono przypisanego lekarza.']);
         }
 
-        // Pobranie liczby zabiegów na dziś
         $proceduresCount = DB::table('PROCEDURES')
             ->join('TREATMENTS_DOCTORS', 'PROCEDURES.ID', '=', 'TREATMENTS_DOCTORS.PROCEDURE_ID')
             ->where('TREATMENTS_DOCTORS.DOCTOR_ID', $doctorId)
             ->whereDate('PROCEDURES.DATE', today())
             ->count();
 
-        // Pobranie zaplanowanych zabiegów
         $procedures = DB::table('PROCEDURES')
             ->join('TREATMENTS_DOCTORS', 'PROCEDURES.ID', '=', 'TREATMENTS_DOCTORS.PROCEDURE_ID')
             ->join('TREATMENT_TYPES', 'PROCEDURES.TREATMENT_TYPE_ID', '=', 'TREATMENT_TYPES.ID')
@@ -90,17 +85,12 @@ class DoctorController extends Controller
                 END;
             ");
 
-            // Tworzymy zmienne lokalne dla każdego parametru
             $name = $request->input('name');
             $surname = $request->input('surname');
             $specialization = $request->input('specialization');
             $license_number = $request->input('license_number');
             $user_id = $request->input('user_id');
 
-            // Debugowanie wartości
-            Log::info('Bound Parameters:', compact('name', 'surname', 'specialization', 'license_number', 'user_id'));
-
-            // Przypisujemy wartości do parametrów
             $stmt->bindParam(':name', $name, PDO::PARAM_STR);
             $stmt->bindParam(':surname', $surname, PDO::PARAM_STR);
             $stmt->bindParam(':specialization', $specialization, PDO::PARAM_STR);
@@ -204,17 +194,14 @@ class DoctorController extends Controller
                 $stmt->execute();
             });
 
-            return redirect()->route('doctorIndex')->with('success', 'Doctor deleted successfully.');
+            return redirect()->route('doctorIndex');
         } catch (\PDOException $e) {
-            // Check if errorInfo is set and contains the error code
             $errorCode = isset($e->errorInfo[1]) ? $e->errorInfo[1] : null;
             if ($errorCode == 20001) {
-                // Custom error handling for doctor assignment
                 return redirect()->route('doctorIndex')->withErrors([
                     'Błąd' => 'Nie można usunąć lekarza który jest już przypisany.',
                 ]);
             } else {
-                // General error handling
                 return redirect()->route('doctorIndex')->withErrors([
                     'Błąd' => 'Nie można usunąć lekarza który jest już przypisany.',
                 ]);

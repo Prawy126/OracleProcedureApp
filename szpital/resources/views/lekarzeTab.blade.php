@@ -26,14 +26,14 @@
     <div class="container mt-4">
         <div class="table-responsive">
             @if ($errors->any())
-            <div class="alert alert-danger">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
             <table class="table table-bordered table-hover">
                 <thead>
                     <tr>
@@ -56,7 +56,7 @@
                             <td>{{ $doc->specialization }}</td>
                             <td>{{ $doc->license_number }}</td>
                             <td>{{ $doc->user_id }}</td>
-                            <td><a href="{{ route('doctorEdit',$doc->id) }}">Edytuj</a></td>
+                            <td><a href="{{ route('doctorEdit', $doc->id) }}">Edytuj</a></td>
                             <td>
                                 <form action="{{ route('doctorDelete', $doc->id) }}" method="POST">
                                     @csrf
@@ -81,10 +81,12 @@
             @csrf
             <div class="row">
                 <div class="form-group col-md-2">
-                    <input type="text" class="form-control" id="inputImie" placeholder="Imię" name="name" required maxlength="255">
+                    <input type="text" class="form-control" id="inputImie" placeholder="Imię" name="name" required
+                        maxlength="255">
                 </div>
                 <div class="form-group col-md-2">
-                    <input type="text" class="form-control" id="inputNazwisko" placeholder="Nazwisko" name="surname" required maxlength="255">
+                    <input type="text" class="form-control" id="inputNazwisko" placeholder="Nazwisko" name="surname"
+                        required maxlength="255">
                 </div>
                 <div class="form-group col-md-2">
                     <select class="form-select" id="inputSpecjalizacja" name="specialization" required>
@@ -99,12 +101,13 @@
                     </select>
                 </div>
                 <div class="form-group col-md-2">
-                    <input type="text" class="form-control" id="inputNumerLicencji" placeholder="Numer licencji" name="license_number" required >
+                    <input type="text" class="form-control" id="inputNumerLicencji" placeholder="Numer licencji"
+                        name="license_number" required>
                 </div>
                 <div class="form-group col-md-2">
                     <select class="form-select" id="inputIDKonta" name="user_id" required>
                         <option value="" disabled selected>Wybierz konto</option>
-                        @foreach($user_ids as $user_id)
+                        @foreach ($user_ids as $user_id)
                             <option value="{{ $user_id->id }}">{{ $user_id->id }}</option>
                         @endforeach
                     </select>

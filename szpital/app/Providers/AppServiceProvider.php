@@ -18,7 +18,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        // Możesz zarejestrować tutaj dowolne dodatkowe usługi aplikacji.
+        //
     }
 
     /**
@@ -26,17 +26,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Zarejestruj polityki
         $this->registerPolicies();
 
-        // Definiowanie uprawnień za pomocą Gates
         Gate::define('access-admin', [AdminPolicy::class, 'accessAdmin']);
         Gate::define('is-logged-in', [AdminPolicy::class, 'isLoggedIn']);
         Gate::define('access-doctor', [AdminPolicy::class, 'accessDoctor']);
         Gate::define('access-nurse', [AdminPolicy::class, 'accessNurse']);
         Gate::define('access-patient', [AdminPolicy::class, 'accessPatient']);
-
-        // Możesz odkomentować poniższy wiersz, aby zapisać logi do plików logowania
-        // Log::info('YourCustomProvider booted.');
     }
 }

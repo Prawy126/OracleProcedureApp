@@ -22,7 +22,7 @@ class ProcedureController extends Controller
     $procedures = DB::table('PROCEDURES')
         ->where('ID', 'like', "%$search%")
         ->orWhere('TREATMENT_TYPE_ID', 'like', "%$search%")
-        ->orWhere('PATIENT_ID', 'like', "%$search%") // Dodane pole PATIENT_ID do wyszukiwania
+        ->orWhere('PATIENT_ID', 'like', "%$search%")
         ->get();
 
     $treatmentTypes = TreatmentType::select('id', 'name')->get();
@@ -88,27 +88,20 @@ public function store(Request $request)
         return redirect()->route('proceduresIndex')->with('success', 'Procedure successfully assigned to patient.');
     } catch (\PDOException $e) {
         if ($e->getCode() == '20003') {
-            // Custom Oracle error code for patient availability conflict
             return redirect()->route('proceduresIndex')->withErrors([
                 'Błąd' => 'Patient is not available at the specified time.',
             ]);
         }if ($e->getCode() == '20004') {
-            // Custom Oracle error code for patient availability conflict
             return redirect()->route('proceduresIndex')->withErrors([
                 'Błąd' => 'Sala jest zajęta',
             ]);
         }
 
-        // Handle other possible exceptions
         return redirect()->route('proceduresIndex')->withErrors([
             'Błąd' => 'An unexpected error occurred. Please try again.', $e->getMessage(),
         ]);
     }
 }
-
-
-
-
 
 public function show($id)
 {
@@ -207,19 +200,16 @@ public function update(Request $request, $id)
         return redirect()->route('proceduresIndex')->with('success', 'Procedure successfully updated.');
     } catch (\PDOException $e) {
         if ($e->getCode() == '20003') {
-            // Custom Oracle error code for patient availability conflict
             return redirect()->route('proceduresShow', $id)->withErrors([
                 'Błąd' => 'Pacjent już ma zabieg w tym czasie.',
             ]);
         }
         if ($e->getCode() == '20004') {
-            // Custom Oracle error code for patient availability conflict
             return redirect()->route('proceduresShow', $id)->withErrors([
                 'Błąd' => 'Sala jest zajęta',
             ]);
         }
 
-        // Handle other possible exceptions
         return redirect()->route('proceduresShow', $id)->withErrors([
             'Błąd' => 'Wystąpił błąd'
         ]);
@@ -244,15 +234,12 @@ public function update(Request $request, $id)
 
             return redirect()->route('proceduresIndex')->with('success', 'Procedure deleted successfully.');
         } catch (\PDOException $e) {
-            // Check if errorInfo is set and contains the error code
             $errorCode = isset($e->errorInfo[1]) ? $e->errorInfo[1] : null;
             if ($errorCode == -20001) {
-                // Custom error handling for procedure assignment
                 return redirect()->route('proceduresIndex')->withErrors([
                     'Błąd' => 'Nie można usunąć procedury, która jest już przypisana.',
                 ]);
             } else {
-                // General error handling
                 return redirect()->route('proceduresIndex')->withErrors([
                     'Błąd' => 'Nie można usunąć zabiegu, zanim nie usunie się przypisań'
                 ]);

@@ -45,12 +45,13 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($users as $user)
+                        @foreach ($users as $user)
                             <tr>
                                 <td>{{ $user->id }}</td>
                                 <td>{{ $user->login }}</td>
                                 <td>{{ $user->account_type }}</td>
-                                <td><a href="{{ route('users.edit', $user->id) }}" class="btn btn-warning">Edytuj</a></td>
+                                <td><a href="{{ route('users.edit', $user->id) }}" class="btn btn-warning">Edytuj</a>
+                                </td>
                                 <td>
                                     <form action="{{ route('users.destroy', $user->id) }}" method="POST">
                                         @csrf

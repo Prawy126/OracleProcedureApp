@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -16,11 +17,9 @@ class AssignmentMedicineController extends Controller
             abort(403);
         }
 
-
         $medicins = Medicin::all(['id', 'name']);
         $patients = Patient::all(['id', 'name', 'surname']);
 
-        // Modyfikacja zapytania SQL, aby sformatować daty bez godziny
         $assignments = DB::select("
             SELECT
                 ID,
@@ -61,7 +60,7 @@ class AssignmentMedicineController extends Controller
             'medicin_id.exists' => 'Wybrany lek nie istnieje.',
             'dose.required' => 'Pole dawka jest wymagane.',
             'dose.numeric' => 'Pole dawka musi być liczbą.',
-            'dose.min'=>"Dawka nie może być ujemna",
+            'dose.min' => "Dawka nie może być ujemna",
             'date_start.required' => 'Pole data rozpoczęcia jest wymagane.',
             'date_start.date' => 'Pole data rozpoczęcia musi być prawidłową datą.',
             'date_end.required' => 'Pole data zakończenia jest wymagane.',
@@ -85,7 +84,7 @@ class AssignmentMedicineController extends Controller
             $validated['availability']
         ]);
 
-        return redirect()->route('assignmentMedicinIndex')->with('success', 'Przypisanie utworzone pomyślnie.');
+        return redirect()->route('assignmentMedicinIndex');
     }
 
     public function edit($id)
@@ -116,7 +115,6 @@ class AssignmentMedicineController extends Controller
 
             if (!empty($result)) {
                 $assignmentMedicine = $result[0];
-                // Formatowanie dat
                 $assignmentMedicine['DATE_START'] = date('Y-m-d', strtotime($assignmentMedicine['DATE_START']));
                 $assignmentMedicine['DATE_END'] = date('Y-m-d', strtotime($assignmentMedicine['DATE_END']));
                 $assignmentMedicine['EXPIRATION_DATE'] = date('Y-m-d', strtotime($assignmentMedicine['EXPIRATION_DATE']));
@@ -154,7 +152,7 @@ class AssignmentMedicineController extends Controller
             'medicin_id.exists' => 'Wybrany lek nie istnieje.',
             'dose.required' => 'Pole dawka jest wymagane.',
             'dose.numeric' => 'Pole dawka musi być liczbą.',
-            'dose.min'=>"Dawka nie może być ujemna",
+            'dose.min' => "Dawka nie może być ujemna",
             'date_start.required' => 'Pole data rozpoczęcia jest wymagane.',
             'date_start.date' => 'Pole data rozpoczęcia musi być prawidłową datą.',
             'date_end.required' => 'Pole data zakończenia jest wymagane.',
@@ -167,7 +165,7 @@ class AssignmentMedicineController extends Controller
             'availability.string' => 'Pole dostępność musi być ciągiem znaków.',
             'availability.max' => 'Pole dostępność nie może przekraczać 1 znaku.',
         ]);
-       // dd($request);
+
         DB::statement('CALL UPDATE_ASSIGNMENT_MEDICINES(?, ?, ?, ?, ?, ?, ?, ?)', [
             $id,
             $validated['patient_id'],
@@ -179,7 +177,7 @@ class AssignmentMedicineController extends Controller
             $validated['availability']
         ]);
 
-        return redirect()->route('assignmentMedicinIndex')->with('success', 'Przypisanie zaktualizowane pomyślnie.');
+        return redirect()->route('assignmentMedicinIndex');
     }
 
     public function destroy($id)
@@ -191,6 +189,6 @@ class AssignmentMedicineController extends Controller
 
         DB::statement('CALL DELETE_ASSIGNMENT_MEDICINES(?)', [$id]);
 
-        return redirect()->route('assignmentMedicinIndex')->with('success', 'Przypisanie usunięte pomyślnie.');
+        return redirect()->route('assignmentMedicinIndex');
     }
 }

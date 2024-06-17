@@ -9,7 +9,6 @@ use PDO;
 
 class StatusController extends Controller
 {
-    // Display a listing of the statuses.
     public function index(Request $request)
     {
         if (Gate::denies('access-admin')) {

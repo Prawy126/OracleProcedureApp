@@ -38,13 +38,13 @@
                 </li>
             @endcan
             @can('access-doctor')
-            <li class="nav-item active">
-                <a class="nav-link" href="{{ route('doctor.dashboard') }}">Dashboard</a>
-            </li>
-            <li class="nav-item active">
-                <a class="nav-link" href="{{ route('assignmentMedicinIndex') }}">Przypisz lek</a>
-            </li>
-        @endcan
+                <li class="nav-item active">
+                    <a class="nav-link" href="{{ route('doctor.dashboard') }}">Dashboard</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="{{ route('assignmentMedicinIndex') }}">Przypisz lek</a>
+                </li>
+            @endcan
         </ul>
 
         @if (Auth::check())

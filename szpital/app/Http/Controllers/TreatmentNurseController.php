@@ -56,22 +56,19 @@ class TreatmentNurseController extends Controller
             });
 
             return redirect()->route('treatmentNurses.index')
-                             ->with('success', 'Treatment successfully assigned to nurse.');
+                ->with('success', 'Treatment successfully assigned to nurse.');
         } catch (\PDOException $e) {
             if ($e->getCode() == '20002') {
-                // Custom Oracle error code for nurse availability conflict
                 return redirect()->route('treatmentNurses.index')
-                ->withErrors([
-                    'Błąd' => 'Nie można przypisać lekarza do zabiegu, ponieważ prowadzi już zabieg w tym czasie',
-                ]);
-}
-
-            // Handle other possible exceptions
+                    ->withErrors([
+                        'Błąd' => 'Nie można przypisać lekarza do zabiegu, ponieważ prowadzi już zabieg w tym czasie',
+                    ]);
+            }
             return redirect()->route('treatmentNurses.index')
-            ->withErrors([
-                'Błąd' => 'Nie można przypisać lekarza do zabiegu, ponieważ prowadzi już zabieg w tym czasie2', $e->getMessage(),
-            ]);
-}
+                ->withErrors([
+                    'Błąd' => 'Nie można przypisać lekarza do zabiegu, ponieważ prowadzi już zabieg w tym czasie2',
+                ]);
+        }
     }
 
 
@@ -138,16 +135,14 @@ class TreatmentNurseController extends Controller
                 $stmt->execute();
             });
 
-            return redirect()->route('treatmentNurses.index')->with('success', 'Nurse updated successfully.');
+            return redirect()->route('treatmentNurses.index');
         } catch (\PDOException $e) {
             if ($e->getCode() == '20005') {
-                // Custom Oracle error code for nurse availability conflict
                 return redirect()->route('treatmentNurses.edit', $id)->withErrors([
                     'Błąd' => 'Nurse is not available at the specified time.',
                 ]);
             }
 
-            // Handle other possible exceptions
             return redirect()->route('treatmentNurses.edit', $id)->withErrors([
                 'Błąd' => 'An unexpected error occurred. Please try again.',
             ]);

@@ -18,7 +18,7 @@
 
     <div class="container mt-4">
         <h2>Planowane zabiegi:</h2>
-        @foreach($procedures as $procedure)
+        @foreach ($procedures as $procedure)
             <div class="card p-3 mb-3">
                 <div class="row">
                     <span>Rodzaj zabiegu: {{ $procedure->treatment_type_name }}</span>
@@ -60,7 +60,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($medicines as $medicine)
+                    @foreach ($medicines as $medicine)
                         <tr>
                             <td>{{ $medicine->name }}</td>
                             <td>{{ $medicine->instruction }}</td>
@@ -78,9 +78,9 @@
                 </tbody>
             </table>
         </div>
-      </div>
+    </div>
 
-      @include('shared.footer' )
+    @include('shared.footer')
 
 </body>
 

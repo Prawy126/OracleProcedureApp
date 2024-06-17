@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\Room;
@@ -19,8 +20,8 @@ class RoomController extends Controller
         $search = $request->input('search');
         if ($search) {
             $rooms = Room::where('rnumber', 'LIKE', "%$search%")
-                         ->orWhere('rlocation', 'LIKE', "%$search%")
-                         ->get();
+                ->orWhere('rlocation', 'LIKE', "%$search%")
+                ->get();
         } else {
             $rooms = Room::all();
         }
@@ -60,7 +61,6 @@ class RoomController extends Controller
             'seats.min' => 'Pole liczba miejsc nie może być ujemne.',
         ]);
 
-        // Specjalna walidacja dla sali operacyjnej
         if ($request->input('type_room') === 'sala operacyjna' && $request->input('seats') != 1) {
             return back()->withErrors(['seats' => 'Sala operacyjna musi mieć dokładnie 1 miejsce.']);
         }
@@ -159,7 +159,6 @@ class RoomController extends Controller
             'seats.min' => 'Pole liczba miejsc nie może być ujemne.',
         ]);
 
-        // Specjalna walidacja dla sali operacyjnej
         if ($request->input('type_room') === 'sala operacyjna' && $request->input('seats') != 1) {
             return back()->withErrors(['seats' => 'Sala operacyjna musi mieć dokładnie 1 miejsce.']);
         }
@@ -193,7 +192,6 @@ class RoomController extends Controller
             $stmt->bindParam(':status', $validated['status'], PDO::PARAM_STR);
             $stmt->bindParam(':type_room', $validated['type_room'], PDO::PARAM_STR);
             $stmt->bindParam(':seats', $validated['seats'], PDO::PARAM_INT);
-            //dd($stmt);
             $stmt->execute();
         });
 
@@ -215,7 +213,7 @@ class RoomController extends Controller
                 $stmt->execute();
             });
 
-            return redirect()->route('roomIndex')->with('success', 'Room deleted successfully.');
+            return redirect()->route('roomIndex');
         } catch (Exception $e) {
             return redirect()->route('roomIndex')->with('error', 'Error deleting room: ' . $e->getMessage());
         }

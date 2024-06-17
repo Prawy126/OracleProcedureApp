@@ -59,11 +59,6 @@ class MedicinController extends Controller
             'dose_unit.max' => 'Pole jednostka dawkowania nie może przekraczać 200 znaków.',
         ]);
 
-
-
-        // Logowanie wartości przed wywołaniem procedury
-        Log::info('Validated data: ', $validated);
-
         DB::transaction(function () use ($validated) {
             $pdo = DB::getPdo();
 
@@ -92,15 +87,13 @@ class MedicinController extends Controller
             $stmt->bindParam(':instruction', $validated['instruction'], PDO::PARAM_STR);
             $stmt->bindParam(':warehouse_quantity', $validated['warehouse_quantity'], PDO::PARAM_INT);
             $stmt->bindParam(':drug_category', $validated['drug_category'], PDO::PARAM_STR);
-
             $stmt->bindParam(':price', $validated['price'], PDO::PARAM_INT);
             $stmt->bindParam(':dose_unit', $validated['dose_unit'], PDO::PARAM_STR);
             $stmt->bindParam(':drug_form', $validated['drug_form'], PDO::PARAM_STR);
-            //dd(var_dump($validated['warehouse_quantity']));
             $stmt->execute();
         });
 
-        return redirect()->route('medicinIndex')->with('success', 'Lek dodany pomyślnie.');
+        return redirect()->route('medicinIndex');
     }
 
 
@@ -217,7 +210,7 @@ class MedicinController extends Controller
             $stmt->execute();
         });
 
-        return redirect()->route('medicinIndex')->with('success', 'Lek zaktualizowany pomyślnie.');
+        return redirect()->route('medicinIndex');
     }
 
     public function destroy($id)
@@ -234,7 +227,7 @@ class MedicinController extends Controller
                 $stmt->execute();
             });
 
-            return redirect()->route('medicinIndex')->with('success', 'Lek usunięty pomyślnie.');
+            return redirect()->route('medicinIndex');
         } catch (\Exception $e) {
             return redirect()->route('medicinIndex')->withErrors([
                 'Błąd' => 'Nie można usunąć leku, który jest przypisany do pacejnta',

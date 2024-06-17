@@ -23,7 +23,7 @@ class PatientController extends Controller
         $rooms = Room::where('type_room', 'Dla pacjentów')->where('status', 'wolny')->get();
         $user_ids = DB::select('SELECT * FROM USERS WHERE ACCOUNT_TYPE = ?', [0]);
         $nurses = Nurse::all();
-        //dd($rooms);
+
         return view('pacjenciTab', compact('patients','rooms','user_ids', 'nurses'));
     }
 
@@ -33,20 +33,16 @@ class PatientController extends Controller
             abort(403);
         }
 
-        // Pobranie id zalogowanego użytkownika
         $kontoId = Auth::user()->id;
 
-        // Pobranie id pacjenta na podstawie user_id
         $patientId = DB::table('PATIENTS')
             ->where('user_id', $kontoId)
             ->value('id');
 
         if (!$patientId) {
-            // Obsługa przypadku, gdy pacjent nie został znaleziony
             return redirect()->route('home')->withErrors(['Błąd' => 'Nie znaleziono przypisanego pacjenta.']);
         }
 
-        // Pobranie wszystkich leków przypisanych do zalogowanego pacjenta
         $medicines = DB::select('
             SELECT
                 m.*,
@@ -60,7 +56,6 @@ class PatientController extends Controller
             WHERE am.patient_id = :patientId
         ', ['patientId' => $patientId]);
 
-        // Pobranie wszystkich planowanych zabiegów dla zalogowanego pacjenta
         $procedures = DB::select('
             SELECT
                 p.*,
@@ -143,7 +138,7 @@ class PatientController extends Controller
             $stmt->execute();
         });
 
-        return redirect()->route('patientIndex')->with('success', 'Patient created successfully.');
+        return redirect()->route('patientIndex');
     }
 
     public function show($id)
@@ -242,7 +237,7 @@ class PatientController extends Controller
             $stmt->execute();
         });
 
-        return redirect()->route('patientIndex')->with('success', 'Patient updated successfully.');
+        return redirect()->route('patientIndex');
     }
 
     public function destroy($id)
@@ -259,7 +254,7 @@ class PatientController extends Controller
                 $stmt->execute();
             });
 
-            return redirect()->route('patientIndex')->with('success', 'Patient deleted successfully.');
+            return redirect()->route('patientIndex');
         } catch (\Exception $e) {
             return redirect()->route('patientIndex')->with('error', 'Error deleting patient: ' . $e->getMessage());
         }

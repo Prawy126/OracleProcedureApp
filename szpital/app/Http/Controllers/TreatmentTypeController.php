@@ -11,7 +11,7 @@ class TreatmentTypeController extends Controller
 {
     public function index(Request $request)
     {
-        if(Gate::denies('access-admin')) {
+        if (Gate::denies('access-admin')) {
             abort(403);
         }
 
@@ -52,7 +52,7 @@ class TreatmentTypeController extends Controller
             $stmt->execute();
         });
 
-        return redirect()->route('treatmentTypes.index')->with('success', 'Treatment Type added successfully');
+        return redirect()->route('treatmentTypes.index');
     }
 
     public function edit($id)
@@ -95,7 +95,6 @@ class TreatmentTypeController extends Controller
 
             $stmt->bindParam(':p_ID', $id, PDO::PARAM_INT);
 
-            // Bind output parameters
             $stmt->bindParam(':p_NAME', $name, PDO::PARAM_STR | PDO::PARAM_INPUT_OUTPUT, 100);
             $stmt->bindParam(':p_DESCRIPTION', $description, PDO::PARAM_STR | PDO::PARAM_INPUT_OUTPUT, 4000);
             $stmt->bindParam(':p_RECOMMENDATIONS_BEFORE_SURGERY', $recommendations_before_surgery, PDO::PARAM_STR | PDO::PARAM_INPUT_OUTPUT, 4000);
@@ -177,6 +176,6 @@ class TreatmentTypeController extends Controller
             $stmt->execute();
         });
 
-        return redirect()->route('treatmentTypes.index')->with('success', 'Treatment Type deleted successfully');
+        return redirect()->route('treatmentTypes.index');
     }
 }

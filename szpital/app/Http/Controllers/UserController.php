@@ -40,7 +40,7 @@ class UserController extends Controller
             ]);
         });
 
-        return redirect()->route('users.index')->with('success', 'User created successfully.');
+        return redirect()->route('users.index');
     }
 
     public function edit($id)
@@ -49,21 +49,15 @@ class UserController extends Controller
             abort(403);
         }
 
-        // Połączenie PDO z bazy danych
         $pdo = DB::getPdo();
 
-        // Przygotowanie zapytania
         $stmt = $pdo->prepare('BEGIN GET_USER(:id, :login, :account_type); END;');
 
-        // Definiowanie parametrów IN i OUT
         $stmt->bindParam(':id', $id, \PDO::PARAM_INT);
-        $stmt->bindParam(':login', $login, \PDO::PARAM_STR| \PDO::PARAM_INPUT_OUTPUT, 50); // dostosuj długość zgodnie z rzeczywistością
+        $stmt->bindParam(':login', $login, \PDO::PARAM_STR| \PDO::PARAM_INPUT_OUTPUT, 50);
         $stmt->bindParam(':account_type', $account_type, \PDO::PARAM_INT | \PDO::PARAM_INPUT_OUTPUT);
-
-        // Wykonanie procedury
         $stmt->execute();
 
-        // Tworzenie obiektu użytkownika z wyników procedury
         $user = (object) [
             'login' => $login,
             'account_type' => $account_type,
@@ -85,13 +79,11 @@ class UserController extends Controller
             'account_type' => 'required|integer',
         ]);
 
-        // Pobranie aktualnych danych użytkownika
         $user = DB::table('users')->where('id', $id)->first();
 
-        // Sprawdzenie, czy hasło zostało podane
-        $password = $user->password; // Użyj istniejącego hasła jako domyślnego
+        $password = $user->password;
         if (!empty($validated['password'])) {
-            $password = Hash::make($validated['password']); // Zaktualizuj hasło, jeśli podano nowe
+            $password = Hash::make($validated['password']);
         }
 
         DB::transaction(function () use ($request, $validated, $id, $password) {

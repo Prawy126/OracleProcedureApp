@@ -15,7 +15,8 @@
         <form method="GET" action="{{ route('roomIndex') }}">
             <div class="row">
                 <div class="form-group col-md-2">
-                    <input type="text" class="form-control" name="search" id="inputWyszukiwanie" placeholder="Wyszukaj">
+                    <input type="text" class="form-control" name="search" id="inputWyszukiwanie"
+                        placeholder="Wyszukaj">
                 </div>
                 <div class="form-group col-md-2">
                     <button type="submit" class="btn btn-primary">Zatwierdź</button>
@@ -69,29 +70,31 @@
 
     <div class="container">
         @if ($errors->any())
-                <div class="alert alert-danger">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
         <h2 class="mt-4">Dodawanie sal</h2>
         <form action="{{ route('roomsStore') }}" method="POST">
             @csrf
             <div class="row">
                 <div class="form-group col-md-2">
-                    <input type="text" class="form-control" name="rnumber" id="inputNumerSali" placeholder="Numer sali" required>
+                    <input type="text" class="form-control" name="rnumber" id="inputNumerSali"
+                        placeholder="Numer sali" required>
                 </div>
                 <div class="form-group col-md-2">
-                    <input type="text" class="form-control" name="rlocation" id="inputLokalizacja" placeholder="Lokalizacja" required>
+                    <input type="text" class="form-control" name="rlocation" id="inputLokalizacja"
+                        placeholder="Lokalizacja" required>
                 </div>
                 <div class="form-group col-md-2">
                     <select class="form-select" name="status" id="inputStatusSali" required>
                         <option value="" disabled selected>Status sali</option>
-                        <option value="Wolna">Wolna</option>
-                        <option value="Zajęta">Zajęta</option>
+                        <option value="wolny">Wolna</option>
+                        <option value="zajęta">Zajęta</option>
                         <option value="Niedostępna">Niedostępna</option>
                     </select>
                 </div>
@@ -103,7 +106,8 @@
                     </select>
                 </div>
                 <div class="form-group col-md-2">
-                    <input type="number" class="form-control" name="seats" id="inputLiczbaLudzi" placeholder="Liczba ludzi" required>
+                    <input type="number" class="form-control" name="seats" id="inputLiczbaLudzi"
+                        placeholder="Liczba ludzi" required>
                 </div>
                 <div class="form-group col-md-2">
                     <button type="submit" class="btn btn-primary">Dodaj</button>

@@ -16,7 +16,7 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Liczba pacjentów:</h5>
-                        <p class="card-text">{{$stats['patient_count']}}</p>
+                        <p class="card-text">{{ $stats['patient_count'] }}</p>
                     </div>
                 </div>
             </div>
@@ -25,7 +25,7 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Zaplanowanych zabiegów: </h5>
-                        <p class="card-text">{{$stats['procedure_count']}}</p>
+                        <p class="card-text">{{ $stats['procedure_count'] }}</p>
                     </div>
                 </div>
             </div>
@@ -34,7 +34,7 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Liczba lekarzy:</h5>
-                        <p class="card-text">{{$stats['doctor_count']}}</p>
+                        <p class="card-text">{{ $stats['doctor_count'] }}</p>
                     </div>
                 </div>
             </div>
@@ -43,7 +43,7 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Liczba pielęgniarek:</h5>
-                        <p class="card-text">{{$stats['nurse_count']}}</p>
+                        <p class="card-text">{{ $stats['nurse_count'] }}</p>
                     </div>
                 </div>
             </div>
@@ -54,16 +54,16 @@
                     <div class="card-body">
                         <ul class="list-group">
                             <li class="list-group-item">
-                                <a href="{{route('accounts')}}">Konta</a>
+                                <a href="{{ route('accounts') }}">Konta</a>
                             </li>
                             <li class="list-group-item">
-                                <a href="{{route('treatmentDoctor.index')}}">Zabiegi-Lekarze</a>
+                                <a href="{{ route('treatmentDoctor.index') }}">Zabiegi-Lekarze</a>
                             </li>
                             <li class="list-group-item">
-                                <a href="{{route('assignmentMedicinIndex')}}">Przypisania leków</a>
+                                <a href="{{ route('assignmentMedicinIndex') }}">Przypisania leków</a>
                             </li>
                             <li class="list-group-item">
-                                <a href="{{route('treatmentNurses.index')}}">Zabiegi-Pielęgniarki</a>
+                                <a href="{{ route('treatmentNurses.index') }}">Zabiegi-Pielęgniarki</a>
                             </li>
                         </ul>
                     </div>
@@ -75,13 +75,13 @@
                     <div class="card-body">
                         <ul class="list-group">
                             <li class="list-group-item">
-                                <a href="{{route('proceduresIndex')}}">Zabiegi tab</a>
+                                <a href="{{ route('proceduresIndex') }}">Zabiegi tab</a>
                             </li>
                             <li class="list-group-item">
-                                <a href="{{route('treatmentTypes.index')}}">Typy zabiegów</a>
+                                <a href="{{ route('treatmentTypes.index') }}">Typy zabiegów</a>
                             </li>
                             <li class="list-group-item">
-                                <a href="{{route('statusIndex')}}">Statusy</a>
+                                <a href="{{ route('statusIndex') }}">Statusy</a>
                             </li>
                         </ul>
                     </div>

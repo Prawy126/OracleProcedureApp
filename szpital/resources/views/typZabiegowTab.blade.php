@@ -18,22 +18,22 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach($treatmentTypes as $treatmentType)
-                <tr>
-                    <td>{{ $treatmentType->id }}</td>
-                    <td>{{ $treatmentType->name }}</td>
-                    <td>{{ $treatmentType->description }}</td>
-                    <td>{{ $treatmentType->recommendations_after_surgery }}</td>
-                    <td>{{ $treatmentType->recommendations_before_surgery }}</td>
-                    <td><a href="{{ route('treatmentTypes.edit', $treatmentType->id) }}">Edytuj</a></td>
-                    <td>
-                        <form action="{{ route('treatmentTypes.destroy', $treatmentType->id) }}" method="POST">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger">Usuń</button>
-                        </form>
-                    </td>
-                </tr>
+                @foreach ($treatmentTypes as $treatmentType)
+                    <tr>
+                        <td>{{ $treatmentType->id }}</td>
+                        <td>{{ $treatmentType->name }}</td>
+                        <td>{{ $treatmentType->description }}</td>
+                        <td>{{ $treatmentType->recommendations_after_surgery }}</td>
+                        <td>{{ $treatmentType->recommendations_before_surgery }}</td>
+                        <td><a href="{{ route('treatmentTypes.edit', $treatmentType->id) }}">Edytuj</a></td>
+                        <td>
+                            <form action="{{ route('treatmentTypes.destroy', $treatmentType->id) }}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger">Usuń</button>
+                            </form>
+                        </td>
+                    </tr>
                 @endforeach
             </tbody>
         </table>

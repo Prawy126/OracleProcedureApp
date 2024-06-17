@@ -48,38 +48,41 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($procedures as $procedure)
-                    <tr>
-                        <th scope="row">{{ $procedure->id }}</th>
-                        <td>{{ $procedure->treatment_type_id }}</td>
-                        <td>{{ $procedure->room_id }}</td>
-                        <td>{{ $procedure->date }}</td>
-                        <td>{{ $procedure->time }}</td>
-                        <td>{{ $procedure->cost }}</td>
-                        <td>{{ $procedure->patient_id }}</td> <!-- Dodane pole -->
-                        <td>
-                            @switch($procedure->status)
-                                @case(1)
-                                    <span class="badge bg-warning">Przed zabiegiem</span>
+                    @foreach ($procedures as $procedure)
+                        <tr>
+                            <th scope="row">{{ $procedure->id }}</th>
+                            <td>{{ $procedure->treatment_type_id }}</td>
+                            <td>{{ $procedure->room_id }}</td>
+                            <td>{{ $procedure->date }}</td>
+                            <td>{{ $procedure->time }}</td>
+                            <td>{{ $procedure->cost }}</td>
+                            <td>{{ $procedure->patient_id }}</td>
+                            <td>
+                                @switch($procedure->status)
+                                    @case(1)
+                                        <span class="badge bg-warning">Przed zabiegiem</span>
                                     @break
-                                @case(2)
-                                    <span class="badge bg-danger">W trakcie zabiegu</span>
+
+                                    @case(2)
+                                        <span class="badge bg-danger">W trakcie zabiegu</span>
                                     @break
-                                @case(3)
-                                    <span class="badge bg-success">Po zabiegu</span>
+
+                                    @case(3)
+                                        <span class="badge bg-success">Po zabiegu</span>
                                     @break
-                                @default
-                                    <span class="badge bg-secondary">Nieznany</span>
-                            @endswitch
-                        </td>
-                        <td><a href="{{ route('proceduresShow', $procedure->id) }}">Edytuj</a></td>
-                        <td>
-                            <form action="{{ route('proceduresDestroy', $procedure->id) }}" method="POST">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger">Usuń</button>
-                            </form>
-                        </td>
+
+                                    @default
+                                        <span class="badge bg-secondary">Nieznany</span>
+                                @endswitch
+                            </td>
+                            <td><a href="{{ route('proceduresShow', $procedure->id) }}">Edytuj</a></td>
+                            <td>
+                                <form action="{{ route('proceduresDestroy', $procedure->id) }}" method="POST">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger">Usuń</button>
+                                </form>
+                            </td>
                     @endforeach
                 </tbody>
             </table>
@@ -94,7 +97,7 @@
                 <div class="form-group col-md-2">
                     <select class="form-select" name="treatment_type_id">
                         <option value="">Wybierz rodzaj zabiegu</option>
-                        @foreach($treatmentTypes as $treatment)
+                        @foreach ($treatmentTypes as $treatment)
                             <option value="{{ $treatment->id }}">{{ $treatment->name }}</option>
                         @endforeach
                     </select>
@@ -102,7 +105,7 @@
                 <div class="form-group col-md-1">
                     <select class="form-select" name="room_id">
                         <option value="">Wybierz salę</option>
-                        @foreach($rooms as $room)
+                        @foreach ($rooms as $room)
                             <option value="{{ $room->id }}">{{ $room->rnumber }}</option>
                         @endforeach
                     </select>
@@ -112,13 +115,12 @@
                 </div>
                 <div class="form-group col-md-2">
                     <input type="text" class="form-control" name="time" placeholder="Czas trwania">
-                    <!--Domyślnie zero i będzie liczony do momentu zmiany statusu na "zakończony"-->
                 </div>
                 <div class="form-group col-md-1">
                     <input type="number" class="form-control" name="cost" placeholder="Koszt">
                 </div>
                 <div class="form-group col-md-1">
-                    <input type="number" class="form-control" name="patient_id" placeholder="ID Pacjenta"> <!-- Dodane pole -->
+                    <input type="number" class="form-control" name="patient_id" placeholder="ID Pacjenta">
                 </div>
                 <div class="form-group col-md-1">
                     <button type="submit" class="btn btn-primary">Dodaj</button>
@@ -130,4 +132,5 @@
     @include('shared.footer')
 
 </body>
+
 </html>

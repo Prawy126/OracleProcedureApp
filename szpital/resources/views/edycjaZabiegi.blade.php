@@ -80,7 +80,7 @@
                 </div>
             </div>
             <div class="form-group row mb-4">
-                <label for="inputPatientID" class="col-md-2 col-form-label">ID Pacjenta:</label> <!-- Dodane pole -->
+                <label for="inputPatientID" class="col-md-2 col-form-label">ID Pacjenta:</label>
                 <div class="col-md-4">
                     <input type="number" class="form-control" id="inputPatientID" name="patient_id"
                         placeholder="ID Pacjenta" value="{{ $procedure['PATIENT_ID'] }}">

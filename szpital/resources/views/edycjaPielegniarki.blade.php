@@ -17,22 +17,26 @@
             <div class="row mb-4">
                 <div class="form-group col-md-2">
                     <label for="inputName">Imię</label>
-                    <input type="text" class="form-control" name="name" id="inputName" placeholder="Imię" value="{{ $nurse['NAME'] }}" required>
+                    <input type="text" class="form-control" name="name" id="inputName" placeholder="Imię"
+                        value="{{ $nurse['NAME'] }}" required>
                 </div>
                 <div class="form-group col-md-2">
                     <label for="inputSurname">Nazwisko</label>
-                    <input type="text" class="form-control" name="surname" id="inputSurname" placeholder="Nazwisko" value="{{ $nurse['SURNAME'] }}" required>
+                    <input type="text" class="form-control" name="surname" id="inputSurname" placeholder="Nazwisko"
+                        value="{{ $nurse['SURNAME'] }}" required>
                 </div>
                 <div class="form-group col-md-2">
                     <label for="inputNumber_license">Numer</label>
-                    <input type="text" class="form-control" name="number_license" id="inputNumber_license" placeholder="Numer" value="{{ $nurse['NUMBER_LICENSE'] }}" required>
+                    <input type="text" class="form-control" name="number_license" id="inputNumber_license"
+                        placeholder="Numer" value="{{ $nurse['NUMBER_LICENSE'] }}" required>
                 </div>
                 <div class="form-group col-md-2">
                     <label for="inputUserID">ID Użytkownika</label>
                     <select class="form-control" name="user_id" id="inputUserID" required>
-                        <option value="{{$nurse['USER_ID']}}">{{ true ? 'nie zmieniaj' : '' }}</option>
-                        @foreach($user_ids as $userId)
-                            <option value="{{ $userId }}" {{ $userId == $nurse['USER_ID'] ? 'selected' : '' }}>{{ $userId }}</option>
+                        <option value="{{ $nurse['USER_ID'] }}">{{ true ? 'nie zmieniaj' : '' }}</option>
+                        @foreach ($user_ids as $userId)
+                            <option value="{{ $userId }}" {{ $userId == $nurse['USER_ID'] ? 'selected' : '' }}>
+                                {{ $userId }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -46,4 +50,5 @@
     @include('shared.footer')
 
 </body>
+
 </html>

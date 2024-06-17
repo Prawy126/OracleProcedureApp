@@ -25,7 +25,7 @@
                 <div class="form-group col-md-6">
                     <label for="medicinId">Id leku</label>
                     <select id="medicinId" class="form-select" name="medicin_id">
-                        @foreach($medicins as $medicin)
+                        @foreach ($medicins as $medicin)
                             <option value="{{ $medicin->id }}">{{ $medicin->id }} {{ $medicin->name }}</option>
                         @endforeach
                     </select>
@@ -33,8 +33,9 @@
                 <div class="form-group col-md-6">
                     <label for="patientId">Id pacjenta</label>
                     <select id="patientId" class="form-select" name="patient_id">
-                        @foreach($patients as $patient)
-                            <option value="{{ $patient->id }}">{{ $patient->id }} {{ $patient->name }} {{ $patient->surname }}</option>
+                        @foreach ($patients as $patient)
+                            <option value="{{ $patient->id }}">{{ $patient->id }} {{ $patient->name }}
+                                {{ $patient->surname }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -86,7 +87,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($assignments as $assignment)
+                        @foreach ($assignments as $assignment)
                             <tr>
                                 <td>{{ $assignment->medicin_id }}</td>
                                 <td>{{ $assignment->patient_id }}</td>
@@ -95,13 +96,15 @@
                                 <td>{{ $assignment->date_end }}</td>
                                 <td>{{ $assignment->expiration_date }}</td>
                                 <td>{{ $assignment->availability ? 'Dostępny' : 'Niedostępny' }}</td>
-                                <td><a href="{{ route('assignmentMedicineEdit', $assignment->id) }}" class="btn btn-warning">Edytuj</a></td>
+                                <td><a href="{{ route('assignmentMedicineEdit', $assignment->id) }}"
+                                        class="btn btn-warning">Edytuj</a></td>
                                 <td>
-                                <form action="{{ route('assignmentMedicineDestroy', $assignment->id) }}" method="POST">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger">Usuń</button>
-                                </form>
+                                    <form action="{{ route('assignmentMedicineDestroy', $assignment->id) }}"
+                                        method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger">Usuń</button>
+                                    </form>
                                 </td>
                             </tr>
                         @endforeach

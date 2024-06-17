@@ -16,7 +16,6 @@ class AdminPolicy
 
     public function accessAdmin(User $user)
     {
-        //dd($user);
         return $user->account_type == 1;
     }
 

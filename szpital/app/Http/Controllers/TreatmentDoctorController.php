@@ -53,14 +53,12 @@ class TreatmentDoctorController extends Controller
                              ->with('success', 'Treatment successfully assigned to doctor.');
         } catch (\PDOException $e) {
             if ($e->getCode() == '20001') {
-                // Custom Oracle error code for doctor availability conflict
                 return redirect()->route('treatmentDoctor.index')
                                  ->withErrors([
                                     'Błąd' => 'Nie można przypisać lekarza do zabiegu, ponieważ prowadzi już zabieg w tym czasie',
                                 ]);
             }
 
-            // Handle other possible exceptions
             return redirect()->route('treatmentDoctor.index')
             ->withErrors([
                 'Błąd' => 'Wystąpił błąd',
@@ -126,13 +124,11 @@ class TreatmentDoctorController extends Controller
             return redirect()->route('treatmentDoctor.index')->with('success', 'Doctor updated successfully.');
         } catch (\PDOException $e) {
             if ($e->getCode() == '20004') {
-                // Custom Oracle error code for doctor availability conflict
                 return redirect()->route('treatmentDoctors.edit', $id)->withErrors([
                     'Błąd' => 'Ten doktor już bierze udział w zabiegu w tym czasie.',
                 ]);
             }
 
-            // Handle other possible exceptions
             return redirect()->route('treatmentDoctors.edit', $id)->withErrors([
                 'Błąd' => 'Wystąpił błąd',
             ]);

@@ -50,7 +50,7 @@
                             <td>{{ $med->drug_category }}</td>
                             <td>{{ $med->price }}</td>
                             <td>{{ $med->dose_unit }}</td>
-                            <td><a href="{{ route('medicinEdit',$med->id) }}" class="btn btn-warning">Edytuj</a></td>
+                            <td><a href="{{ route('medicinEdit', $med->id) }}" class="btn btn-warning">Edytuj</a></td>
                             <td>
                                 <form action="{{ route('medicinDelete', $med->id) }}" method="POST">
                                     @csrf
@@ -69,7 +69,7 @@
         </div>
     </div>
 
-    <div class="container mb-12" style="padding-bottom: 50px;"> <!--naprawa problemu nie bootstrapowym podejściem-->
+    <div class="container mb-12" style="padding-bottom: 50px;">
         <h2 class="mt-4">Dodawanie leku</h2>
         @if ($errors->any())
             <div class="alert alert-danger">
@@ -86,7 +86,8 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="inputNazwaLeku">Nazwa leku</label>
-                        <input type="text" class="form-control" id="inputNazwaLeku" name="name" placeholder="Nazwa leku" required>
+                        <input type="text" class="form-control" id="inputNazwaLeku" name="name"
+                            placeholder="Nazwa leku" required>
                     </div>
                     <div class="form-group">
                         <label for="inputInstrukcja">Instrukcja</label>
@@ -104,7 +105,8 @@
                     </div>
                     <div class="form-group">
                         <label for="inputIloscMagazyn">Ilość w magazynie</label>
-                        <input type="number" class="form-control" id="inputIloscMagazyn" name="warehouse_quantity" placeholder="Ilość w magazynie" min="0" required>
+                        <input type="number" class="form-control" id="inputIloscMagazyn" name="warehouse_quantity"
+                            placeholder="Ilość w magazynie" min="0" required>
                     </div>
                     <div class="form-group">
                         <label for="inputKategoriaLeku">Kategoria Leku</label>
@@ -123,11 +125,16 @@
                     </div>
                     <div class="form-group">
                         <label for="inputCena">Cena</label>
-                        <input type="number" class="form-control" id="inputCena" name="price" placeholder="Cena" min="0" required>
+                        <input type="number" class="form-control" id="inputCena" name="price" placeholder="Cena"
+                            min="0" required>
                     </div>
                     <div class="form-group">
                         <label for="inputDawkaJednostka">Dawka jednostka</label>
-                        <input type="text" class="form-control" id="inputDawkaJednostka" name="dose_unit" placeholder="Dawka jednostka" required>
+                        <select class="form-select" id="inputDawkaJednostka" name="dose_unit" required>
+                            <option value="" disabled selected>Wybierz jednostkę</option>
+                            <option value="mililitr">Mililitr</option>
+                            <option value="tabletka">Tabletka</option>
+                        </select>
                     </div>
                 </div>
             </div>
