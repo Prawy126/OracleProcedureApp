@@ -691,7 +691,7 @@ BEGIN
     DELETE FROM PROCEDURES WHERE ID = p_ID;
 END;
 
--- Hashowanie has³a
+-- Hashowanie hasÅ‚a
 CREATE OR REPLACE FUNCTION HASH_PASSWORD(p_password IN VARCHAR2) RETURN VARCHAR2 IS
     l_hashed_password VARCHAR2(200);
 BEGIN
@@ -699,7 +699,7 @@ BEGIN
     RETURN l_hashed_password;
 END;
 
--- Sprawdzanie has³a
+-- Sprawdzanie hasÅ‚a
 CREATE OR REPLACE FUNCTION CHECK_PASSWORD(p_username IN VARCHAR2, p_password IN VARCHAR2) RETURN BOOLEAN IS
     l_hashed_password VARCHAR2(200);
     l_stored_password VARCHAR2(200);
@@ -763,7 +763,7 @@ BEGIN
     DELETE FROM USERS WHERE ID = p_ID;
 END;
 
--- Funkcja GET_END_TIME (powtórzenie z procedurami)
+-- Funkcja GET_END_TIME (powtÃ³rzenie z procedurami)
 CREATE OR REPLACE FUNCTION GET_END_TIME(
     p_start_time TIMESTAMP,
     p_duration VARCHAR2
@@ -808,7 +808,7 @@ BEGIN
             SET STATUS = l_new_status_id
             WHERE ID = r.ID;
         ELSE
-            RAISE_APPLICATION_ERROR(-20001, 'Nie mo¿na ustawiæ statusu na NULL dla ID ' || r.ID);
+            RAISE_APPLICATION_ERROR(-20001, 'Nie moÅ¼na ustawiÄ‡ statusu na NULL dla ID ' || r.ID);
         END IF;
     END LOOP;
 
@@ -895,7 +895,7 @@ BEGIN
 END;
 /
 
--- Pielêgniarki
+-- PielÄ™gniarki
 CREATE TABLE nurses_audit (
     nurse_id NUMBER,
     action VARCHAR2(10),
@@ -974,7 +974,7 @@ BEGIN
 
         IF v_seats = 0 THEN
             UPDATE rooms
-            SET status = 'zajêta'
+            SET status = 'zajÄ™ta'
             WHERE id = :NEW.room_id;
         END IF;
     ELSIF DELETING THEN
@@ -988,7 +988,7 @@ BEGIN
 
         IF v_seats > 0 THEN
             UPDATE rooms
-            SET status = 'dostêpna'
+            SET status = 'dostÄ™pna'
             WHERE id = :OLD.room_id;
         END IF;
     END IF;
@@ -1085,7 +1085,7 @@ BEGIN
             occupied_seats NUMBER;
             operating_status NUMBER;
         BEGIN
-            IF rec.TYPE_ROOM = 'Dla pacjentów' THEN
+            IF rec.TYPE_ROOM = 'Dla pacjentÃ³w' THEN
                 SELECT COUNT(*) INTO occupied_seats
                 FROM PATIENTS
                 WHERE ROOM_ID = rec.ID;
@@ -1096,7 +1096,7 @@ BEGIN
                     WHERE ID = rec.ID;
                 ELSE
                     UPDATE ROOMS
-                    SET STATUS = 'zajêty'
+                    SET STATUS = 'zajÄ™ty'
                     WHERE ID = rec.ID;
                 END IF;
 
@@ -1111,7 +1111,7 @@ BEGIN
 
                 IF operating_status = 2 THEN
                     UPDATE ROOMS
-                    SET STATUS = 'zajêty'
+                    SET STATUS = 'zajÄ™ty'
                     WHERE ID = rec.ID;
                 ELSE
                     UPDATE ROOMS
@@ -1172,7 +1172,7 @@ BEGIN
         job_type        => 'PLSQL_BLOCK',
         job_action      => 'BEGIN CHECK_DUPLICATE_MEDICATIONS; END;',
         start_date      => SYSTIMESTAMP,
-        repeat_interval => 'FREQ=SECONDLY; INTERVAL=30', -- dostosuj wed³ug potrzeb
+        repeat_interval => 'FREQ=SECONDLY; INTERVAL=30', -- dostosuj wedÅ‚ug potrzeb
         enabled         => TRUE
     );
 END;
@@ -1210,7 +1210,7 @@ BEGIN
         job_type        => 'PLSQL_BLOCK',
         job_action      => 'BEGIN REMOVE_DUPLICATE_ASSIGNMENTS; END;',
         start_date      => SYSTIMESTAMP,
-        repeat_interval => 'FREQ=SECONDLY; INTERVAL=30', -- dostosuj wed³ug potrzeb
+        repeat_interval => 'FREQ=SECONDLY; INTERVAL=30', -- dostosuj wedÅ‚ug potrzeb
         enabled         => TRUE
     );
 END;
@@ -1248,7 +1248,7 @@ BEGIN
         job_type        => 'PLSQL_BLOCK',
         job_action      => 'BEGIN REMOVE_DUPLICATE_DOCTOR_ASSIGNMENTS; END;',
         start_date      => SYSTIMESTAMP,
-        repeat_interval => 'FREQ=SECONDLY; INTERVAL=30', -- dostosuj wed³ug potrzeb
+        repeat_interval => 'FREQ=SECONDLY; INTERVAL=30', -- dostosuj wedÅ‚ug potrzeb
         enabled         => TRUE
     );
 END;
