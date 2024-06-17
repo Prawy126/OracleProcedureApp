@@ -19,7 +19,6 @@ return new class extends Migration
             $table->text('description');
             $table->text('recommendations_before_surgery');
             $table->text('recommendations_after_surgery');
-            $table->timestamps();
         });
     }
 
