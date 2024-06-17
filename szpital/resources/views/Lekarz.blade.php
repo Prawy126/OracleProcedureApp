@@ -45,38 +45,32 @@
             <tbody>
                 @foreach ($procedures as $procedure)
                     <tr>
-                        <th>{{ $procedure->id}}</th>
+                        <th>{{ $procedure->id }}</th>
                         <td>{{ $procedure->treatment_name }}</td>
-                        <td>{{ $procedure->room_number }}</td>
+                        <td>{{ $procedure->room_number}}</td>
                         <td>{{ \Carbon\Carbon::parse($procedure->date)->format('Y-m-d') }}</td>
                         <td>{{ $procedure->time }}</td>
                         <td>{{ $procedure->cost }}</td>
-                        <td>@switch($procedure->status)
-                            @case(1)
-                                <span class="badge bg-warning">Przed zabiegiem</span>
-                                @break
-                            @case(2)
-                                <span class="badge bg-danger">W trakcie zabiegu</span>
-                                @break
-                            @case(3)
-                                <span class="badge bg-success">Po zabiegu</span>
-                                @break
-                            @default
-                                <span class="badge bg-secondary">Nieznany</span>
-                        @endswitch</td>
-
+                        <td>
+                            @switch($procedure->status)
+                                @case(1)
+                                    <span class="badge bg-warning">Przed zabiegiem</span>
+                                    @break
+                                @case(2)
+                                    <span class="badge bg-danger">W trakcie zabiegu</span>
+                                    @break
+                                @case(3)
+                                    <span class="badge bg-success">Po zabiegu</span>
+                                    @break
+                                @default
+                                    <span class="badge bg-secondary">Nieznany</span>
+                            @endswitch
+                        </td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
     </div>
-
-    <div class="row">
-        <div class="col-md-3">
-            <button type="button" class="btn btn-primary">Zobacz więcej</button>
-        </div>
-    </div>
-
 </div>
 
 @include('shared.footer')

@@ -1,3 +1,5 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
 @include('shared.head')
 @include('shared.navbar')
 @include('shared.scripts')

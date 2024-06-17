@@ -18,27 +18,29 @@
 
     <div class="container mt-4">
         <h2>Planowane zabiegi:</h2>
-        <div class="card p-3">
-            <div class="row">
-                <span>Rodzaj zabiegu: </span>
+        @foreach($procedures as $procedure)
+            <div class="card p-3 mb-3">
+                <div class="row">
+                    <span>Rodzaj zabiegu: {{ $procedure->treatment_type_name }}</span>
+                </div>
+                <div class="row">
+                    <span>Sala: {{ $procedure->room_number }}</span>
+                </div>
+                <div class="row">
+                    <span>Data zabiegu: {{ $procedure->date }}</span>
+                </div>
+                <div class="row">
+                    <span>Zalecenia przed zabiegiem: {{ $procedure->recommendations_before_surgery }}</span>
+                </div>
+                <div class="row">
+                    <span>Zalecenia po zabiegu: {{ $procedure->recommendations_after_surgery }}</span>
+                </div>
             </div>
-            <div class="row">
-                <span>Sala: </span>
-            </div>
-            <div class="row">
-                <span>Data zabiegu: </span>
-            </div>
-            <div class="row">
-                <span>Zalecenia przed zabiegiem: </span>
-            </div>
-            <div class="row">
-                <span>Zalecenia po zabiegu: </span>
-            </div>
-        </div>
+        @endforeach
     </div>
 
 
-    <div class="container-fluid mt-4">
+    <div class="container-fluid mt-4" style="margin-bottom: 100px">
         <h2>Przypisania leki:</h2>
         <div class="table-responsive">
             <table class="table-bordered">

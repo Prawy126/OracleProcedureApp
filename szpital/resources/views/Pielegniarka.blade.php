@@ -56,11 +56,11 @@
                         <tbody>
                             @foreach($todayProcedures as $procedure)
                             <tr>
-                                <td>{{ $procedure->ID }}</td>
-                                <td>{{ $procedure->TREATMENT_TYPE_ID }}</td>
-                                <td>{{ $procedure->ROOM_ID }}</td>
-                                <td>{{ \Carbon\Carbon::parse($procedure->DATE)->format('Y-m-d') }}</td>
-                                <td>{{ $procedure->TIME }}</td>
+                                <td>{{ $procedure->id}}</td>
+                                <td>{{ $procedure->treatment_type_name}}</td>
+                                <td>{{ $procedure->room_number }}</td>
+                                <td>{{ \Carbon\Carbon::parse($procedure->date)->format('Y-m-d') }}</td>
+                                <td>{{ $procedure->time }}</td>
                                 <td>@switch($procedure->status)
                                     @case(1)
                                         <span class="badge bg-warning">Przed zabiegiem</span>
@@ -100,7 +100,7 @@
                             <tr>
                                 <td>{{ $patient->name }}</td>
                                 <td>{{ $patient->surname }}</td>
-                                <td>{{ $patient->rnumber }}</td>
+                                <td>{{ $patient->room_number }}</td>
                                 <td>{{ $patient->time_visit }}</td>
                             </tr>
                             @endforeach

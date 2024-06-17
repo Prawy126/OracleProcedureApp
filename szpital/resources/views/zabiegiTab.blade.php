@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="dark">
-
 @include('shared.head')
 
 <body>
@@ -42,6 +41,7 @@
                         <th scope="col">Data</th>
                         <th scope="col">Czas trwania</th>
                         <th scope="col">Koszt</th>
+                        <th scope="col">ID Pacjenta</th> <!-- Dodane pole -->
                         <th scope="col">Status</th>
                         <th scope="col"></th>
                         <th scope="col"></th>
@@ -56,6 +56,7 @@
                         <td>{{ $procedure->date }}</td>
                         <td>{{ $procedure->time }}</td>
                         <td>{{ $procedure->cost }}</td>
+                        <td>{{ $procedure->patient_id }}</td> <!-- Dodane pole -->
                         <td>
                             @switch($procedure->status)
                                 @case(1)
@@ -79,14 +80,13 @@
                                 <button type="submit" class="btn btn-danger">Usuń</button>
                             </form>
                         </td>
-                    </tr>
                     @endforeach
                 </tbody>
             </table>
         </div>
     </div>
 
-    <div class="container">
+    <div class="container" style="margin-bottom: 100px">
         <h2 class="mt-4">Dodawanie zabiegu</h2>
         <form action="{{ route('proceduresStore') }}" method="POST">
             @csrf
@@ -108,7 +108,7 @@
                     </select>
                 </div>
                 <div class="form-group col-md-2">
-                    <input type="datetime-local" class="form-control" name="date" placeholder="Data">
+                    <input type="datetime" class="form-control" name="date" placeholder="Data">
                 </div>
                 <div class="form-group col-md-2">
                     <input type="text" class="form-control" name="time" placeholder="Czas trwania">
@@ -116,6 +116,9 @@
                 </div>
                 <div class="form-group col-md-1">
                     <input type="number" class="form-control" name="cost" placeholder="Koszt">
+                </div>
+                <div class="form-group col-md-1">
+                    <input type="number" class="form-control" name="patient_id" placeholder="ID Pacjenta"> <!-- Dodane pole -->
                 </div>
                 <div class="form-group col-md-1">
                     <button type="submit" class="btn btn-primary">Dodaj</button>
@@ -127,5 +130,4 @@
     @include('shared.footer')
 
 </body>
-
 </html>

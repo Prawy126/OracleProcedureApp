@@ -31,28 +31,43 @@ class TreatmentDoctorController extends Controller
             abort(403);
         }
 
-        DB::transaction(function () use ($request) {
-            $pdo = DB::getPdo();
-            $stmt = $pdo->prepare('
-                BEGIN
-                    ADD_TREATMENTS_DOCTORS(:p_PROCEDURE_ID, :p_DOCTOR_ID);
-                END;
-            ');
+        try {
+            DB::transaction(function () use ($request) {
+                $pdo = DB::getPdo();
+                $stmt = $pdo->prepare('
+                    BEGIN
+                        ADD_TREATMENTS_DOCTORS(:p_PROCEDURE_ID, :p_DOCTOR_ID);
+                    END;
+                ');
 
-            $doctor_id = $request->input('doctor');
-            $procedure_id = $request->input('procedure');
+                $doctor_id = $request->input('doctor');
+                $procedure_id = $request->input('procedure');
 
-            $stmt->bindParam(':p_DOCTOR_ID', $doctor_id, PDO::PARAM_INT);
-            $stmt->bindParam(':p_PROCEDURE_ID', $procedure_id, PDO::PARAM_INT);
+                $stmt->bindParam(':p_DOCTOR_ID', $doctor_id, PDO::PARAM_INT);
+                $stmt->bindParam(':p_PROCEDURE_ID', $procedure_id, PDO::PARAM_INT);
 
-            $stmt->execute();
-        });
+                $stmt->execute();
+            });
 
-        $doctors = Doctor::all();
-        $procedures = Procedure::all();
-        $treatmentDoctors = TreatmentDoctor::all();
-        return redirect()->route('treatmentDoctor.index', compact('doctors', 'procedures', 'treatmentDoctors'));
+            return redirect()->route('treatmentDoctor.index')
+                             ->with('success', 'Treatment successfully assigned to doctor.');
+        } catch (\PDOException $e) {
+            if ($e->getCode() == '20001') {
+                // Custom Oracle error code for doctor availability conflict
+                return redirect()->route('treatmentDoctor.index')
+                                 ->withErrors([
+                                    'Błąd' => 'Nie można przypisać lekarza do zabiegu, ponieważ prowadzi już zabieg w tym czasie',
+                                ]);
+            }
+
+            // Handle other possible exceptions
+            return redirect()->route('treatmentDoctor.index')
+            ->withErrors([
+                'Błąd' => 'Wystąpił błąd',
+            ]);
+        }
     }
+
 
     public function destroy($id)
     {
@@ -84,27 +99,46 @@ class TreatmentDoctorController extends Controller
             abort(403);
         }
 
-        DB::transaction(function () use ($request, $id) {
-            $pdo = DB::getPdo();
-            $stmt = $pdo->prepare('
-                BEGIN
-                    UPDATE_TREATMENTS_DOCTORS(:p_PROCEDURE_ID, :p_NEW_DOCTOR_ID);
-                END;
-            ');
+        $validated = $request->validate([
+            'doctor_id' => 'required|integer',
+        ], [
+            'doctor_id.required' => 'Pole lekarz jest wymagane.',
+            'doctor_id.integer' => 'Pole lekarz musi być liczbą całkowitą.',
+        ]);
 
-            $newDoctorId = $request->input('doctor_id');
+        $newDoctorId = $validated['doctor_id'];
 
-            $stmt->bindParam(':p_PROCEDURE_ID', $id, PDO::PARAM_INT);
-            $stmt->bindParam(':p_NEW_DOCTOR_ID', $newDoctorId, PDO::PARAM_INT);
+        try {
+            DB::transaction(function () use ($id, $newDoctorId) {
+                $pdo = DB::getPdo();
+                $stmt = $pdo->prepare('
+                    BEGIN
+                        UPDATE_TREATMENTS_DOCTORS(:p_PROCEDURE_ID, :p_NEW_DOCTOR_ID);
+                    END;
+                ');
 
-            $stmt->execute();
-        });
+                $stmt->bindParam(':p_PROCEDURE_ID', $id, PDO::PARAM_INT);
+                $stmt->bindParam(':p_NEW_DOCTOR_ID', $newDoctorId, PDO::PARAM_INT);
 
-        $doctors = Doctor::all();
-        $procedures = Procedure::all();
-        $treatmentDoctors = TreatmentDoctor::all();
-        return redirect()->route('treatmentDoctor.index', compact('doctors', 'procedures', 'treatmentDoctors'));
+                $stmt->execute();
+            });
+
+            return redirect()->route('treatmentDoctor.index')->with('success', 'Doctor updated successfully.');
+        } catch (\PDOException $e) {
+            if ($e->getCode() == '20004') {
+                // Custom Oracle error code for doctor availability conflict
+                return redirect()->route('treatmentDoctors.edit', $id)->withErrors([
+                    'Błąd' => 'Ten doktor już bierze udział w zabiegu w tym czasie.',
+                ]);
+            }
+
+            // Handle other possible exceptions
+            return redirect()->route('treatmentDoctors.edit', $id)->withErrors([
+                'Błąd' => 'Wystąpił błąd',
+            ]);
+        }
     }
+
 
     public function edit($id)
     {

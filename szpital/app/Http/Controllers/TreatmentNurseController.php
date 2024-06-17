@@ -37,32 +37,43 @@ class TreatmentNurseController extends Controller
             abort(403);
         }
 
-        DB::transaction(function () use ($request) {
-            $pdo = DB::getPdo();
-            $stmt = $pdo->prepare('
-                BEGIN
-                    ADD_TREATMENTS_NURSES(:p_NURSE_ID, :p_PROCEDURE_ID);
-                END;
-            ');
+        try {
+            DB::transaction(function () use ($request) {
+                $pdo = DB::getPdo();
+                $stmt = $pdo->prepare('
+                    BEGIN
+                        ADD_TREATMENTS_NURSES(:p_NURSE_ID, :p_PROCEDURE_ID);
+                    END;
+                ');
 
-            $nurse_id = $request->input('nurse_id');
-            $procedure_id = $request->input('procedure_id');
+                $nurse_id = $request->input('nurse_id');
+                $procedure_id = $request->input('procedure_id');
 
-            $stmt->bindParam(':p_NURSE_ID', $nurse_id, PDO::PARAM_INT);
-            $stmt->bindParam(':p_PROCEDURE_ID', $procedure_id, PDO::PARAM_INT);
+                $stmt->bindParam(':p_NURSE_ID', $nurse_id, PDO::PARAM_INT);
+                $stmt->bindParam(':p_PROCEDURE_ID', $procedure_id, PDO::PARAM_INT);
 
-            $stmt->execute();
-        });
+                $stmt->execute();
+            });
 
-        $data = [
-            'nurses' => Nurse::all(),
-            'procedures' => Procedure::all(),
-            'treatmentNurses' => TreatmentNurse::all(),
-        ];
-        return view('adminElements.nurseTreatments', [
-            'data' => $data,
-        ]);
+            return redirect()->route('treatmentNurses.index')
+                             ->with('success', 'Treatment successfully assigned to nurse.');
+        } catch (\PDOException $e) {
+            if ($e->getCode() == '20002') {
+                // Custom Oracle error code for nurse availability conflict
+                return redirect()->route('treatmentNurses.index')
+                ->withErrors([
+                    'Błąd' => 'Nie można przypisać lekarza do zabiegu, ponieważ prowadzi już zabieg w tym czasie',
+                ]);
+}
+
+            // Handle other possible exceptions
+            return redirect()->route('treatmentNurses.index')
+            ->withErrors([
+                'Błąd' => 'Nie można przypisać lekarza do zabiegu, ponieważ prowadzi już zabieg w tym czasie2', $e->getMessage(),
+            ]);
+}
     }
+
 
     public function destroy($id)
     {
@@ -98,31 +109,51 @@ class TreatmentNurseController extends Controller
             abort(403);
         }
 
-        DB::transaction(function () use ($request, $id) {
-            $pdo = DB::getPdo();
-            $stmt = $pdo->prepare('
-                BEGIN
-                    UPDATE_TREATMENTS_NURSES(:p_ID, :p_NEW_NURSE_ID, :p_NEW_PROCEDURE_ID);
-                END;
-            ');
+        $validated = $request->validate([
+            'nurse_id' => 'required|integer',
+            'procedure_id' => 'required|integer',
+        ], [
+            'nurse_id.required' => 'Pole pielęgniarka jest wymagane.',
+            'nurse_id.integer' => 'Pole pielęgniarka musi być liczbą całkowitą.',
+            'procedure_id.required' => 'Pole zabieg jest wymagane.',
+            'procedure_id.integer' => 'Pole zabieg musi być liczbą całkowitą.',
+        ]);
 
-            $newNurseId = $request->input('nurse_id');
-            $newProcedureId = $request->input('procedure_id');
+        $newNurseId = $validated['nurse_id'];
+        $newProcedureId = $validated['procedure_id'];
 
-            $stmt->bindParam(':p_ID', $id, PDO::PARAM_INT);
-            $stmt->bindParam(':p_NEW_NURSE_ID', $newNurseId, PDO::PARAM_INT);
-            $stmt->bindParam(':p_NEW_PROCEDURE_ID', $newProcedureId, PDO::PARAM_INT);
+        try {
+            DB::transaction(function () use ($id, $newNurseId, $newProcedureId) {
+                $pdo = DB::getPdo();
+                $stmt = $pdo->prepare('
+                    BEGIN
+                        UPDATE_TREATMENTS_NURSES(:p_ID, :p_NEW_NURSE_ID, :p_NEW_PROCEDURE_ID);
+                    END;
+                ');
 
-            $stmt->execute();
-        });
+                $stmt->bindParam(':p_ID', $id, PDO::PARAM_INT);
+                $stmt->bindParam(':p_NEW_NURSE_ID', $newNurseId, PDO::PARAM_INT);
+                $stmt->bindParam(':p_NEW_PROCEDURE_ID', $newProcedureId, PDO::PARAM_INT);
 
-        $data = [
-            'nurses' => Nurse::all(),
-            'procedures' => Procedure::all(),
-            'treatmentNurses' => TreatmentNurse::all(),
-        ];
-        return redirect()->route('treatmentNurses.index', compact('data'));
+                $stmt->execute();
+            });
+
+            return redirect()->route('treatmentNurses.index')->with('success', 'Nurse updated successfully.');
+        } catch (\PDOException $e) {
+            if ($e->getCode() == '20005') {
+                // Custom Oracle error code for nurse availability conflict
+                return redirect()->route('treatmentNurses.edit', $id)->withErrors([
+                    'Błąd' => 'Nurse is not available at the specified time.',
+                ]);
+            }
+
+            // Handle other possible exceptions
+            return redirect()->route('treatmentNurses.edit', $id)->withErrors([
+                'Błąd' => 'An unexpected error occurred. Please try again.',
+            ]);
+        }
     }
+
 
     public function edit($id)
     {

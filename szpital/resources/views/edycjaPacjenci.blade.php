@@ -79,6 +79,7 @@
                 <div class="col-md-4">
                     <select class="form-control" id="inputRoomID" name="room_id" required>
                         <option value="" disabled selected>Wybierz salę</option>
+                        <option value="{{$patient['ROOM_ID']}}">{{ true ? 'nie zmieniaj' : '' }}</option>
                         @foreach($rooms as $room)
                             <option value="{{ $patient["ROOM_ID"]}}" {{ $patient['ROOM_ID'] == $room->id ? 'selected' : '' }}>
                                 {{ $room->id }} - Sala nr: {{ $room->rnumber }}

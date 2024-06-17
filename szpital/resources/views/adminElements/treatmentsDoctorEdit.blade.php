@@ -5,6 +5,15 @@
 @include('shared.navbar')
 @include('shared.scripts')
 <div class="container mt-5 mb-4">
+    @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
     <h2 class="mb-4">Edytuj Przypisanie Lekarza</h2>
     <form action="{{ route('treatmentDoctors.update', $treatmentDoctor['PROCEDURE_ID']) }}" method="POST">
         @csrf

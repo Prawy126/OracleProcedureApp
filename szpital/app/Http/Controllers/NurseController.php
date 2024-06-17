@@ -42,41 +42,39 @@ class NurseController extends Controller
             abort(403);
         }
 
-        // Pobranie id zalogowanego użytkownika
         $kontoId = Auth::user()->id;
-
-        // Pobranie id pacjenta na podstawie user_id
         $nurseId = DB::table('NURSES')
             ->where('user_id', $kontoId)
             ->value('id');
-        // Liczba zabiegów na dziś
+
+        if (!$nurseId) {
+            return redirect()->route('home')->withErrors(['Błąd' => 'Nie znaleziono przypisanej pielęgniarki.']);
+        }
+
         $proceduresToday = DB::table('PROCEDURES')
             ->whereDate('DATE', '=', today())
             ->count();
 
-        // Liczba pacjentów pod nadzorem pielęgniarki
         $patientsUnderCare = DB::table('PATIENTS')
             ->where('NURSE_ID', '=', $nurseId)
             ->count();
 
-        // Zaplanowane zabiegi na dziś
         $todayProcedures = DB::table('PROCEDURES')
             ->join('TREATMENT_NURSES', 'PROCEDURES.ID', '=', 'TREATMENT_NURSES.PROCEDURE_ID')
+            ->join('TREATMENT_TYPES', 'PROCEDURES.TREATMENT_TYPE_ID', '=', 'TREATMENT_TYPES.ID')
+            ->join('ROOMS', 'PROCEDURES.ROOM_ID', '=', 'ROOMS.ID')
             ->where('TREATMENT_NURSES.NURSE_ID', '=', $nurseId)
-            ->whereDate('PROCEDURES.DATE', '=', today())
-            ->select('PROCEDURES.ID', 'PROCEDURES.TREATMENT_TYPE_ID', 'PROCEDURES.ROOM_ID', 'PROCEDURES.DATE', 'PROCEDURES.TIME', 'PROCEDURES.STATUS')
+            ->select('PROCEDURES.ID', 'TREATMENT_TYPES.NAME as TREATMENT_TYPE_NAME', 'ROOMS.RNUMBER as ROOM_NUMBER', 'PROCEDURES.DATE', 'PROCEDURES.TIME', 'PROCEDURES.STATUS')
             ->get();
 
-        // Pacjenci pod nadzorem pielęgniarki
         $patients = DB::table('PATIENTS')
             ->join('ROOMS', 'PATIENTS.ROOM_ID', '=', 'ROOMS.ID')
             ->where('PATIENTS.NURSE_ID', '=', $nurseId)
-            ->select('PATIENTS.ID', 'PATIENTS.NAME', 'PATIENTS.SURNAME', 'ROOMS.RNUMBER', 'PATIENTS.TIME_VISIT')
+            ->select('PATIENTS.NAME', 'PATIENTS.SURNAME', 'ROOMS.RNUMBER as ROOM_NUMBER', 'PATIENTS.TIME_VISIT')
             ->get();
 
         return view('pielegniarka', compact('proceduresToday', 'patientsUnderCare', 'todayProcedures', 'patients'));
     }
-
 
     public function store(Request $request)
     {

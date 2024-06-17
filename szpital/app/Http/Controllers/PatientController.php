@@ -20,7 +20,7 @@ class PatientController extends Controller
         }
 
         $patients = Patient::all();
-        $rooms = Room::where('type_room', 'Dla pacjentów')->get();
+        $rooms = Room::where('type_room', 'Dla pacjentów')->where('status', 'wolny')->get();
         $user_ids = DB::select('SELECT * FROM USERS WHERE ACCOUNT_TYPE = ?', [0]);
         $nurses = Nurse::all();
         //dd($rooms);
@@ -60,10 +60,26 @@ class PatientController extends Controller
             WHERE am.patient_id = :patientId
         ', ['patientId' => $patientId]);
 
+        // Pobranie wszystkich planowanych zabiegów dla zalogowanego pacjenta
+        $procedures = DB::select('
+            SELECT
+                p.*,
+                tt.name AS treatment_type_name,
+                tt.recommendations_before_surgery,
+                tt.recommendations_after_surgery,
+                r.rnumber AS room_number
+            FROM PROCEDURES p
+            JOIN TREATMENT_TYPES tt ON p.treatment_type_id = tt.id
+            JOIN ROOMS r ON p.room_id = r.id
+            WHERE p.patient_id = :patientId
+        ', ['patientId' => $patientId]);
+
         return view('pacjent', [
             'medicines' => $medicines,
+            'procedures' => $procedures,
         ]);
     }
+
 
 
 
@@ -159,7 +175,7 @@ class PatientController extends Controller
             return redirect()->route('patientIndex')->with('error', 'Patient not found.');
         }
         //dd($patient);
-        $rooms = Room::where('type_room', 'Dla pacjentów')->get();
+        $rooms = Room::where('type_room', 'Dla pacjentów')->where('status', 'wolny')->get();
         $user_ids = User::where('account_type', 0)->get();
         $nurses = Nurse::all();
         return view('edycjaPacjenci', compact('patient','rooms','user_ids', 'nurses'));

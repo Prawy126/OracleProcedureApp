@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="dark">
-
 @include('shared.head')
 
 <body>
@@ -10,6 +9,15 @@
     @include('shared.scripts')
 
     <div class="container">
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
         <h2 class="mt-4">Edytuj dane: Zabiegi</h2>
         <form method="POST" action="{{ route('proceduresUpdate', $procedure['ID']) }}">
             @csrf
@@ -28,7 +36,7 @@
                         <option value="">Wybierz rodzaj zabiegu</option>
                         @foreach ($treatmentTypes as $treatment)
                             <option value="{{ $treatment->id }}"
-                                {{ $procedure['ID'] == $treatment->id ? 'selected' : '' }}>
+                                {{ $procedure['TREATMENT_TYPE_ID'] == $treatment->id ? 'selected' : '' }}>
                                 {{ $treatment->name }}
                             </option>
                         @endforeach
@@ -42,7 +50,8 @@
                     <select class="form-select" name="room_id">
                         <option value="">Wybierz salę</option>
                         @foreach ($rooms as $room)
-                            <option value="{{ $room->id }}" {{ $procedure['ROOM_ID'] == $room->id ? 'selected' : '' }}>
+                            <option value="{{ $room->id }}"
+                                {{ $procedure['ROOM_ID'] == $room->id ? 'selected' : '' }}>
                                 {{ $room->rnumber }}
                             </option>
                         @endforeach
@@ -68,6 +77,13 @@
                 <div class="col-md-4">
                     <input type="number" class="form-control" id="inputKoszt" name="cost" placeholder="Koszt"
                         value="{{ $procedure['COST'] }}">
+                </div>
+            </div>
+            <div class="form-group row mb-4">
+                <label for="inputPatientID" class="col-md-2 col-form-label">ID Pacjenta:</label> <!-- Dodane pole -->
+                <div class="col-md-4">
+                    <input type="number" class="form-control" id="inputPatientID" name="patient_id"
+                        placeholder="ID Pacjenta" value="{{ $procedure['PATIENT_ID'] }}">
                 </div>
             </div>
 

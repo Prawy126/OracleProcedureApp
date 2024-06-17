@@ -16,16 +16,18 @@
                 <div class="form-group col-md-6">
                     <label for="doctorId">Id lekarza</label>
                     <select id="doctorId" class="form-select" name="doctor">
-                        @foreach($doctors as $doctor)
-                            <option value="{{ $doctor->id }}">{{ $doctor->id }} {{ $doctor->name }} {{ $doctor->surname }}</option>
+                        @foreach ($doctors as $doctor)
+                            <option value="{{ $doctor->id }}">{{ $doctor->id }} {{ $doctor->name }}
+                                {{ $doctor->surname }}</option>
                         @endforeach
                     </select>
                 </div>
                 <div class="form-group col-md-6">
                     <label for="procedureId">Id zabiegu</label>
                     <select id="procedureId" class="form-select" name="procedure">
-                        @foreach($procedures as $procedure)
-                            <option value="{{ $procedure->id }}">{{ $procedure->id }} {{ $procedure->procedure_name }} {{ $procedure->date }}</option>
+                        @foreach ($procedures as $procedure)
+                            <option value="{{ $procedure->id }}">{{ $procedure->id }} {{ $procedure->procedure_name }}
+                                {{ $procedure->date }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -33,6 +35,15 @@
             <button type="submit" class="btn btn-primary">Prześlij</button>
         </form>
         <div class="card">
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
             <div class="card-body">
                 <h5 class="card-title mb-4">Zabiegi - Lekarze:</h5>
                 <table class="table table-bordered mb-4">
@@ -45,17 +56,19 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($treatmentDoctors as $treatmentDoctor)
+                        @foreach ($treatmentDoctors as $treatmentDoctor)
                             <tr>
                                 <td>{{ $treatmentDoctor->doctor_id }}</td>
                                 <td>{{ $treatmentDoctor->procedure_id }}</td>
-                                <td><a href="{{route('treatmentDoctors.edit', $treatmentDoctor->id)}}" class="btn btn-warning">Edytuj</a></td>
+                                <td><a href="{{ route('treatmentDoctors.edit', $treatmentDoctor->id) }}"
+                                        class="btn btn-warning">Edytuj</a></td>
                                 <td>
-                                <form action="{{route('treatmentDoctors.destroy', $treatmentDoctor->id)}}" method="POST">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger">Usuń</button>
-                                </form>
+                                    <form action="{{ route('treatmentDoctors.destroy', $treatmentDoctor->id) }}"
+                                        method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger">Usuń</button>
+                                    </form>
                                 </td>
                             </tr>
                         @endforeach

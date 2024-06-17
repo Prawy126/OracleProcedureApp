@@ -34,19 +34,24 @@ class DoctorController extends Controller
         // Pobranie id zalogowanego użytkownika
         $kontoId = Auth::user()->id;
 
-        // Pobranie id pacjenta na podstawie user_id
+        // Pobranie id lekarza na podstawie user_id
         $doctorId = DB::table('DOCTORS')
             ->where('user_id', $kontoId)
             ->value('id');
+
+        if (!$doctorId) {
+            // Obsługa przypadku, gdy lekarz nie został znaleziony
+            return redirect()->route('home')->withErrors(['Błąd' => 'Nie znaleziono przypisanego lekarza.']);
+        }
+
         // Pobranie liczby zabiegów na dziś
-        $today = date('Y-m-d');
         $proceduresCount = DB::table('PROCEDURES')
             ->join('TREATMENTS_DOCTORS', 'PROCEDURES.ID', '=', 'TREATMENTS_DOCTORS.PROCEDURE_ID')
             ->where('TREATMENTS_DOCTORS.DOCTOR_ID', $doctorId)
-            ->whereDate('PROCEDURES.DATE', $today)
+            ->whereDate('PROCEDURES.DATE', today())
             ->count();
 
-        // Pobranie zaplanowanych zabiegów na dziś
+        // Pobranie zaplanowanych zabiegów
         $procedures = DB::table('PROCEDURES')
             ->join('TREATMENTS_DOCTORS', 'PROCEDURES.ID', '=', 'TREATMENTS_DOCTORS.PROCEDURE_ID')
             ->join('TREATMENT_TYPES', 'PROCEDURES.TREATMENT_TYPE_ID', '=', 'TREATMENT_TYPES.ID')
@@ -54,12 +59,14 @@ class DoctorController extends Controller
             ->select('PROCEDURES.ID', 'TREATMENT_TYPES.NAME as TREATMENT_NAME', 'ROOMS.RNUMBER as ROOM_NUMBER', 'PROCEDURES.DATE', 'PROCEDURES.TIME', 'PROCEDURES.COST', 'PROCEDURES.STATUS')
             ->where('TREATMENTS_DOCTORS.DOCTOR_ID', $doctorId)
             ->get();
-        //dd($procedures);
+
         return view('lekarz', [
             'proceduresCount' => $proceduresCount,
             'procedures' => $procedures,
         ]);
     }
+
+
 
 
     public function store(Request $request)
