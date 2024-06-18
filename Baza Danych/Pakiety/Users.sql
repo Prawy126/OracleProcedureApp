@@ -42,7 +42,7 @@ create or replace PACKAGE users_pkg IS
     PROCEDURE delete_nurse(p_nurse_id IN NUMBER);
 
 END users_pkg;
-
+/
 create or replace PACKAGE BODY users_pkg IS
 
     PROCEDURE add_doctor(p_doctor IN doctor_rec) IS
@@ -151,3 +151,4 @@ create or replace PACKAGE BODY users_pkg IS
 
 
 END users_pkg;
+/

@@ -10,7 +10,7 @@ BEGIN
     INSERT INTO doctors (name, surname, specialization, license_number, user_id)
     VALUES (p_name, p_surname, p_specialization, p_license_number, p_user_id);
 END ADD_DOCTOR;
-
+/
 create or replace PROCEDURE GET_DOCTOR(
     p_doctor_id IN NUMBER,
     p_doctor OUT SYS_REFCURSOR)
@@ -19,7 +19,7 @@ BEGIN
     OPEN p_doctor FOR
     SELECT * FROM doctors WHERE id = p_doctor_id;
 END;
-
+/
 create or replace PROCEDURE UPDATE_DOCTOR(
     p_doctor_id IN NUMBER,
     p_name IN VARCHAR2,
@@ -37,10 +37,11 @@ BEGIN
         user_id = p_user_id
     WHERE id = p_doctor_id;
 END;
-
+/
 create or replace PROCEDURE DELETE_DOCTOR(
     p_doctor_id IN NUMBER)
 IS
 BEGIN
     DELETE FROM doctors WHERE id = p_doctor_id;
 END;
+/

@@ -32,7 +32,7 @@ BEGIN
 
     COMMIT;
 END;
-
+/
 
 
 BEGIN
@@ -44,7 +44,7 @@ BEGIN
         enabled        => TRUE
     );
 END;
-
+/
 
 
 BEGIN
@@ -55,7 +55,7 @@ BEGIN
         enabled         => TRUE
     );
 END;
-
+/
 
 
 BEGIN
@@ -68,3 +68,4 @@ BEGIN
         enabled         => TRUE
     );
 END;
+/

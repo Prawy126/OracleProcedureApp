@@ -36,7 +36,7 @@ BEGIN
 
     COMMIT;
 END;
-
+/
 BEGIN
     DBMS_SCHEDULER.create_job (
         job_name        => 'JOB_CHECK_AND_UPDATE_ACCOUNT_TYPES',

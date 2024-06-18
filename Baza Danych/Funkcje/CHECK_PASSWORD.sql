@@ -21,3 +21,4 @@ EXCEPTION
         -- Gdy użytkownik nie istnieje
         RETURN FALSE;
 END;
+/

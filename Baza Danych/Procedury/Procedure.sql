@@ -13,7 +13,7 @@ BEGIN
         user_id = p_user_id
     WHERE id = p_nurse_id;
 END;
-
+/
 create or replace PROCEDURE DELETE_PROCEDURE(
     p_procedure_id IN NUMBER
 ) IS
@@ -29,7 +29,7 @@ BEGIN
             END IF;
     END;
 END;
-
+/
 create or replace PROCEDURE GET_PROCEDURE (
     p_ID IN NUMBER,
     p_procedure OUT SYS_REFCURSOR
@@ -40,7 +40,7 @@ BEGIN
     FROM PROCEDURES
     WHERE ID = p_ID;
 END;
-
+/
 create or replace PROCEDURE UPDATE_PROCEDURE (
     p_ID IN NUMBER,
     p_TREATMENT_TYPE_ID IN NUMBER,
@@ -94,3 +94,4 @@ BEGIN
         STATUS = 1
     WHERE ID = p_ID;
 END;
+/

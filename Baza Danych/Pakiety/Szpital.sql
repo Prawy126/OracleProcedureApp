@@ -117,7 +117,7 @@ create or replace PACKAGE szpital AS
         p_ID IN NUMBER
     );
 END szpital;
-
+/
 create or replace PACKAGE BODY szpital AS
 
     PROCEDURE add_medicin(
@@ -270,3 +270,4 @@ create or replace PACKAGE BODY szpital AS
     END delete_treatment_type;
 
 END szpital;
+/

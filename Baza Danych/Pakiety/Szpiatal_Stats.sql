@@ -8,7 +8,7 @@ create or replace PACKAGE szpital_stats AS
 
     PROCEDURE get_stats(p_stats OUT stats_rec);
 END szpital_stats;
-
+/
 create or replace PACKAGE BODY szpital_stats AS
     PROCEDURE get_stats(p_stats OUT stats_rec) IS
     BEGIN
@@ -18,3 +18,4 @@ create or replace PACKAGE BODY szpital_stats AS
         SELECT COUNT(*) INTO p_stats.nurse_count FROM nurses;
     END get_stats;
 END szpital_stats;
+/

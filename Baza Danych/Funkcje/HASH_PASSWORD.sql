@@ -4,3 +4,4 @@ BEGIN
     l_hashed_password := DBMS_CRYPTO.HASH(UTL_RAW.CAST_TO_RAW(p_password), DBMS_CRYPTO.HASH_MD5);
     RETURN l_hashed_password;
 END;
+/

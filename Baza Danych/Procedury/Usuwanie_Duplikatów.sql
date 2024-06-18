@@ -22,7 +22,7 @@ BEGIN
     END LOOP;
     COMMIT;
 END;
-
+/
 create or replace PROCEDURE REMOVE_DUPLICATE_DOCTOR_ASSIGNMENTS AS
 BEGIN
     FOR rec IN (
@@ -47,7 +47,7 @@ BEGIN
     END LOOP;
     COMMIT;
 END;
-
+/
 create or replace PROCEDURE REMOVE_DUPLICATE_TREATMENTS_NURSES IS
 BEGIN
     DELETE FROM TREATMENTS_NURSES A
@@ -58,7 +58,7 @@ BEGIN
           AND A.PROCEDURE_ID = B.PROCEDURE_ID
     );
 END REMOVE_DUPLICATE_TREATMENTS_NURSES;
-
+/
 BEGIN
     DBMS_SCHEDULER.create_job (
         job_name        => 'JOB_REMOVE_DUPLICATE_TREATMENTS_NURSES',
@@ -69,7 +69,7 @@ BEGIN
         enabled         => TRUE
     );
 END;
-
+/
 BEGIN
     DBMS_SCHEDULER.create_job (
         job_name        => 'JOB_REMOVE_DUPLICATE_TREATMENTS_NURSES',
@@ -80,7 +80,7 @@ BEGIN
         enabled         => TRUE
     );
 END;
-
+/
 BEGIN
     DBMS_SCHEDULER.create_job (
         job_name        => 'REMOVE_DUPLICATE_DOCTOR_ASSIGNMENTS_JOB',
@@ -91,7 +91,7 @@ BEGIN
         enabled         => TRUE
     );
 END;
-
+/
 CREATE OR REPLACE PROCEDURE CHECK_ROOM_AVAILABILITY AS
 BEGIN
     FOR rec IN (SELECT ID, RNUMBER, SEATS, TYPE_ROOM FROM ROOMS) LOOP

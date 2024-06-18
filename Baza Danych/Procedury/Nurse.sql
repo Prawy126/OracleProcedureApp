@@ -8,14 +8,14 @@ BEGIN
     INSERT INTO NURSES (NAME, SURNAME, NUMBER_LICENSE, USER_ID)
     VALUES (p_name, p_surname, p_number, p_user_id);
 END;
-
+/
 create or replace PROCEDURE DELETE_NURSE(
     p_nurse_id IN NUMBER)
 IS
 BEGIN
     DELETE FROM nurses WHERE id = p_nurse_id;
 END;
-
+/
 create or replace PROCEDURE UPDATE_NURSE(
     p_nurse_id IN NUMBER,
     p_name IN VARCHAR2,
@@ -31,3 +31,4 @@ BEGIN
         user_id = p_user_id
     WHERE id = p_nurse_id;
 END;
+/
