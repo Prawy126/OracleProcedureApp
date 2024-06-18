@@ -16,9 +16,6 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        /*if (Gate::allows('is-logged-in')) {
-            return back();
-        }*/
 
         $credentials = $request->only('login', 'password');
 
