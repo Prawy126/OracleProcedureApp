@@ -40,7 +40,7 @@
     </div>
 </div>
 
-<div class="container">
+<div class="container" style="margin-bottom: 100px">
     <h2 class="mt-4">Dodawanie Rodzaju Zabiegu</h2>
     <form action="{{ route('treatmentTypes.store') }}" method="POST">
         @csrf

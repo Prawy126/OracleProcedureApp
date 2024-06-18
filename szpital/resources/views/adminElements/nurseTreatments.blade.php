@@ -9,7 +9,7 @@
 
     @include('shared.scripts')
 
-    <div class="container">
+    <div class="container" style="margin-bottom: 100px">
         <form action="{{ route('treatmentNurses.store') }}" method="POST">
             @csrf
             <div class="form-row">

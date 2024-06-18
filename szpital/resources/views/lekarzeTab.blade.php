@@ -75,7 +75,7 @@
         </div>
     </div>
 
-    <div class="container">
+    <div class="container" style="margin-bottom: 100px">
         <h2 class="mt-4">Dodawanie lekarzy</h2>
         <form method="POST" action="{{ route('doctorStore') }}">
             @csrf

@@ -27,7 +27,7 @@
         </div>
     </div>
 
-    <div class="container mt-4">
+    <div class="container mt-4" style="margin-bottom: 100px">
         <h2>Planowane zabiegi:</h2>
         <div class="table-responsive">
             <table class="table table-bordered table-hover">

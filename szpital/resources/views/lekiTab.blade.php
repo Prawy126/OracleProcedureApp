@@ -69,7 +69,7 @@
         </div>
     </div>
 
-    <div class="container mb-12" style="padding-bottom: 50px;">
+    <div class="container mb-12" style="padding-bottom: 100px;">
         <h2 class="mt-4">Dodawanie leku</h2>
         @if ($errors->any())
             <div class="alert alert-danger">

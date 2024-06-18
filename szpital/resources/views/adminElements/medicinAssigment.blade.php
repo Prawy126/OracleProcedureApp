@@ -69,7 +69,7 @@
             </div>
             <button type="submit" class="btn btn-primary">Prześlij</button>
         </form>
-        <div class="card mt-4">
+        <div class="card mt-4" style="margin-bottom: 100px">
             <div class="card-body">
                 <h5 class="card-title mb-4">Przypisania leki:</h5>
                 <table class="table table-bordered mb-4">

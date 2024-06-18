@@ -9,7 +9,7 @@
 
     @include('shared.scripts')
 
-    <div class="container mt-3">
+    <div class="container mt-3" style="margin-bottom: 100px">
         <form action="{{ route('users.store') }}" method="POST">
             @csrf
             <div class="form-group col-md-3 mb-2">

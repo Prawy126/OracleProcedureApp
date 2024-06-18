@@ -32,7 +32,7 @@
         </div>
     </div>
 
-    <div class="container mt-5 mb-4">
+    <div class="container mt-5 mb-4" style="margin-bottom: 100px">
         <div class="row">
             <div class="col-md-6">
                 <div class="card">
