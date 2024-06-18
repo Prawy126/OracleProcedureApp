@@ -60,6 +60,26 @@ class UserSeeder extends Seeder
             'password' => Hash::make('1234'),
             'account_type' => 4
         ],
+        [
+            'login' => 'login9',
+            'password' => Hash::make('1234'),
+            'account_type' => 3
+        ],
+        [
+            'login' => 'login10',
+            'password' => Hash::make('1234'),
+            'account_type' => 3
+        ],
+        [
+            'login' => 'login11',
+            'password' => Hash::make('1234'),
+            'account_type' => 2
+        ],
+        [
+            'login' => 'login12',
+            'password' => Hash::make('1234'),
+            'account_type' => 2
+        ]
     ]);
     }
 }

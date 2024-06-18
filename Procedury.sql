@@ -631,19 +631,49 @@ END;
 /
 
 CREATE OR REPLACE PROCEDURE ADD_PROCEDURE (
-    p_ID IN NUMBER,
     p_TREATMENT_TYPE_ID IN NUMBER,
     p_ROOM_ID IN NUMBER,
     p_DATE IN TIMESTAMP,
-    p_DURATION IN INTERVAL DAY TO SECOND,
+    p_DURATION IN VARCHAR2,
     p_COST IN NUMBER,
-    p_STATUS IN NUMBER
+    p_PATIENT_ID IN NUMBER
 ) AS
-    v_end_time VARCHAR2(5);
+    l_start_time TIMESTAMP;
+    l_end_time TIMESTAMP;
 BEGIN
-    v_end_time := GET_END_TIME(p_DATE, p_DURATION);
-    INSERT INTO PROCEDURES (ID, TREATMENT_TYPE_ID, ROOM_ID, "DATE", "TIME", "COST", STATUS)
-    VALUES (p_ID, p_TREATMENT_TYPE_ID, p_ROOM_ID, p_DATE, v_end_time, p_COST, p_STATUS);
+    -- Oblicz czas zakoñczenia nowego zabiegu
+    l_start_time := p_DATE;
+    l_end_time := GET_END_TIME(p_DATE, p_DURATION);
+
+    -- SprawdŸ, czy pacjent ma ju¿ zaplanowany zabieg w danym przedziale czasowym
+    FOR rec IN (
+        SELECT P."DATE", P."TIME", GET_END_TIME(P."DATE", P."TIME") AS END_TIME
+        FROM PROCEDURES P
+        WHERE P.PATIENT_ID = p_PATIENT_ID
+    ) LOOP
+        IF (l_start_time BETWEEN rec."DATE" AND rec.END_TIME)
+           OR (l_end_time BETWEEN rec."DATE" AND rec.END_TIME)
+           OR (rec."DATE" BETWEEN l_start_time AND l_end_time) THEN
+            RAISE_APPLICATION_ERROR(-20003, 'Patient is not available at the specified time.');
+        END IF;
+    END LOOP;
+
+    -- SprawdŸ, czy sala jest ju¿ zajêta w danym przedziale czasowym
+    FOR rec IN (
+        SELECT P."DATE", P."TIME", GET_END_TIME(P."DATE", P."TIME") AS END_TIME
+        FROM PROCEDURES P
+        WHERE P.ROOM_ID = p_ROOM_ID
+    ) LOOP
+        IF (l_start_time BETWEEN rec."DATE" AND rec.END_TIME)
+           OR (l_end_time BETWEEN rec."DATE" AND rec.END_TIME)
+           OR (rec."DATE" BETWEEN l_start_time AND l_end_time) THEN
+            RAISE_APPLICATION_ERROR(-20004, 'Room is not available at the specified time.');
+        END IF;
+    END LOOP;
+
+    -- Jeœli brak konfliktów, dodaj nowy wpis do PROCEDURES
+    INSERT INTO PROCEDURES (ID, TREATMENT_TYPE_ID, ROOM_ID, "DATE", "TIME", "COST", STATUS, PATIENT_ID)
+    VALUES (PROCEDURES_ID_SEQ.NEXTVAL, p_TREATMENT_TYPE_ID, p_ROOM_ID, p_DATE, p_DURATION, p_COST, 1, p_PATIENT_ID);
 END;
 /
 CREATE OR REPLACE PROCEDURE GET_PROCEDURE (
@@ -847,77 +877,7 @@ BEGIN
     );
 END;
 /
--- Logowanie Doktora
-CREATE TABLE doctors_audit (
-    doctor_id NUMBER,
-    action VARCHAR2(10),
-    action_time TIMESTAMP
-);
-/
-CREATE OR REPLACE TRIGGER trg_doctors_audit
-AFTER INSERT OR UPDATE OR DELETE ON doctors
-FOR EACH ROW
-BEGIN
-    IF INSERTING THEN
-        INSERT INTO doctors_audit (doctor_id, action, action_time)
-        VALUES (:NEW.id, 'INSERT', SYSTIMESTAMP);
-    ELSIF UPDATING THEN
-        INSERT INTO doctors_audit (doctor_id, action, action_time)
-        VALUES (:NEW.id, 'UPDATE', SYSTIMESTAMP);
-    ELSIF DELETING THEN
-        INSERT INTO doctors_audit (doctor_id, action, action_time)
-        VALUES (:OLD.id, 'DELETE', SYSTIMESTAMP);
-    END IF;
-END;
-/
 
--- Pacjent
-CREATE TABLE patients_audit (
-    patient_id NUMBER,
-    action VARCHAR2(10),
-    action_time TIMESTAMP
-);
-
-CREATE OR REPLACE TRIGGER trg_patients_audit
-AFTER INSERT OR UPDATE OR DELETE ON patients
-FOR EACH ROW
-BEGIN
-    IF INSERTING THEN
-        INSERT INTO patients_audit (patient_id, action, action_time)
-        VALUES (:NEW.id, 'INSERT', SYSTIMESTAMP);
-    ELSIF UPDATING THEN
-        INSERT INTO patients_audit (patient_id, action, action_time)
-        VALUES (:NEW.id, 'UPDATE', SYSTIMESTAMP);
-    ELSIF DELETING THEN
-        INSERT INTO patients_audit (patient_id, action, action_time)
-        VALUES (:OLD.id, 'DELETE', SYSTIMESTAMP);
-    END IF;
-END;
-/
-
--- Pielêgniarki
-CREATE TABLE nurses_audit (
-    nurse_id NUMBER,
-    action VARCHAR2(10),
-    action_time TIMESTAMP
-);
-/
-CREATE OR REPLACE TRIGGER trg_nurses_audit
-AFTER INSERT OR UPDATE OR DELETE ON nurses
-FOR EACH ROW
-BEGIN
-    IF INSERTING THEN
-        INSERT INTO nurses_audit (nurse_id, action, action_time)
-        VALUES (:NEW.id, 'INSERT', SYSTIMESTAMP);
-    ELSIF UPDATING THEN
-        INSERT INTO nurses_audit (nurse_id, action, action_time)
-        VALUES (:NEW.id, 'UPDATE', SYSTIMESTAMP);
-    ELSIF DELETING THEN
-        INSERT INTO nurses_audit (nurse_id, action, action_time)
-        VALUES (:OLD.id, 'DELETE', SYSTIMESTAMP);
-    END IF;
-END;
-/
 
 CREATE OR REPLACE PROCEDURE login (
     p_login IN VARCHAR2,
@@ -1064,50 +1024,43 @@ BEGIN
         job_type        => 'PLSQL_BLOCK',
         job_action      => 'BEGIN REMOVE_DUPLICATE_TREATMENTS_NURSES; END;',
         start_date      => SYSTIMESTAMP,
-        repeat_interval => 'FREQ=MINUTELY; INTERVAL=1',
+        repeat_interval => 'FREQ=SECONDLY; INTERVAL=15',
         enabled         => TRUE
     );
 END;
 /
 
-BEGIN
-    DBMS_SCHEDULER.drop_job (
-        job_name => 'HOSPITAL.JOB_REMOVE_DUPLICATE_TREATMENTS_NURSES',
-        force => TRUE
-    );
-END;
-/
 
 CREATE OR REPLACE PROCEDURE CHECK_ROOM_AVAILABILITY AS
+    occupied_seats NUMBER;
+    operating_status NUMBER;
 BEGIN
     FOR rec IN (SELECT ID, RNUMBER, SEATS, TYPE_ROOM FROM ROOMS) LOOP
-        DECLARE
-            occupied_seats NUMBER;
-            operating_status NUMBER;
-        BEGIN
-            IF rec.TYPE_ROOM = 'Dla pacjentów' THEN
-                SELECT COUNT(*) INTO occupied_seats
-                FROM PATIENTS
-                WHERE ROOM_ID = rec.ID;
+        IF rec.TYPE_ROOM = 'Dla pacjentów' THEN
+            SELECT COUNT(*) INTO occupied_seats
+            FROM PATIENTS
+            WHERE ROOM_ID = rec.ID;
 
-                IF occupied_seats < rec.SEATS THEN
-                    UPDATE ROOMS
-                    SET STATUS = 'wolny'
-                    WHERE ID = rec.ID;
-                ELSE
-                    UPDATE ROOMS
-                    SET STATUS = 'zajêty'
-                    WHERE ID = rec.ID;
-                END IF;
+            IF occupied_seats < rec.SEATS THEN
+                UPDATE ROOMS
+                SET STATUS = 'wolny'
+                WHERE ID = rec.ID;
+            ELSE
+                UPDATE ROOMS
+                SET STATUS = 'zajêty'
+                WHERE ID = rec.ID;
+            END IF;
 
-            ELSIF rec.TYPE_ROOM = 'Sala operacyjna' THEN
+        ELSIF rec.TYPE_ROOM = 'Sala operacyjna' THEN
+            BEGIN
                 SELECT STATUS INTO operating_status
                 FROM (
                     SELECT STATUS
                     FROM PROCEDURES
-                    WHERE ROOM_ID = rec.ID AND DATE > SYSDATE - INTERVAL '1' HOUR
-                    ORDER BY DATE DESC
-                ) WHERE ROWNUM = 1;
+                    WHERE ROOM_ID = rec.ID AND "DATE" > SYSDATE - INTERVAL '1' HOUR
+                    ORDER BY "DATE" DESC
+                )
+                WHERE ROWNUM = 1;
 
                 IF operating_status = 2 THEN
                     UPDATE ROOMS
@@ -1118,13 +1071,17 @@ BEGIN
                     SET STATUS = 'wolny'
                     WHERE ID = rec.ID;
                 END IF;
-            END IF;
-        END;
+            EXCEPTION
+                WHEN NO_DATA_FOUND THEN
+                    UPDATE ROOMS
+                    SET STATUS = 'wolny'
+                    WHERE ID = rec.ID;
+            END;
+        END IF;
     END LOOP;
     COMMIT;
 END;
 /
-
 
 
 BEGIN
@@ -1172,7 +1129,7 @@ BEGIN
         job_type        => 'PLSQL_BLOCK',
         job_action      => 'BEGIN CHECK_DUPLICATE_MEDICATIONS; END;',
         start_date      => SYSTIMESTAMP,
-        repeat_interval => 'FREQ=SECONDLY; INTERVAL=30', -- dostosuj wed³ug potrzeb
+        repeat_interval => 'FREQ=SECONDLY; INTERVAL=30',
         enabled         => TRUE
     );
 END;
@@ -1210,7 +1167,7 @@ BEGIN
         job_type        => 'PLSQL_BLOCK',
         job_action      => 'BEGIN REMOVE_DUPLICATE_ASSIGNMENTS; END;',
         start_date      => SYSTIMESTAMP,
-        repeat_interval => 'FREQ=SECONDLY; INTERVAL=30', -- dostosuj wed³ug potrzeb
+        repeat_interval => 'FREQ=SECONDLY; INTERVAL=30',
         enabled         => TRUE
     );
 END;
@@ -1248,9 +1205,288 @@ BEGIN
         job_type        => 'PLSQL_BLOCK',
         job_action      => 'BEGIN REMOVE_DUPLICATE_DOCTOR_ASSIGNMENTS; END;',
         start_date      => SYSTIMESTAMP,
-        repeat_interval => 'FREQ=SECONDLY; INTERVAL=30', -- dostosuj wed³ug potrzeb
+        repeat_interval => 'FREQ=SECONDLY; INTERVAL=30', 
         enabled         => TRUE
     );
 END;
 /
 
+create or replace PROCEDURE ADD_TREATMENTS_NURSES (
+    p_NURSE_ID IN NUMBER,
+    p_PROCEDURE_ID IN NUMBER
+    
+) AS
+    l_start_time TIMESTAMP;
+    l_duration VARCHAR2(255);
+    l_end_time TIMESTAMP;
+BEGIN
+    -- Pobierz czas rozpoczêcia i d³ugoœæ trwania nowego zabiegu
+    SELECT "DATE", "TIME" INTO l_start_time, l_duration
+    FROM PROCEDURES
+    WHERE ID = p_PROCEDURE_ID;
+
+    -- Oblicz czas zakoñczenia nowego zabiegu
+    l_end_time := GET_END_TIME(l_start_time, l_duration);
+
+    -- SprawdŸ, czy pielêgniarka ma ju¿ zaplanowany zabieg w danym przedziale czasowym
+    FOR rec IN (
+        SELECT P."DATE", P."TIME", GET_END_TIME(P."DATE", P."TIME") AS END_TIME
+        FROM PROCEDURES P
+        JOIN TREATMENTS_NURSES TN ON P.ID = TN.PROCEDURE_ID
+        WHERE TN.NURSE_ID = p_NURSE_ID
+    ) LOOP
+        IF (l_start_time BETWEEN rec.DATE AND rec.END_TIME)
+           OR (l_end_time BETWEEN rec.DATE AND rec.END_TIME)
+           OR (rec.DATE BETWEEN l_start_time AND l_end_time) THEN
+            RAISE_APPLICATION_ERROR(-20002, 'Nurse is not available at the specified time.');
+        END IF;
+    END LOOP;
+
+    -- Jeœli brak konfliktów, dodaj nowy wpis do TREATMENTS_NURSES
+    INSERT INTO TREATMENTS_NURSES (ID, PROCEDURE_ID, NURSE_ID)
+    VALUES (TREATMENTS_NURSES_ID_SEQ.NEXTVAL, p_PROCEDURE_ID, p_NURSE_ID);
+END;
+/
+
+create or replace PROCEDURE DELETE_TREATMENTS_NURSES (
+    p_ID IN NUMBER
+) AS
+BEGIN
+    DELETE FROM TREATMENTS_NURSES WHERE ID = p_ID;
+END;
+/
+create or replace PROCEDURE GET_TREATMENTS_NURSES (
+    p_ID IN NUMBER,
+    p_RESULT OUT SYS_REFCURSOR
+) AS
+BEGIN
+    OPEN p_RESULT FOR
+    SELECT * FROM TREATMENTS_NURSES
+    WHERE ID = p_ID;
+END;
+/
+create or replace PROCEDURE UPDATE_TREATMENTS_NURSES (
+    p_ID IN NUMBER,
+    p_NEW_NURSE_ID IN NUMBER,
+    p_NEW_PROCEDURE_ID IN NUMBER
+) AS
+    l_start_time TIMESTAMP;
+    l_duration VARCHAR2(255);
+    l_end_time TIMESTAMP;
+BEGIN
+    -- Pobierz czas rozpoczêcia i d³ugoœæ trwania aktualizowanego zabiegu
+    SELECT "DATE", "TIME" INTO l_start_time, l_duration
+    FROM PROCEDURES
+    WHERE ID = p_NEW_PROCEDURE_ID;
+
+    -- Oblicz czas zakoñczenia aktualizowanego zabiegu
+    l_end_time := GET_END_TIME(l_start_time, l_duration);
+
+    -- SprawdŸ, czy pielêgniarka ma ju¿ zaplanowany zabieg w danym przedziale czasowym
+    FOR rec IN (
+        SELECT P."DATE", P."TIME", GET_END_TIME(P."DATE", P."TIME") AS END_TIME
+        FROM PROCEDURES P
+        JOIN TREATMENTS_NURSES TN ON P.ID = TN.PROCEDURE_ID
+        WHERE TN.NURSE_ID = p_NEW_NURSE_ID AND P.ID != p_NEW_PROCEDURE_ID
+    ) LOOP
+        IF (l_start_time BETWEEN rec."DATE" AND rec.END_TIME)
+           OR (l_end_time BETWEEN rec."DATE" AND rec.END_TIME)
+           OR (rec."DATE" BETWEEN l_start_time AND l_end_time) THEN
+            RAISE_APPLICATION_ERROR(-20005, 'Nurse is not available at the specified time.');
+        END IF;
+    END LOOP;
+
+    -- Jeœli brak konfliktów, zaktualizuj wpis w TREATMENTS_NURSES
+    UPDATE TREATMENTS_NURSES
+    SET NURSE_ID = p_NEW_NURSE_ID,
+        PROCEDURE_ID = p_NEW_PROCEDURE_ID
+    WHERE ID = p_ID;
+END;
+/
+
+create or replace PROCEDURE ADD_TREATMENTS_DOCTORS (
+    p_PROCEDURE_ID IN NUMBER,
+    p_DOCTOR_ID IN NUMBER
+) AS
+    l_start_time TIMESTAMP;
+    l_duration VARCHAR2(255);
+    l_end_time TIMESTAMP;
+BEGIN
+    -- Pobierz czas rozpoczêcia i d³ugoœæ trwania nowego zabiegu
+    SELECT "DATE", "TIME" INTO l_start_time, l_duration
+    FROM PROCEDURES
+    WHERE ID = p_PROCEDURE_ID;
+
+    -- Oblicz czas zakoñczenia nowego zabiegu
+    l_end_time := GET_END_TIME(l_start_time, l_duration);
+
+    -- SprawdŸ, czy doktor ma ju¿ zaplanowany zabieg w danym przedziale czasowym
+    FOR rec IN (
+        SELECT T."DATE", T."TIME", GET_END_TIME(T."DATE", T."TIME") AS END_TIME
+        FROM PROCEDURES T
+        JOIN TREATMENTS_DOCTORS TD ON T.ID = TD.PROCEDURE_ID
+        WHERE TD.DOCTOR_ID = p_DOCTOR_ID
+    ) LOOP
+        IF (l_start_time BETWEEN rec.DATE AND rec.END_TIME)
+           OR (l_end_time BETWEEN rec.DATE AND rec.END_TIME)
+           OR (rec.DATE BETWEEN l_start_time AND l_end_time) THEN
+            RAISE_APPLICATION_ERROR(-20001, 'Doctor is not available at the specified time.');
+        END IF;
+    END LOOP;
+
+    -- Jeœli brak konfliktów, dodaj nowy wpis do TREATMENTS_DOCTORS
+    INSERT INTO TREATMENTS_DOCTORS (ID, PROCEDURE_ID, DOCTOR_ID, CREATED_AT)
+    VALUES (TREATMENTS_DOCTORS_ID_SEQ.NEXTVAL, p_PROCEDURE_ID, p_DOCTOR_ID, SYSTIMESTAMP);
+END;
+/
+create or replace PROCEDURE DELETE_TREATMENTS_DOCTORS (
+    p_ID IN NUMBER
+) AS
+BEGIN
+    DELETE FROM TREATMENTS_DOCTORS WHERE ID = p_ID;
+END;
+/
+create or replace PROCEDURE GET_TREATMENTS_DOCTORS (
+    p_ID IN NUMBER,
+    p_RESULT OUT SYS_REFCURSOR
+) AS
+BEGIN
+    OPEN p_RESULT FOR
+    SELECT * FROM TREATMENTS_DOCTORS
+    WHERE ID = p_ID;
+END;
+/
+create or replace PROCEDURE UPDATE_TREATMENTS_DOCTORS (
+    p_PROCEDURE_ID IN NUMBER,
+    p_DOCTOR_ID IN NUMBER
+) AS
+    l_start_time TIMESTAMP;
+    l_duration VARCHAR2(255);
+    l_end_time TIMESTAMP;
+BEGIN
+    -- Pobierz czas rozpoczêcia i d³ugoœæ trwania aktualizowanego zabiegu
+    SELECT "DATE", "TIME" INTO l_start_time, l_duration
+    FROM PROCEDURES
+    WHERE ID = p_PROCEDURE_ID;
+
+    -- Oblicz czas zakoñczenia aktualizowanego zabiegu
+    l_end_time := GET_END_TIME(l_start_time, l_duration);
+
+    -- SprawdŸ, czy lekarz ma ju¿ zaplanowany zabieg w danym przedziale czasowym
+    FOR rec IN (
+        SELECT P."DATE", P."TIME", GET_END_TIME(P."DATE", P."TIME") AS END_TIME
+        FROM PROCEDURES P
+        JOIN TREATMENTS_DOCTORS TD ON P.ID = TD.PROCEDURE_ID
+        WHERE TD.DOCTOR_ID = p_DOCTOR_ID AND P.ID != p_PROCEDURE_ID
+    ) LOOP
+        IF (l_start_time BETWEEN rec."DATE" AND rec.END_TIME)
+           OR (l_end_time BETWEEN rec."DATE" AND rec.END_TIME)
+           OR (rec."DATE" BETWEEN l_start_time AND l_end_time) THEN
+            RAISE_APPLICATION_ERROR(-20004, 'Doctor is not available at the specified time.');
+        END IF;
+    END LOOP;
+
+    -- Jeœli brak konfliktów, zaktualizuj wpis w TREATMENTS_DOCTORS
+    UPDATE TREATMENTS_DOCTORS
+    SET DOCTOR_ID = p_DOCTOR_ID
+    WHERE PROCEDURE_ID = p_PROCEDURE_ID;
+END;
+/
+
+create or replace PROCEDURE UPDATE_NURSE(
+    p_nurse_id IN NUMBER,
+    p_name IN VARCHAR2,
+    p_surname IN VARCHAR2,
+    p_number IN VARCHAR2,
+    p_user_id IN NUMBER)
+IS
+BEGIN
+    UPDATE nurses
+    SET name = p_name,
+        surname = p_surname,
+        number_license = p_number,
+        user_id = p_user_id
+    WHERE id = p_nurse_id;
+END;
+/
+create or replace PROCEDURE DELETE_PROCEDURE(
+    p_procedure_id IN NUMBER
+) IS
+BEGIN
+    BEGIN
+        DELETE FROM procedures WHERE id = p_procedure_id;
+    EXCEPTION
+        WHEN OTHERS THEN
+            IF SQLCODE = -2292 THEN
+                RAISE_APPLICATION_ERROR(-20001, 'Nie mo¿na usun¹æ procedury, która jest ju¿ przypisana.');
+            ELSE
+                RAISE;
+            END IF;
+    END;
+END;
+/
+create or replace PROCEDURE GET_PROCEDURE (
+    p_ID IN NUMBER,
+    p_procedure OUT SYS_REFCURSOR
+) AS
+BEGIN
+    OPEN p_procedure FOR
+    SELECT "ID",TREATMENT_TYPE_ID, ROOM_ID, "DATE", "TIME", "COST", STATUS, PATIENT_ID
+    FROM PROCEDURES
+    WHERE ID = p_ID;
+END;
+/
+create or replace PROCEDURE UPDATE_PROCEDURE (
+    p_ID IN NUMBER,
+    p_TREATMENT_TYPE_ID IN NUMBER,
+    p_ROOM_ID IN NUMBER,
+    p_DATE IN TIMESTAMP,
+    p_DURATION IN VARCHAR2,
+    p_COST IN NUMBER,
+    p_PATIENT_ID IN NUMBER
+) AS
+    l_start_time TIMESTAMP;
+    l_end_time TIMESTAMP;
+BEGIN
+    -- Oblicz czas zakoñczenia nowego zabiegu
+    l_start_time := p_DATE;
+    l_end_time := GET_END_TIME(p_DATE, p_DURATION);
+
+    -- SprawdŸ, czy pacjent ma ju¿ zaplanowany zabieg w danym przedziale czasowym
+    FOR rec IN (
+        SELECT P."DATE", P."TIME", GET_END_TIME(P."DATE", P."TIME") AS END_TIME
+        FROM PROCEDURES P
+        WHERE P.PATIENT_ID = p_PATIENT_ID AND P.ID != p_ID
+    ) LOOP
+        IF (l_start_time BETWEEN rec."DATE" AND rec.END_TIME)
+           OR (l_end_time BETWEEN rec."DATE" AND rec.END_TIME)
+           OR (rec."DATE" BETWEEN l_start_time AND l_end_time) THEN
+            RAISE_APPLICATION_ERROR(-20003, 'Patient is not available at the specified time.');
+        END IF;
+    END LOOP;
+
+    -- SprawdŸ, czy sala jest ju¿ zajêta w danym przedziale czasowym
+    FOR rec IN (
+        SELECT P."DATE", P."TIME", GET_END_TIME(P."DATE", P."TIME") AS END_TIME
+        FROM PROCEDURES P
+        WHERE P.ROOM_ID = p_ROOM_ID AND P.ID != p_ID
+    ) LOOP
+        IF (l_start_time BETWEEN rec."DATE" AND rec.END_TIME)
+           OR (l_end_time BETWEEN rec."DATE" AND rec.END_TIME)
+           OR (rec."DATE" BETWEEN l_start_time AND l_end_time) THEN
+            RAISE_APPLICATION_ERROR(-20004, 'Room is not available at the specified time.');
+        END IF;
+    END LOOP;
+
+    -- Jeœli brak konfliktów, zaktualizuj wpis w PROCEDURES
+    UPDATE PROCEDURES
+    SET TREATMENT_TYPE_ID = p_TREATMENT_TYPE_ID,
+        ROOM_ID = p_ROOM_ID,
+        "DATE" = p_DATE,
+        "TIME" = p_DURATION,
+        "COST" = p_COST,
+        PATIENT_ID = p_PATIENT_ID,
+        STATUS = 1
+    WHERE ID = p_ID;
+END;
+/

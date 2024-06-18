@@ -26,6 +26,18 @@ class NurseSeeder extends Seeder
             'surname'=>'Kos',
             'number_license'=>'12s13dfad1',
             'user_id'=>5
+        ],
+        [
+            'name' => 'Elżbieta',
+            'surname' => 'Zawadzka',
+            'number_license' => '9a1b2c3d4e',
+            'user_id' => 11
+        ],
+        [
+            'name' => 'Monika',
+            'surname' => 'Kowalczyk',
+            'number_license' => '5f6g7h8i9j',
+            'user_id' => 12
         ]
     ]);
     }

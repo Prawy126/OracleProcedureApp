@@ -27,6 +27,20 @@ class DoctorSeeder extends Seeder
             'specialization'=>'chirurg',
             'license_number' => 'A231B3FDS',
             'user_id' => 3
+        ],
+        [
+            'name' => 'Michał',
+            'surname' => 'Nowak',
+            'specialization' => 'kardiolog',
+            'license_number' => 'B123C456D',
+            'user_id' => 9
+        ],
+        [
+            'name' => 'Anna',
+            'surname' => 'Wiśniewska',
+            'specialization' => 'internista',
+            'license_number' => 'C789D012E',
+            'user_id' => 10
         ]
 
     ]);

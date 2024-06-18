@@ -17,6 +17,13 @@ class TreatmentNurseSeeder extends Seeder
         TreatmentNurse::insert([[
             'nurse_id'=>1,
             'procedure_id'=>1
-        ]]);
+        ],[
+            'nurse_id'=>2,
+            'procedure_id'=>2
+        ],[
+            'nurse_id'=>3,
+            'procedure_id'=>3
+        ]
+        ]);
     }
 }

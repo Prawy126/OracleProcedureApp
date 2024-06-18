@@ -23,6 +23,14 @@ class TreatmentDoctorSeeder extends Seeder
         [
             'doctor_id'=>2,
             'procedure_id'=>1
+        ],
+        [
+            'doctor_id'=>3,
+            'procedure_id'=>2
+        ],
+        [
+            'doctor_id'=>4,
+            'procedure_id'=>2
         ]
     ]);
     }

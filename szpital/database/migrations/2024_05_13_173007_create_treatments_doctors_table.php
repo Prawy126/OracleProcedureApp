@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(procedure::class)->constrained();
             $table->foreignIdFor(doctor::class)->constrained();
+            $table->timestamps();
         });
     }
 
